@@ -198,7 +198,6 @@
     <ClInclude Include="..\src\Android\TimeBase.hpp" />
     <ClInclude Include="..\src\Android\TimeLineView.hpp" />
     <ClInclude Include="..\src\Android\TraceAction.hpp" />
-    <ClInclude Include="..\src\Android\TraceFile.h" />
     <ClInclude Include="..\src\Android\TraceUnits.hpp" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
@@ -226,7 +225,6 @@
     <ClCompile Include="..\src\Android\ThreadData.cpp" />
     <ClCompile Include="..\src\Android\TimeBase.cpp" />
     <ClCompile Include="..\src\Android\TimeLineView.cpp" />
-    <ClCompile Include="..\src\Android\TraceFile.cpp" />
     <ClCompile Include="..\src\Android\TraceUnits.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />

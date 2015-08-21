@@ -2,9 +2,10 @@
 // DmTraceViewerDoc.h : interface of the CDmTraceViewerDoc class
 //
 
-
 #pragma once
-#include "Android/TraceFile.h"
+
+#include "Android/DmTraceReader.hpp"
+#include "Android/TimeLineView.hpp"
 
 class CDmTraceViewerDoc : public CDocument
 {
@@ -49,5 +50,6 @@ public:
 	void OnCloseDocument();
 	BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	void DeleteContents();
-	Android::TraceFile* m_pTraceFile;
+	Android::DmTraceReader* m_pTraceReader;
+	Android::TimeLineView* m_pTimeLineView;
 };

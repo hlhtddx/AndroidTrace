@@ -9,8 +9,6 @@
 #endif
 
 #include "DmTraceViewerDoc.h"
-#include "Android/DmTraceReader.hpp"
-#include "Android/TimeLineView.hpp"
 
 #include <propkey.h>
 
@@ -29,10 +27,9 @@ END_MESSAGE_MAP()
 // CDmTraceViewerDoc construction/destruction
 
 CDmTraceViewerDoc::CDmTraceViewerDoc()
-	: m_pTraceFile(NULL)
+	: m_pTraceReader(NULL)
+	, m_pTimeLineView(NULL)
 {
-	// TODO: add one-time construction code here
-
 }
 
 CDmTraceViewerDoc::~CDmTraceViewerDoc()
@@ -128,24 +125,24 @@ BOOL CDmTraceViewerDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	DeleteContents();
 	CT2A fileName(lpszPathName);
 
-	Android::DmTraceReader* reader = new Android::DmTraceReader(fileName, false);
-	Android::TimeLineView* view = new Android::TimeLineView(reader);
-	delete reader;
+	m_pTraceReader = new Android::DmTraceReader(fileName, false);
+	m_pTimeLineView = new Android::TimeLineView(m_pTraceReader);
 
-	//m_pTraceFile = new Android::TraceFile;
-	//if (!m_pTraceFile->parseDataKeys(fileName)) {
-	//	delete m_pTraceFile;
-	//	m_pTraceFile = NULL;
-	//}
 	return TRUE;
 }
 
 void CDmTraceViewerDoc::DeleteContents()
 {
-	if (m_pTraceFile)
+	if (m_pTimeLineView)
 	{
-		delete m_pTraceFile;
-		m_pTraceFile = NULL;
+		delete m_pTimeLineView;
+		m_pTimeLineView = NULL;
+	}
+
+	if (m_pTraceReader)
+	{
+		delete m_pTraceReader;
+		m_pTraceReader = NULL;
 	}
 
 	CDocument::DeleteContents();
