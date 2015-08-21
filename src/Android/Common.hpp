@@ -1,0 +1,289 @@
+#pragma once
+
+#include <stdint.h>
+#include <set>
+#include <map>
+#include <list>
+#include <vector>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <functional>
+#include <utility>
+#include <iomanip>
+
+#if (defined _DEBUG) && 1
+	#define NOMINMAX
+	#include <afx.h>
+	#define new DEBUG_NEW
+	//	#define _CRTDBG_MAP_ALLOC
+	#include <stdlib.h>
+	#include <crtdbg.h>
+#else
+	#ifndef TRACE
+		#define TRACE(x, ...)
+	#endif
+#endif
+
+namespace Android {
+	typedef std::string String;
+
+	template<class _Ty> class List : public std::list<_Ty>
+	{
+	};
+
+	template<class _Ty> class Vector : public std::vector<_Ty>
+	{
+	};
+
+	template<class _Kty, class _Ty> class HashMap : public std::map<_Kty, _Ty>
+	{
+	public:
+		typedef std::map<_Kty, _Ty> basetype;
+
+		void add(_Kty key, _Ty value) {
+			basetype::insert(std::make_pair(key, value));
+		}
+
+		List<_Ty> *value_list() {
+			List<_Ty> *ret = new List<_Ty>;
+			for (typename std::map<_Kty, _Ty>::iterator it = this->begin(); it != this->end(); it++) {
+				ret->push_back(it->second);
+			}
+			return ret;
+		}
+
+		Vector<_Ty> *value_vector() {
+			Vector<_Ty> *ret = new Vector<_Ty>;
+			for (typename std::map<_Kty, _Ty>::iterator it = this->begin(); it != this->end(); it++) {
+				ret->push_back(it->second);
+			}
+			return ret;
+		}
+	};
+
+	class GeneralException
+	{
+	public:
+		GeneralException() {
+		}
+
+		GeneralException(const char* description)
+			: mDescription(description) {
+		}
+
+		virtual const char* getDescription() {
+			return mDescription.c_str();
+		}
+
+	protected:
+		String mDescription;
+	};
+
+	class MemoryException : public GeneralException
+	{
+	public:
+		MemoryException(const char* description)
+			: GeneralException(description) {
+		}
+	};
+
+	class BoundaryException : public GeneralException
+	{
+	public:
+		BoundaryException(const char* description, size_t index, size_t boundary)
+		{
+			mIndex = index;
+			mBoundary = boundary;
+			std::stringstream ss(mDescription);
+			ss << "Out of range: " << description << " -> (" << index << " out of " << boundary << ")";
+		}
+
+	protected:
+		size_t mIndex;
+		size_t mBoundary;
+	};
+
+	template<class _Ty> class FastArray
+	{
+	public:
+		FastArray()
+			: FastArray(16)
+		{
+		}
+
+		FastArray(int Capacity) {
+			mSize = 0;
+			mCapacity = Capacity;
+			mContents = (_Ty*)malloc(sizeof(_Ty) * mCapacity);
+		}
+
+		~FastArray()
+		{
+			free(mContents);
+		}
+
+		int add(const _Ty& value) {
+			ensureCapacity(mSize + 1);
+			memcpy(mContents + mSize, &value, sizeof(_Ty));
+			return (int)mSize++;
+		}
+
+		int addNull() {
+			ensureCapacity(mSize + 1);
+			return (int)mSize++;
+		}
+
+		_Ty* add2(const _Ty& value) {
+			return get(add(value));
+		}
+
+		_Ty* addNull2() {
+			return get(addNull());
+		}
+
+		_Ty& operator[] (size_t index) {
+			return *(get(index));
+		}
+
+		const _Ty& operator[] (size_t index) const {
+			return *(get(index));
+		}
+
+		_Ty* get(size_t index) {
+			if (index >= mSize) {
+				throw BoundaryException("Cannot access the element", index, mSize);
+			}
+			return &(mContents[index]);
+		}
+
+		const _Ty* get(size_t index) const {
+			if (index >= mSize) {
+				throw BoundaryException("Cannot access the element", index, mSize);
+			}
+			return &(mContents[index]);
+		}
+
+		_Ty& set(size_t index, const _Ty& value) {
+			if (index >= mSize) {
+				throw BoundaryException("Cannot access the element", index, mSize);
+			}
+			memcpy(mContents + index, &value, sizeof(_Ty));
+		}
+
+		void clear() {
+			free(mContents);
+			mSize = 0;
+			mCapacity = 16;
+			mContents = (_Ty*)malloc(sizeof(_Ty) * mCapacity);
+		}
+
+		void freeExtra() {
+			if (mCapacity < mSize) {
+				throw BoundaryException("freeExtra", mSize, mCapacity);
+			}
+			else if (mCapacity == mSize) {
+				return;
+			}
+
+			_Ty* newContents = (_Ty*)realloc(mContents, sizeof(_Ty) * mSize);
+			if (newContents == nullptr) {
+				throw MemoryException("Cannot reallocate memory for freeExtra");
+			}
+
+			mContents = newContents;
+			mCapacity = mSize;
+		}
+
+		size_t size() const {
+			return mSize;
+		}
+
+	private:
+		size_t mSize;
+		size_t mCapacity;
+		_Ty* mContents;
+
+	protected:
+		void ensureCapacity(size_t size) {
+			if (size <= mCapacity)
+				return;
+
+			size_t newSize = getNewCapacity(size);
+			_Ty* newContents = (_Ty*)realloc(mContents, sizeof(_Ty) * newSize);
+			if (newContents == nullptr) {
+				throw MemoryException("Cannot reallocate memory");
+			}
+
+			mContents = newContents;
+			mCapacity = newSize;
+		}
+
+		size_t getNewCapacity(size_t size) {
+			size_t newSize = mCapacity;
+			while (newSize < size) {
+				newSize *= 2;
+			}
+			return newSize;
+		}
+
+		size_t capacity() const {
+			return mCapacity;
+		}
+	};
+
+	class Object {
+	public:
+#ifdef _CRTDBG_MAP_ALLOC
+		static std::set<Object*> allObjects;
+#endif
+		static uint64_t mReferenceCount;
+		Object() {
+#ifdef _DEBUG
+			mReferenceCount++;
+#ifdef _CRTDBG_MAP_ALLOC
+			allObjects.insert(this);
+#endif
+#endif
+		}
+		virtual ~Object() {
+#ifdef _DEBUG
+			mReferenceCount--;
+#ifdef _CRTDBG_MAP_ALLOC
+			allObjects.erase(this);
+#endif
+#endif
+		}
+	};
+
+	inline char getByte(std::istream& str) {
+		return str.get();
+	}
+
+	inline short getShort(std::istream& str) {
+		short ret;
+		str.read((char*)&ret, sizeof(ret));
+		return ret;
+	}
+
+	inline int getInt(std::istream& str) {
+		int ret = 0;
+		str.read((char*)&ret, sizeof(ret));
+		return ret;
+	}
+
+	inline int64_t getLong(std::istream& str) {
+		int64_t ret;
+		str.read((char*)&ret, sizeof(ret));
+		return ret;
+	}
+
+	bool readToken(std::istream& str, String& buffer, char token);
+
+	typedef std::istream ByteBuffer;
+
+	inline bool readLine(std::istream& str, String& line) {
+		return readToken(str, line, '\n');
+	}
+};
+

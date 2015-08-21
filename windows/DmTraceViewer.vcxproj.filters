@@ -1,0 +1,269 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Android">
+      <UniqueIdentifier>{0cc46652-d532-4f00-8d57-855f0799bfb6}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="DmTraceViewer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChildFrm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DmTraceViewerDoc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DmTraceViewerView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FileView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ClassView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ViewTree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OutputWnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertiesWnd.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\Call.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\ColorController.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\Common.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\DmTraceReader.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\MethodData.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\ProfileData.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\ProfileNode.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\ProfileSelf.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\ThreadData.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\TimeBase.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\TimeLineView.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\TraceAction.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\TraceFile.h">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Android\TraceUnits.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="DmTraceViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MainFrm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChildFrm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DmTraceViewerDoc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DmTraceViewerView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FileView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ClassView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ViewTree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PropertiesWnd.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\Call.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\ColorController.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\Common.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\DmTraceReader.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\MethodData.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\ProfileData.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\ProfileNode.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\ProfileSelf.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\ThreadData.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\TimeBase.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\TimeLineView.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\TraceFile.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Android\TraceUnits.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DmTraceViewer.reg" />
+    <None Include="res\DmTraceViewer.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DmTraceViewer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\file_view.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\file_view_hc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\class_view.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\class_view_hc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\fileview.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\fileview_hc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\classview.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\classview_hc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\explorer.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\explorer_hc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sort.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\sort_hc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\menuimages.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\menuimages_hc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\output_wnd.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\output_wnd_hc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\properties_wnd.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\properties_wnd_hc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\properties.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\properties_hc.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="UserImages.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\DmTraceViewerDoc.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\DmTraceViewer.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\Toolbar256.bmp">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
