@@ -256,31 +256,54 @@ namespace Android {
 		}
 	};
 
-	inline char getByte(std::istream& str) {
-		return str.get();
-	}
+	class ByteBuffer {
+	private:
+		char* mData;
+		size_t mSize;
+		char* mCurrent;
+		char* mEnd;
+	public:
+		ByteBuffer(void* data, size_t size) {
+			mData = mCurrent = (char*)data;
+			mSize = size;
+			mEnd = mData + mSize;
+		}
 
-	inline short getShort(std::istream& str) {
-		short ret;
-		str.read((char*)&ret, sizeof(ret));
-		return ret;
-	}
+		~ByteBuffer() {
+			if (mData) {
+				delete mData;
+			}
+		}
 
-	inline int getInt(std::istream& str) {
-		int ret = 0;
-		str.read((char*)&ret, sizeof(ret));
-		return ret;
-	}
+		char getByte() {
+			if (end()) {
+				throw BoundaryException("ByteBuffer out of bound", mCurrent - mData, mSize);
+			}
+			return *(mCurrent++);
+		}
 
-	inline int64_t getLong(std::istream& str) {
-		int64_t ret;
-		str.read((char*)&ret, sizeof(ret));
-		return ret;
-	}
+		short getShort() {
+			return getByte() | getByte() << 8;
+		}
+
+		int getInt() {
+			return getShort() | getShort() << 16;
+		}	
+
+		int64_t getLong() {
+			return getInt() | ((int64_t)getInt()) << 32;
+		}
+
+		void skip(size_t n) {
+			mCurrent += n;
+		}
+
+		bool end() {
+			return mCurrent >= mData + mSize;
+		}
+	};
 
 	bool readToken(std::istream& str, String& buffer, char token);
-
-	typedef std::istream ByteBuffer;
 
 	inline bool readLine(std::istream& str, String& line) {
 		return readToken(str, line, '\n');

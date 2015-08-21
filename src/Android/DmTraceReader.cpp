@@ -20,46 +20,21 @@ namespace Android {
 
 	DmTraceReader::~DmTraceReader()
 	{
-#ifdef _DEBUG
-		DWORD s1 = ::GetTickCount();
-#endif
 		if (mSortedThreads != nullptr) {
 			delete mSortedThreads;
 		}
-#ifdef _DEBUG
-		DWORD s2 = ::GetTickCount();
-#endif
 		if (mSortedMethods != nullptr) {
 			delete mSortedMethods;
 		}
-#ifdef _DEBUG
-		DWORD s3 = ::GetTickCount();
-#endif
 		for (MethodMap::iterator it = mMethodMap.begin(); it != mMethodMap.end(); it++) {
 			delete it->second;
 		}
-#ifdef _DEBUG
-		DWORD s4 = ::GetTickCount();
-#endif
 		for (ThreadMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
 			delete it->second;
 		}
-#ifdef _DEBUG
-		DWORD s5 = ::GetTickCount();
-#endif
-		//for (CallList::iterator it = mCallList.begin(); it != mCallList.end(); it++) {
-		//	delete *it;
-		//}
-#ifdef _DEBUG
-		DWORD s6 = ::GetTickCount();
-		mCallList.clear();
-		DWORD s7 = ::GetTickCount();
-		TRACE("mSortedThreads=%d, mSortedMethods=%d, mMethodMap=%d, mThreadMap=%d, mCallList=%d, %d\n",
-			s2-s1, s3-s2, s4-s3, s5-s4, s6-s5, s7-s6);
-#endif
 	}
 
-	void DmTraceReader::generateTrees() /* throws(IOException) */
+	void DmTraceReader::generateTrees()
 	{
 		auto offset = parseKeys();
 		parseData(offset);
@@ -76,21 +51,21 @@ namespace Android {
 	//}
 	//
 
-	void DmTraceReader::readDataFileHeader(ByteBuffer& buffer)
+	void DmTraceReader::readDataFileHeader(ByteBuffer* buffer)
 	{
-		int magic = getInt(buffer);
+		int magic = buffer->getInt();
 		if (magic != TRACE_MAGIC) {
 			throw magic;
 		}
-		int version = getShort(buffer);
+		int version = buffer->getByte();
 		if (version != mVersionNumber) {
 			throw version;
 		}
 		if ((version < 1) || (version > 3)) {
 			throw version;
 		}
-		int offsetToData = getShort(buffer) - 16;
-		getLong(buffer);
+		int offsetToData = buffer->getShort() - 16;
+		buffer->getLong();
 		if (version == 1) {
 			mRecordSize = 9;
 		}
@@ -98,17 +73,39 @@ namespace Android {
 			mRecordSize = 10;
 		}
 		else {
-			mRecordSize = getShort(buffer);
+			mRecordSize = buffer->getShort();
 			offsetToData -= 2;
 		}
-		buffer.seekg(offsetToData, std::ios_base::cur);
+		buffer->skip(offsetToData);
+	}
+
+	ByteBuffer* DmTraceReader::mapFile(const char* filename, int64_t offset)
+	{
+		char* buffer = nullptr;
+		try {
+			std::ifstream in(filename, std::ios::binary | std::ios::in);
+			in.seekg(0, std::ios_base::end);
+			int64_t size = in.tellg() - offset;
+
+			char* buffer = new char[size];
+			in.exceptions(std::ios::eofbit | std::ios::failbit | std::ios::badbit);
+			in.seekg(offset, std::ios_base::beg);
+			in.read(buffer, size);
+
+			return new ByteBuffer(buffer, size);
+		}
+		catch(...)
+		{
+			if (buffer) {
+				delete[] buffer;
+			}
+			return nullptr;
+		}
 	}
 
 	void DmTraceReader::parseData(int64_t offset) /* throws(IOException) */
 	{
-		std::ifstream buffer(mTraceFileName, std::ios::binary | std::ios::in);
-		buffer.seekg(offset);
-
+		ByteBuffer* buffer = mapFile(mTraceFileName.c_str(), offset);
 		readDataFileHeader(buffer);
 		List<TraceAction> lTrace;
 		List<TraceAction> *trace = nullptr;
@@ -119,8 +116,7 @@ namespace Android {
 		bool haveGlobalClock = mClockSource != THREAD_CPU;
 		ThreadData* prevThreadData = nullptr;
 
-		buffer.exceptions(std::ios::eofbit | std::ios::failbit | std::ios::badbit);
-		while (true) {
+		while (!buffer->end()) {
 			int threadId;
 			int methodId;
 			uint32_t threadTime = 0;
@@ -128,41 +124,42 @@ namespace Android {
 			try {
 				int recordSize = mRecordSize;
 				if (mVersionNumber == 1) {
-					threadId = getByte(buffer);
+					threadId = buffer->getByte();
 					if (threadId <= 0) {
 						printf("The file should reach to the end\n");
 					}
 					recordSize--;
 				}
 				else {
-					threadId = getShort(buffer);
+					threadId = buffer->getShort();
 					if (threadId <= 0) {
 						printf("The file should reach to the end\n");
 					}
 					recordSize -= 2;
 				}
-				methodId = getInt(buffer);
+				methodId = buffer->getInt();
 				recordSize -= 4;
 
 				ClockSource v = mClockSource;
 				if (v == WALL) {
 					threadTime = 0LL;
-					globalTime = getInt(buffer);
+					globalTime = buffer->getInt();
 					recordSize -= 4;
 				}
 				else if (v == DUAL) {
-					threadTime = getInt(buffer);
-					globalTime = getInt(buffer);
+					threadTime = buffer->getInt();
+					globalTime = buffer->getInt();
 					recordSize -= 8;
 				} if (((v == THREAD_CPU) || ((v != WALL) && (v != DUAL) && (v != THREAD_CPU)))) {
-					threadTime = getInt(buffer);
+					threadTime = buffer->getInt();
 					globalTime = 0LL;
 					recordSize -= 4;
 				}
 
-				buffer.seekg(recordSize, std::ios::cur);
+				offset += recordSize;
 			}
-			catch (...) {
+			catch (BoundaryException& e) {
+				e.getDescription();
 				break;
 			}
 
@@ -222,7 +219,7 @@ namespace Android {
 						auto top = threadData->top(&mCallList);
 						if (top->getMethodData() == mContextSwitch) {
 							threadData->exit(mContextSwitch, trace, &mCallList);
-							auto beforeSwitch = elapsedThreadTime / int64_t(2LL);
+							auto beforeSwitch = elapsedThreadTime / 2;
 							top->mThreadStartTime += beforeSwitch;
 							top->mThreadEndTime = top->mThreadStartTime;
 						}
@@ -269,6 +266,7 @@ namespace Android {
 				}
 				break;
 			default:
+				delete buffer;
 				throw "Unrecognized method action: ";
 			}
 		}
@@ -278,7 +276,7 @@ namespace Android {
 			threadData->endTrace(trace, &mCallList);
 		}
 
-		int64_t globalTime;
+		uint32_t globalTime;
 		if (!haveGlobalClock) {
 			globalTime = 0LL;
 			prevThreadData = nullptr;
@@ -313,8 +311,8 @@ namespace Android {
 
 		for (size_t i = mCallList.size() - 1; i >= 1; i--) {
 			Call* call = mCallList.get(i);
-			int64_t realTime = call->mGlobalEndTime - call->mGlobalStartTime;
-			call->mExclusiveRealTime = std::max(realTime - call->mInclusiveRealTime, int64_t(0));
+			uint32_t realTime = call->mGlobalEndTime - call->mGlobalStartTime;
+			call->mExclusiveRealTime = std::max<uint32_t>(realTime - call->mInclusiveRealTime, 0);
 			call->mInclusiveRealTime = realTime;
 			call->finish(&mCallList);
 		}
@@ -337,6 +335,7 @@ namespace Android {
 			//dumpThreadTimes();
 			//dumpCallTimes();
 		}
+		delete buffer;
 	}
 
 	int64_t DmTraceReader::parseKeys() /* throws(IOException) */

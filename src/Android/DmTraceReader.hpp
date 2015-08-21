@@ -70,8 +70,8 @@ namespace Android {
 		//ProfileProvider* getProfileProvider();
 
 	private:
-		ByteBuffer* mapFile(String filename, int64_t offset) /* throws(IOException) */;
-		void readDataFileHeader(ByteBuffer& buffer);
+		ByteBuffer* mapFile(const char* filename, int64_t offset);
+		void readDataFileHeader(ByteBuffer* buffer);
 		void parseData(int64_t offset) /* throws(IOException) */;
 
 	public:
