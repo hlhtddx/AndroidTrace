@@ -7,19 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0111B9331B86A7CB0005A657 /* TimeLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9191B86A7CB0005A657 /* TimeLineView.cpp */; };
-		0111B9341B86A7CB0005A657 /* TraceUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B91B1B86A7CB0005A657 /* TraceUnits.cpp */; };
-		0111B9351B86A7CB0005A657 /* Call.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B91D1B86A7CB0005A657 /* Call.cpp */; };
-		0111B9361B86A7CB0005A657 /* ColorController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B91F1B86A7CB0005A657 /* ColorController.cpp */; };
-		0111B9371B86A7CB0005A657 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9211B86A7CB0005A657 /* Common.cpp */; };
-		0111B9381B86A7CB0005A657 /* DmTraceReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9231B86A7CB0005A657 /* DmTraceReader.cpp */; };
-		0111B9391B86A7CB0005A657 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9251B86A7CB0005A657 /* main.cpp */; };
-		0111B93A1B86A7CB0005A657 /* MethodData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9261B86A7CB0005A657 /* MethodData.cpp */; };
-		0111B93B1B86A7CB0005A657 /* ProfileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9281B86A7CB0005A657 /* ProfileData.cpp */; };
-		0111B93C1B86A7CB0005A657 /* ProfileNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B92A1B86A7CB0005A657 /* ProfileNode.cpp */; };
-		0111B93D1B86A7CB0005A657 /* ProfileSelf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B92C1B86A7CB0005A657 /* ProfileSelf.cpp */; };
-		0111B93E1B86A7CB0005A657 /* ThreadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B92E1B86A7CB0005A657 /* ThreadData.cpp */; };
-		0111B93F1B86A7CB0005A657 /* TimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9301B86A7CB0005A657 /* TimeBase.cpp */; };
+		0111B98B1B86B2EB0005A657 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98A1B86B2EB0005A657 /* main.cpp */; };
+		0111B9A51B86B3BB0005A657 /* Call.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98C1B86B3BB0005A657 /* Call.cpp */; };
+		0111B9A61B86B3BB0005A657 /* ColorController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98E1B86B3BB0005A657 /* ColorController.cpp */; };
+		0111B9A71B86B3BB0005A657 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9901B86B3BB0005A657 /* Common.cpp */; };
+		0111B9A81B86B3BB0005A657 /* DmTraceReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9921B86B3BB0005A657 /* DmTraceReader.cpp */; };
+		0111B9A91B86B3BB0005A657 /* MethodData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9941B86B3BB0005A657 /* MethodData.cpp */; };
+		0111B9AA1B86B3BB0005A657 /* ProfileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9961B86B3BB0005A657 /* ProfileData.cpp */; };
+		0111B9AB1B86B3BB0005A657 /* ProfileNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9981B86B3BB0005A657 /* ProfileNode.cpp */; };
+		0111B9AC1B86B3BB0005A657 /* ProfileSelf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99A1B86B3BB0005A657 /* ProfileSelf.cpp */; };
+		0111B9AD1B86B3BB0005A657 /* ThreadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99C1B86B3BB0005A657 /* ThreadData.cpp */; };
+		0111B9AE1B86B3BB0005A657 /* TimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99E1B86B3BB0005A657 /* TimeBase.cpp */; };
+		0111B9AF1B86B3BB0005A657 /* TimeLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9A01B86B3BB0005A657 /* TimeLineView.cpp */; };
+		0111B9B01B86B3BB0005A657 /* TraceUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,32 +35,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0111B9191B86A7CB0005A657 /* TimeLineView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeLineView.cpp; path = Android/TimeLineView.cpp; sourceTree = SOURCE_ROOT; };
-		0111B91A1B86A7CB0005A657 /* TimeLineView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TimeLineView.hpp; path = Android/TimeLineView.hpp; sourceTree = SOURCE_ROOT; };
-		0111B91B1B86A7CB0005A657 /* TraceUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TraceUnits.cpp; path = Android/TraceUnits.cpp; sourceTree = SOURCE_ROOT; };
-		0111B91C1B86A7CB0005A657 /* TraceUnits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TraceUnits.hpp; path = Android/TraceUnits.hpp; sourceTree = SOURCE_ROOT; };
-		0111B91D1B86A7CB0005A657 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Call.cpp; path = Android/Call.cpp; sourceTree = SOURCE_ROOT; };
-		0111B91E1B86A7CB0005A657 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Call.hpp; path = Android/Call.hpp; sourceTree = SOURCE_ROOT; };
-		0111B91F1B86A7CB0005A657 /* ColorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ColorController.cpp; path = Android/ColorController.cpp; sourceTree = SOURCE_ROOT; };
-		0111B9201B86A7CB0005A657 /* ColorController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ColorController.hpp; path = Android/ColorController.hpp; sourceTree = SOURCE_ROOT; };
-		0111B9211B86A7CB0005A657 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Common.cpp; path = Android/Common.cpp; sourceTree = SOURCE_ROOT; };
-		0111B9221B86A7CB0005A657 /* Common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Common.hpp; path = Android/Common.hpp; sourceTree = SOURCE_ROOT; };
-		0111B9231B86A7CB0005A657 /* DmTraceReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DmTraceReader.cpp; path = Android/DmTraceReader.cpp; sourceTree = SOURCE_ROOT; };
-		0111B9241B86A7CB0005A657 /* DmTraceReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DmTraceReader.hpp; path = Android/DmTraceReader.hpp; sourceTree = SOURCE_ROOT; };
-		0111B9251B86A7CB0005A657 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Android/main.cpp; sourceTree = SOURCE_ROOT; };
-		0111B9261B86A7CB0005A657 /* MethodData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MethodData.cpp; path = Android/MethodData.cpp; sourceTree = SOURCE_ROOT; };
-		0111B9271B86A7CB0005A657 /* MethodData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MethodData.hpp; path = Android/MethodData.hpp; sourceTree = SOURCE_ROOT; };
-		0111B9281B86A7CB0005A657 /* ProfileData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProfileData.cpp; path = Android/ProfileData.cpp; sourceTree = SOURCE_ROOT; };
-		0111B9291B86A7CB0005A657 /* ProfileData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ProfileData.hpp; path = Android/ProfileData.hpp; sourceTree = SOURCE_ROOT; };
-		0111B92A1B86A7CB0005A657 /* ProfileNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProfileNode.cpp; path = Android/ProfileNode.cpp; sourceTree = SOURCE_ROOT; };
-		0111B92B1B86A7CB0005A657 /* ProfileNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ProfileNode.hpp; path = Android/ProfileNode.hpp; sourceTree = SOURCE_ROOT; };
-		0111B92C1B86A7CB0005A657 /* ProfileSelf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProfileSelf.cpp; path = Android/ProfileSelf.cpp; sourceTree = SOURCE_ROOT; };
-		0111B92D1B86A7CB0005A657 /* ProfileSelf.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ProfileSelf.hpp; path = Android/ProfileSelf.hpp; sourceTree = SOURCE_ROOT; };
-		0111B92E1B86A7CB0005A657 /* ThreadData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThreadData.cpp; path = Android/ThreadData.cpp; sourceTree = SOURCE_ROOT; };
-		0111B92F1B86A7CB0005A657 /* ThreadData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ThreadData.hpp; path = Android/ThreadData.hpp; sourceTree = SOURCE_ROOT; };
-		0111B9301B86A7CB0005A657 /* TimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeBase.cpp; path = Android/TimeBase.cpp; sourceTree = SOURCE_ROOT; };
-		0111B9311B86A7CB0005A657 /* TimeBase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TimeBase.hpp; path = Android/TimeBase.hpp; sourceTree = SOURCE_ROOT; };
-		0111B9321B86A7CB0005A657 /* TraceAction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TraceAction.hpp; path = Android/TraceAction.hpp; sourceTree = SOURCE_ROOT; };
+		0111B98A1B86B2EB0005A657 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../main.cpp; sourceTree = "<group>"; };
+		0111B98C1B86B3BB0005A657 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Call.cpp; sourceTree = "<group>"; };
+		0111B98D1B86B3BB0005A657 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Call.hpp; sourceTree = "<group>"; };
+		0111B98E1B86B3BB0005A657 /* ColorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ColorController.cpp; sourceTree = "<group>"; };
+		0111B98F1B86B3BB0005A657 /* ColorController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ColorController.hpp; sourceTree = "<group>"; };
+		0111B9901B86B3BB0005A657 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
+		0111B9911B86B3BB0005A657 /* Common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Common.hpp; sourceTree = "<group>"; };
+		0111B9921B86B3BB0005A657 /* DmTraceReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DmTraceReader.cpp; sourceTree = "<group>"; };
+		0111B9931B86B3BB0005A657 /* DmTraceReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DmTraceReader.hpp; sourceTree = "<group>"; };
+		0111B9941B86B3BB0005A657 /* MethodData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MethodData.cpp; sourceTree = "<group>"; };
+		0111B9951B86B3BB0005A657 /* MethodData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MethodData.hpp; sourceTree = "<group>"; };
+		0111B9961B86B3BB0005A657 /* ProfileData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfileData.cpp; sourceTree = "<group>"; };
+		0111B9971B86B3BB0005A657 /* ProfileData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProfileData.hpp; sourceTree = "<group>"; };
+		0111B9981B86B3BB0005A657 /* ProfileNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfileNode.cpp; sourceTree = "<group>"; };
+		0111B9991B86B3BB0005A657 /* ProfileNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProfileNode.hpp; sourceTree = "<group>"; };
+		0111B99A1B86B3BB0005A657 /* ProfileSelf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfileSelf.cpp; sourceTree = "<group>"; };
+		0111B99B1B86B3BB0005A657 /* ProfileSelf.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProfileSelf.hpp; sourceTree = "<group>"; };
+		0111B99C1B86B3BB0005A657 /* ThreadData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadData.cpp; sourceTree = "<group>"; };
+		0111B99D1B86B3BB0005A657 /* ThreadData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ThreadData.hpp; sourceTree = "<group>"; };
+		0111B99E1B86B3BB0005A657 /* TimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeBase.cpp; sourceTree = "<group>"; };
+		0111B99F1B86B3BB0005A657 /* TimeBase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TimeBase.hpp; sourceTree = "<group>"; };
+		0111B9A01B86B3BB0005A657 /* TimeLineView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeLineView.cpp; sourceTree = "<group>"; };
+		0111B9A11B86B3BB0005A657 /* TimeLineView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TimeLineView.hpp; sourceTree = "<group>"; };
+		0111B9A21B86B3BB0005A657 /* TraceAction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TraceAction.hpp; sourceTree = "<group>"; };
+		0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TraceUnits.cpp; sourceTree = "<group>"; };
+		0111B9A41B86B3BB0005A657 /* TraceUnits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TraceUnits.hpp; sourceTree = "<group>"; };
 		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -94,36 +94,36 @@
 		01BA98471B80C33500BA696A /* Android */ = {
 			isa = PBXGroup;
 			children = (
-				0111B9191B86A7CB0005A657 /* TimeLineView.cpp */,
-				0111B91A1B86A7CB0005A657 /* TimeLineView.hpp */,
-				0111B91B1B86A7CB0005A657 /* TraceUnits.cpp */,
-				0111B91C1B86A7CB0005A657 /* TraceUnits.hpp */,
-				0111B91D1B86A7CB0005A657 /* Call.cpp */,
-				0111B91E1B86A7CB0005A657 /* Call.hpp */,
-				0111B91F1B86A7CB0005A657 /* ColorController.cpp */,
-				0111B9201B86A7CB0005A657 /* ColorController.hpp */,
-				0111B9211B86A7CB0005A657 /* Common.cpp */,
-				0111B9221B86A7CB0005A657 /* Common.hpp */,
-				0111B9231B86A7CB0005A657 /* DmTraceReader.cpp */,
-				0111B9241B86A7CB0005A657 /* DmTraceReader.hpp */,
-				0111B9251B86A7CB0005A657 /* main.cpp */,
-				0111B9261B86A7CB0005A657 /* MethodData.cpp */,
-				0111B9271B86A7CB0005A657 /* MethodData.hpp */,
-				0111B9281B86A7CB0005A657 /* ProfileData.cpp */,
-				0111B9291B86A7CB0005A657 /* ProfileData.hpp */,
-				0111B92A1B86A7CB0005A657 /* ProfileNode.cpp */,
-				0111B92B1B86A7CB0005A657 /* ProfileNode.hpp */,
-				0111B92C1B86A7CB0005A657 /* ProfileSelf.cpp */,
-				0111B92D1B86A7CB0005A657 /* ProfileSelf.hpp */,
-				0111B92E1B86A7CB0005A657 /* ThreadData.cpp */,
-				0111B92F1B86A7CB0005A657 /* ThreadData.hpp */,
-				0111B9301B86A7CB0005A657 /* TimeBase.cpp */,
-				0111B9311B86A7CB0005A657 /* TimeBase.hpp */,
-				0111B9321B86A7CB0005A657 /* TraceAction.hpp */,
+				0111B98C1B86B3BB0005A657 /* Call.cpp */,
+				0111B98D1B86B3BB0005A657 /* Call.hpp */,
+				0111B98E1B86B3BB0005A657 /* ColorController.cpp */,
+				0111B98F1B86B3BB0005A657 /* ColorController.hpp */,
+				0111B9901B86B3BB0005A657 /* Common.cpp */,
+				0111B9911B86B3BB0005A657 /* Common.hpp */,
+				0111B9921B86B3BB0005A657 /* DmTraceReader.cpp */,
+				0111B9931B86B3BB0005A657 /* DmTraceReader.hpp */,
+				0111B9941B86B3BB0005A657 /* MethodData.cpp */,
+				0111B9951B86B3BB0005A657 /* MethodData.hpp */,
+				0111B9961B86B3BB0005A657 /* ProfileData.cpp */,
+				0111B9971B86B3BB0005A657 /* ProfileData.hpp */,
+				0111B9981B86B3BB0005A657 /* ProfileNode.cpp */,
+				0111B9991B86B3BB0005A657 /* ProfileNode.hpp */,
+				0111B99A1B86B3BB0005A657 /* ProfileSelf.cpp */,
+				0111B99B1B86B3BB0005A657 /* ProfileSelf.hpp */,
+				0111B99C1B86B3BB0005A657 /* ThreadData.cpp */,
+				0111B99D1B86B3BB0005A657 /* ThreadData.hpp */,
+				0111B99E1B86B3BB0005A657 /* TimeBase.cpp */,
+				0111B99F1B86B3BB0005A657 /* TimeBase.hpp */,
+				0111B9A01B86B3BB0005A657 /* TimeLineView.cpp */,
+				0111B9A11B86B3BB0005A657 /* TimeLineView.hpp */,
+				0111B9A21B86B3BB0005A657 /* TraceAction.hpp */,
+				0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */,
+				0111B9A41B86B3BB0005A657 /* TraceUnits.hpp */,
+				0111B98A1B86B2EB0005A657 /* main.cpp */,
 			);
 			name = Android;
-			path = AndroidTrace;
-			sourceTree = "<group>";
+			path = ../src/Android;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -181,19 +181,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0111B9351B86A7CB0005A657 /* Call.cpp in Sources */,
-				0111B93C1B86A7CB0005A657 /* ProfileNode.cpp in Sources */,
-				0111B9381B86A7CB0005A657 /* DmTraceReader.cpp in Sources */,
-				0111B93A1B86A7CB0005A657 /* MethodData.cpp in Sources */,
-				0111B9331B86A7CB0005A657 /* TimeLineView.cpp in Sources */,
-				0111B93E1B86A7CB0005A657 /* ThreadData.cpp in Sources */,
-				0111B9341B86A7CB0005A657 /* TraceUnits.cpp in Sources */,
-				0111B93F1B86A7CB0005A657 /* TimeBase.cpp in Sources */,
-				0111B9391B86A7CB0005A657 /* main.cpp in Sources */,
-				0111B93B1B86A7CB0005A657 /* ProfileData.cpp in Sources */,
-				0111B9371B86A7CB0005A657 /* Common.cpp in Sources */,
-				0111B93D1B86A7CB0005A657 /* ProfileSelf.cpp in Sources */,
-				0111B9361B86A7CB0005A657 /* ColorController.cpp in Sources */,
+				0111B9A71B86B3BB0005A657 /* Common.cpp in Sources */,
+				0111B9AD1B86B3BB0005A657 /* ThreadData.cpp in Sources */,
+				0111B9A61B86B3BB0005A657 /* ColorController.cpp in Sources */,
+				0111B9AF1B86B3BB0005A657 /* TimeLineView.cpp in Sources */,
+				0111B9A91B86B3BB0005A657 /* MethodData.cpp in Sources */,
+				0111B9AE1B86B3BB0005A657 /* TimeBase.cpp in Sources */,
+				0111B9AA1B86B3BB0005A657 /* ProfileData.cpp in Sources */,
+				0111B9B01B86B3BB0005A657 /* TraceUnits.cpp in Sources */,
+				0111B98B1B86B2EB0005A657 /* main.cpp in Sources */,
+				0111B9A81B86B3BB0005A657 /* DmTraceReader.cpp in Sources */,
+				0111B9A51B86B3BB0005A657 /* Call.cpp in Sources */,
+				0111B9AC1B86B3BB0005A657 /* ProfileSelf.cpp in Sources */,
+				0111B9AB1B86B3BB0005A657 /* ProfileNode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
