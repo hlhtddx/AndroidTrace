@@ -1,0 +1,318 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0111B9331B86A7CB0005A657 /* TimeLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9191B86A7CB0005A657 /* TimeLineView.cpp */; };
+		0111B9341B86A7CB0005A657 /* TraceUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B91B1B86A7CB0005A657 /* TraceUnits.cpp */; };
+		0111B9351B86A7CB0005A657 /* Call.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B91D1B86A7CB0005A657 /* Call.cpp */; };
+		0111B9361B86A7CB0005A657 /* ColorController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B91F1B86A7CB0005A657 /* ColorController.cpp */; };
+		0111B9371B86A7CB0005A657 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9211B86A7CB0005A657 /* Common.cpp */; };
+		0111B9381B86A7CB0005A657 /* DmTraceReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9231B86A7CB0005A657 /* DmTraceReader.cpp */; };
+		0111B9391B86A7CB0005A657 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9251B86A7CB0005A657 /* main.cpp */; };
+		0111B93A1B86A7CB0005A657 /* MethodData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9261B86A7CB0005A657 /* MethodData.cpp */; };
+		0111B93B1B86A7CB0005A657 /* ProfileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9281B86A7CB0005A657 /* ProfileData.cpp */; };
+		0111B93C1B86A7CB0005A657 /* ProfileNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B92A1B86A7CB0005A657 /* ProfileNode.cpp */; };
+		0111B93D1B86A7CB0005A657 /* ProfileSelf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B92C1B86A7CB0005A657 /* ProfileSelf.cpp */; };
+		0111B93E1B86A7CB0005A657 /* ThreadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B92E1B86A7CB0005A657 /* ThreadData.cpp */; };
+		0111B93F1B86A7CB0005A657 /* TimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9301B86A7CB0005A657 /* TimeBase.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		01BA98431B80C33500BA696A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		0111B9191B86A7CB0005A657 /* TimeLineView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeLineView.cpp; path = Android/TimeLineView.cpp; sourceTree = SOURCE_ROOT; };
+		0111B91A1B86A7CB0005A657 /* TimeLineView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TimeLineView.hpp; path = Android/TimeLineView.hpp; sourceTree = SOURCE_ROOT; };
+		0111B91B1B86A7CB0005A657 /* TraceUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TraceUnits.cpp; path = Android/TraceUnits.cpp; sourceTree = SOURCE_ROOT; };
+		0111B91C1B86A7CB0005A657 /* TraceUnits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TraceUnits.hpp; path = Android/TraceUnits.hpp; sourceTree = SOURCE_ROOT; };
+		0111B91D1B86A7CB0005A657 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Call.cpp; path = Android/Call.cpp; sourceTree = SOURCE_ROOT; };
+		0111B91E1B86A7CB0005A657 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Call.hpp; path = Android/Call.hpp; sourceTree = SOURCE_ROOT; };
+		0111B91F1B86A7CB0005A657 /* ColorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ColorController.cpp; path = Android/ColorController.cpp; sourceTree = SOURCE_ROOT; };
+		0111B9201B86A7CB0005A657 /* ColorController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ColorController.hpp; path = Android/ColorController.hpp; sourceTree = SOURCE_ROOT; };
+		0111B9211B86A7CB0005A657 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Common.cpp; path = Android/Common.cpp; sourceTree = SOURCE_ROOT; };
+		0111B9221B86A7CB0005A657 /* Common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = Common.hpp; path = Android/Common.hpp; sourceTree = SOURCE_ROOT; };
+		0111B9231B86A7CB0005A657 /* DmTraceReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DmTraceReader.cpp; path = Android/DmTraceReader.cpp; sourceTree = SOURCE_ROOT; };
+		0111B9241B86A7CB0005A657 /* DmTraceReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DmTraceReader.hpp; path = Android/DmTraceReader.hpp; sourceTree = SOURCE_ROOT; };
+		0111B9251B86A7CB0005A657 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = Android/main.cpp; sourceTree = SOURCE_ROOT; };
+		0111B9261B86A7CB0005A657 /* MethodData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MethodData.cpp; path = Android/MethodData.cpp; sourceTree = SOURCE_ROOT; };
+		0111B9271B86A7CB0005A657 /* MethodData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = MethodData.hpp; path = Android/MethodData.hpp; sourceTree = SOURCE_ROOT; };
+		0111B9281B86A7CB0005A657 /* ProfileData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProfileData.cpp; path = Android/ProfileData.cpp; sourceTree = SOURCE_ROOT; };
+		0111B9291B86A7CB0005A657 /* ProfileData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ProfileData.hpp; path = Android/ProfileData.hpp; sourceTree = SOURCE_ROOT; };
+		0111B92A1B86A7CB0005A657 /* ProfileNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProfileNode.cpp; path = Android/ProfileNode.cpp; sourceTree = SOURCE_ROOT; };
+		0111B92B1B86A7CB0005A657 /* ProfileNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ProfileNode.hpp; path = Android/ProfileNode.hpp; sourceTree = SOURCE_ROOT; };
+		0111B92C1B86A7CB0005A657 /* ProfileSelf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProfileSelf.cpp; path = Android/ProfileSelf.cpp; sourceTree = SOURCE_ROOT; };
+		0111B92D1B86A7CB0005A657 /* ProfileSelf.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ProfileSelf.hpp; path = Android/ProfileSelf.hpp; sourceTree = SOURCE_ROOT; };
+		0111B92E1B86A7CB0005A657 /* ThreadData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ThreadData.cpp; path = Android/ThreadData.cpp; sourceTree = SOURCE_ROOT; };
+		0111B92F1B86A7CB0005A657 /* ThreadData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = ThreadData.hpp; path = Android/ThreadData.hpp; sourceTree = SOURCE_ROOT; };
+		0111B9301B86A7CB0005A657 /* TimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TimeBase.cpp; path = Android/TimeBase.cpp; sourceTree = SOURCE_ROOT; };
+		0111B9311B86A7CB0005A657 /* TimeBase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TimeBase.hpp; path = Android/TimeBase.hpp; sourceTree = SOURCE_ROOT; };
+		0111B9321B86A7CB0005A657 /* TraceAction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = TraceAction.hpp; path = Android/TraceAction.hpp; sourceTree = SOURCE_ROOT; };
+		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		01BA98421B80C33500BA696A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		01BA983C1B80C33500BA696A = {
+			isa = PBXGroup;
+			children = (
+				01BA98471B80C33500BA696A /* Android */,
+				01BA98461B80C33500BA696A /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		01BA98461B80C33500BA696A /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				01BA98451B80C33500BA696A /* AndroidTrace */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		01BA98471B80C33500BA696A /* Android */ = {
+			isa = PBXGroup;
+			children = (
+				0111B9191B86A7CB0005A657 /* TimeLineView.cpp */,
+				0111B91A1B86A7CB0005A657 /* TimeLineView.hpp */,
+				0111B91B1B86A7CB0005A657 /* TraceUnits.cpp */,
+				0111B91C1B86A7CB0005A657 /* TraceUnits.hpp */,
+				0111B91D1B86A7CB0005A657 /* Call.cpp */,
+				0111B91E1B86A7CB0005A657 /* Call.hpp */,
+				0111B91F1B86A7CB0005A657 /* ColorController.cpp */,
+				0111B9201B86A7CB0005A657 /* ColorController.hpp */,
+				0111B9211B86A7CB0005A657 /* Common.cpp */,
+				0111B9221B86A7CB0005A657 /* Common.hpp */,
+				0111B9231B86A7CB0005A657 /* DmTraceReader.cpp */,
+				0111B9241B86A7CB0005A657 /* DmTraceReader.hpp */,
+				0111B9251B86A7CB0005A657 /* main.cpp */,
+				0111B9261B86A7CB0005A657 /* MethodData.cpp */,
+				0111B9271B86A7CB0005A657 /* MethodData.hpp */,
+				0111B9281B86A7CB0005A657 /* ProfileData.cpp */,
+				0111B9291B86A7CB0005A657 /* ProfileData.hpp */,
+				0111B92A1B86A7CB0005A657 /* ProfileNode.cpp */,
+				0111B92B1B86A7CB0005A657 /* ProfileNode.hpp */,
+				0111B92C1B86A7CB0005A657 /* ProfileSelf.cpp */,
+				0111B92D1B86A7CB0005A657 /* ProfileSelf.hpp */,
+				0111B92E1B86A7CB0005A657 /* ThreadData.cpp */,
+				0111B92F1B86A7CB0005A657 /* ThreadData.hpp */,
+				0111B9301B86A7CB0005A657 /* TimeBase.cpp */,
+				0111B9311B86A7CB0005A657 /* TimeBase.hpp */,
+				0111B9321B86A7CB0005A657 /* TraceAction.hpp */,
+			);
+			name = Android;
+			path = AndroidTrace;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		01BA98441B80C33500BA696A /* AndroidTrace */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01BA984C1B80C33500BA696A /* Build configuration list for PBXNativeTarget "AndroidTrace" */;
+			buildPhases = (
+				01BA98411B80C33500BA696A /* Sources */,
+				01BA98421B80C33500BA696A /* Frameworks */,
+				01BA98431B80C33500BA696A /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AndroidTrace;
+			productName = AndroidTrace;
+			productReference = 01BA98451B80C33500BA696A /* AndroidTrace */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		01BA983D1B80C33500BA696A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "Frank Zhang";
+				TargetAttributes = {
+					01BA98441B80C33500BA696A = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 01BA98401B80C33500BA696A /* Build configuration list for PBXProject "AndroidTrace" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 01BA983C1B80C33500BA696A;
+			productRefGroup = 01BA98461B80C33500BA696A /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				01BA98441B80C33500BA696A /* AndroidTrace */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		01BA98411B80C33500BA696A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				0111B9351B86A7CB0005A657 /* Call.cpp in Sources */,
+				0111B93C1B86A7CB0005A657 /* ProfileNode.cpp in Sources */,
+				0111B9381B86A7CB0005A657 /* DmTraceReader.cpp in Sources */,
+				0111B93A1B86A7CB0005A657 /* MethodData.cpp in Sources */,
+				0111B9331B86A7CB0005A657 /* TimeLineView.cpp in Sources */,
+				0111B93E1B86A7CB0005A657 /* ThreadData.cpp in Sources */,
+				0111B9341B86A7CB0005A657 /* TraceUnits.cpp in Sources */,
+				0111B93F1B86A7CB0005A657 /* TimeBase.cpp in Sources */,
+				0111B9391B86A7CB0005A657 /* main.cpp in Sources */,
+				0111B93B1B86A7CB0005A657 /* ProfileData.cpp in Sources */,
+				0111B9371B86A7CB0005A657 /* Common.cpp in Sources */,
+				0111B93D1B86A7CB0005A657 /* ProfileSelf.cpp in Sources */,
+				0111B9361B86A7CB0005A657 /* ColorController.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		01BA984A1B80C33500BA696A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		01BA984B1B80C33500BA696A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		01BA984D1B80C33500BA696A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		01BA984E1B80C33500BA696A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		01BA98401B80C33500BA696A /* Build configuration list for PBXProject "AndroidTrace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01BA984A1B80C33500BA696A /* Debug */,
+				01BA984B1B80C33500BA696A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		01BA984C1B80C33500BA696A /* Build configuration list for PBXNativeTarget "AndroidTrace" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01BA984D1B80C33500BA696A /* Debug */,
+				01BA984E1B80C33500BA696A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 01BA983D1B80C33500BA696A /* Project object */;
+}
