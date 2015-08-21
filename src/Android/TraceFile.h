@@ -18,7 +18,7 @@
 #include <memory>
 #include <fstream>
 #include <string>
-#include <hash_map>
+#include <map>
 #include <vector>
 #include <set>
 
@@ -79,11 +79,11 @@ namespace Android {
 		}
 	};
 
-	typedef std::hash_map<unsigned int, ThreadEntry*> ThreadMap;
+	typedef std::map<unsigned int, ThreadEntry*> ThreadMap;
 
 	class MethodEntry;
 	typedef std::vector<MethodEntry*> MethodList;
-	typedef std::hash_map<uint64_t, MethodEntry*> MethodMap;
+	typedef std::map<uint64_t, MethodEntry*> MethodMap;
 
 	class TimedMethod {
 	public:
