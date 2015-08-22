@@ -9,19 +9,19 @@ namespace Android {
 	{
 	}
 
-	MethodData::MethodData(id_type id, String className)
+	MethodData::MethodData(id_type id, const char* className)
 		: MethodData(id, className, "", "", "", -1)
 	{
 	}
 
-	MethodData::MethodData(id_type id, String className, String methodName, String signature, String pathname, int lineNumber)
+	MethodData::MethodData(id_type id, const char*  className, const char*  methodName, const char*  signature, const char*  pathname, int lineNumber)
 		: mRank(-1)
+		, mClassName(className)
+		, mMethodName(methodName)
+		, mSignature(signature)
+		, mPathname(pathname)
 	{
 		mId = id;
-		mClassName = className;
-		mMethodName = methodName;
-		mSignature = signature;
-		mPathname = pathname;
 		mLineNumber = -1;
 		mParents = NULL;
 		mChildren = NULL;
@@ -256,12 +256,12 @@ namespace Android {
 		mProfileName = ss.str();
 	}
 
-	const char* MethodData::getCalls(String& outstring)
+	const char* MethodData::getCalls(String& outString)
 	{
 		std::stringstream ss;
 		ss << mNumCalls[0] << "+" << mNumCalls[1];
-		outstring = ss.str();
-		return outstring.c_str();
+		outString = ss.str();
+		return outString.c_str();
 	}
 
 	int MethodData::getTotalCalls()
@@ -333,14 +333,14 @@ namespace Android {
 	}
 #endif
 
-	void MethodData::setPathname(const String &pathname)
+	void MethodData::setPathname(const char* pathname)
 	{
 		mPathname = pathname;
 	}
 
-	const String & MethodData::getPathname()
+	const char* MethodData::getPathname()
 	{
-		return mPathname;
+		return mPathname.c_str();
 	}
 
 	void MethodData::setLineNumber(int lineNumber)

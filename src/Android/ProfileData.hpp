@@ -26,7 +26,7 @@ namespace Android {
 		virtual uint32_t getElapsedInclusiveCpuTime() const;
 		virtual uint32_t getElapsedInclusiveRealTime() const;
 		void setNumCalls(int numCalls);
-		void getNumCalls(String& out_string);
+		void getNumCalls(String& outString);
 		bool isParent();
 		MethodData* getContext();
 

@@ -165,7 +165,7 @@ namespace Android {
 			if (mMethodMap.find(methodId) == mMethodMap.end()) {
 				std::stringstream ss;
 				ss << "0x" << std::ios::hex << methodId;
-				methodData = new MethodData(methodId, ss.str());
+				methodData = new MethodData(methodId, ss.str().c_str());
 				mMethodMap.add(methodId, methodData);
 			}
 			else {
@@ -176,7 +176,7 @@ namespace Android {
 			if (mThreadMap.find(threadId) == mThreadMap.end()) {
 				std::stringstream ss;
 				ss << "[" << std::ios::dec << threadId << "]";
-				threadData = new ThreadData(threadId, ss.str(), mTopLevel, &mCallList);
+				threadData = new ThreadData(threadId, ss.str().c_str(), mTopLevel, &mCallList);
 				mThreadMap.add(threadId, threadData);
 			}
 			else {
@@ -410,7 +410,7 @@ namespace Android {
 		String idStr, name;
 		if (readToken(str, idStr, '\t') && readToken(str, name, '\n')) {
 			int id = atoi(idStr.c_str());
-			mThreadMap.add(id, new ThreadData(id, name, mTopLevel, &mCallList));
+			mThreadMap.add(id, new ThreadData(id, name.c_str(), mTopLevel, &mCallList));
 		}
 	}
 
@@ -440,7 +440,7 @@ namespace Android {
 		if (readToken(str, methodName, '\t') && readToken(str, signature, '\t')) {
 			if (readToken(str, pathname, '\t') && readToken(str, lineStr, '\t')) {
 				lineNumber = atoi(lineStr.c_str());
-				pathname = constructPathname(className, pathname);
+				constructPathname(className, pathname);
 			}
 			else {
 				if (signature.front() != '(') {
@@ -449,16 +449,15 @@ namespace Android {
 				}
 			}
 		}
-		mMethodMap.add(id, new MethodData(id, className, methodName, signature, pathname, lineNumber));
+		mMethodMap.add(id, new MethodData(id, className.c_str(), methodName.c_str(), signature.c_str(), pathname.c_str(), lineNumber));
 	}
 
-	String DmTraceReader::constructPathname(const String& className, const String& pathname)
+	void DmTraceReader::constructPathname(String& className, String& pathname)
 	{
 		size_t index = className.find('/');
 		if ((index != className.npos) && (index < className.size() - 1) && (pathname.compare(className.size() - 6, 5, ".java"))) {
-			return className.substr(0, index + 1) + pathname;
+			pathname = className.substr(0, index + 1) + pathname;
 		}
-		return pathname;
 	}
 
 	void DmTraceReader::analyzeData()
@@ -536,13 +535,13 @@ namespace Android {
 		printf("Excl Cpu\tIncl Cpu\tExcl Real\tIncl Real\tCalls\tMethod\n");
 		for (auto _i = mSortedMethods->begin(); _i != mSortedMethods->end(); _i++) {
 			MethodData* md = *_i;
-			String callstr;
+			String calls;
 			printf("%9d\t%9d\t%9d\t%9d\t%9s\t%s\n"
 				, md->getElapsedExclusiveCpuTime()
 				, md->getElapsedInclusiveCpuTime()
 				, md->getElapsedExclusiveRealTime()
 				, md->getElapsedInclusiveRealTime()
-				, md->getCalls(callstr)
+				, md->getCalls(calls)
 				, md->getProfileName());
 		}
 	}

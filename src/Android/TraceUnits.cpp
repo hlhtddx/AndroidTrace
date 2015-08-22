@@ -19,15 +19,15 @@ namespace Android {
 		return value * mScale;
 	}
 
-	const char* TraceUnits::valueOf(uint32_t value, String& out_string)
+	const char* TraceUnits::valueOf(uint32_t value, String& outString)
 	{
-		return valueOf((double)value, out_string);
+		return valueOf((double)value, outString);
 	}
 
-	const char* TraceUnits::valueOf(double value, String& out_string)
+	const char* TraceUnits::valueOf(double value, String& outString)
 	{
 		double scaled = value * mScale;
-		std::stringstream outs(out_string);
+		std::stringstream outs(outString);
 
 		outs << std::setiosflags(std::ios::fixed);
 
@@ -42,22 +42,22 @@ namespace Android {
 			outs.precision(3);
 		}
 		outs << value;
-		return out_string.c_str();
+		return outString.c_str();
 	}
 
-	const char* TraceUnits::labelledString(double value, String& out_string)
+	const char* TraceUnits::labelledString(double value, String& outString)
 	{
 		const char* units = label();
 		String num;
 		valueOf(value, num);
-		std::stringstream outs(out_string);
+		std::stringstream outs(outString);
 		outs << units << ": " << num;
-		return out_string.c_str();
+		return outString.c_str();
 	}
 
-	const char* TraceUnits::labelledString(uint32_t value, String& out_string)
+	const char* TraceUnits::labelledString(uint32_t value, String& outString)
 	{
-		return labelledString(static_cast<double>(value), out_string);
+		return labelledString(static_cast<double>(value), outString);
 	}
 
 	const char* TraceUnits::label()

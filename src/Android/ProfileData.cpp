@@ -62,14 +62,14 @@ namespace Android {
 		mNumCalls = numCalls;
 	}
 
-	void ProfileData::getNumCalls(String& out_string)
+	void ProfileData::getNumCalls(String& outString)
 	{
 		//    int totalCalls;
 		//    if(mElementIsParent) {
 		//        totalCalls = mContext->getTotalCalls();
 		//    } else
 		//        totalCalls = mElement->getTotalCalls();
-		//    out_string = "%d/%d";
+		//    outString = "%d/%d";
 	}
 
 	bool ProfileData::isParent()

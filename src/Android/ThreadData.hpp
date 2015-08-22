@@ -92,7 +92,7 @@ namespace Android {
 			mRootCall = -1;
 		}
 
-		ThreadData(id_type id, String name, MethodData* topLevel, CallList* callList)
+		ThreadData(id_type id, const char* name, MethodData* topLevel, CallList* callList)
 		{
 			mId = id;
 			std::stringstream ss;

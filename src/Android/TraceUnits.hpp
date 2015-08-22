@@ -17,10 +17,10 @@ namespace Android {
 	public:
 		double getScaledValue(uint32_t value);
 		double getScaledValue(double value);
-		const char* valueOf(uint32_t value, String& out_string);
-		const char* valueOf(double value, String& out_string);
-		const char* labelledString(double value, String& out_string);
-		const char* labelledString(uint32_t value, String& out_string);
+		const char* valueOf(uint32_t value, String& outString);
+		const char* valueOf(double value, String& outString);
+		const char* labelledString(double value, String& outString);
+		const char* labelledString(uint32_t value, String& outString);
 		const char* label();
 		void setTimeScale(TimeScale val);
 		TimeScale getTimeScale();

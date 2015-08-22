@@ -285,6 +285,7 @@ namespace Android {
 		String blockName;
 		COLOR blockColor = 0;
 		String blockDetails;
+
 		if (mDebug) {
 			auto pixelsPerRange = mParent->getScaleInfo().getPixelsPerRange();
 			printf("dim.x %d pixels %d minVal %f, maxVal %f ppr %f rpp %f\n",
@@ -292,6 +293,7 @@ namespace Android {
 				mParent->getScaleInfo().getMinVal(), mParent->getScaleInfo().getMaxVal(),
 				pixelsPerRange, 1.0 / pixelsPerRange);
 		}
+		
 		Call* selectBlock = nullptr;
 		for (auto it = mStripList.begin(); it != mStripList.end(); it++) {
 			Strip* strip = *it;
@@ -313,7 +315,7 @@ namespace Android {
 							ss << "excl cpu " << mParent->mUnits->labelledString(block->getExclusiveCpuTime(), outString1)
 								<< ", incl cpu " << mParent->mUnits->labelledString(block->getInclusiveCpuTime(), outString2);
 							if (mParent->mHaveRealTime) {
-								String out_string;
+								String outString;
 								ss << ", excl real " << mParent->mUnits->labelledString(block->getExclusiveRealTime(), outString3)
 									<< ", incl real " << mParent->mUnits->labelledString(block->getInclusiveRealTime(), outString4);
 							}
@@ -446,32 +448,37 @@ namespace Android {
 
 	void Surface::computeStrips()
 	{
-		auto minVal = mParent->getScaleInfo().getMinVal();
-		auto maxVal = mParent->getScaleInfo().getMaxVal();
-		auto pixels = new Pixel[mParent->mNumRows];
-		for (auto ii = 0; ii < mParent->mSegments.size(); ii++) {
+		double minVal = mParent->getScaleInfo().getMinVal();
+		double maxVal = mParent->getScaleInfo().getMaxVal();
+		Pixel* pixels = new Pixel[mParent->mNumRows];
+
+		for (size_t ii = 0; ii < mParent->mSegments.size(); ii++) {
 			mParent->mCallList->get(mParent->mSegments[ii].mBlock)->clearWeight();
 		}
 
 		mStripList.clear();
 		mHighlightExclusive.clear();
 		mHighlightInclusive.clear();
+
 		MethodData* callMethod = nullptr;
+
+		RowData* callRowData = nullptr;
 		uint32_t callStart = 0;
 		uint32_t callEnd = UINT32_MAX;
-		RowData* callRowData = nullptr;
 		uint32_t prevMethodStart = UINT32_MAX;
 		uint32_t prevMethodEnd = UINT32_MAX;
 		uint32_t prevCallStart = UINT32_MAX;
 		uint32_t prevCallEnd = UINT32_MAX;
+
 		if (mParent->mHighlightCall != nullptr) {
 
 			uint32_t callPixelStart = UINT32_MAX;
 			uint32_t callPixelEnd = UINT32_MAX;
+			Call* highlightCall = mParent->mHighlightCall;
 
-			callStart = mParent->mHighlightCall->getStartTime();
-			callEnd = mParent->mHighlightCall->getEndTime();
-			callMethod = mParent->mHighlightCall->getMethodData();
+			callStart = highlightCall->getStartTime();
+			callEnd = highlightCall->getEndTime();
+			callMethod = highlightCall->getMethodData();
 
 			if (callStart >= minVal) {
 				callPixelStart = mParent->getScaleInfo().valueToPixel(callStart);
@@ -481,8 +488,8 @@ namespace Android {
 				callPixelEnd = mParent->getScaleInfo().valueToPixel(callEnd);
 			}
 
-			uint32_t threadId = mParent->mHighlightCall->getThreadId();
-			const String& threadName = mParent->mThreadLabels[threadId].c_str();
+			id_type threadId = highlightCall->getThreadId();
+			const char* threadName = mParent->mThreadLabels[threadId].c_str();
 			callRowData = mParent->mRowByName[threadName];
 			auto y1 = callRowData->mRank * 32 + 6;
 			COLOR color = callMethod->getColor();

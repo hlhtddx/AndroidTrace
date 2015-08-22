@@ -83,7 +83,7 @@ namespace Android {
 		void parseMethod(const String &line);
 
 	private:
-		String constructPathname(const String &className, const String &pathname);
+		void constructPathname(String &className, String &pathname);
 		void analyzeData();
 
 	public:

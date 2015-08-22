@@ -328,27 +328,7 @@ namespace Android {
 		int mMarkEndX;
 		const int METHOD_BLOCK_MARGIN = 10;
 
-	public:
-		//void setVbarPosition(int x);
-		//void setMarkStart(int x);
-		//void setMarkEnd(int x);
-		//void setMethodName(String name);
-		//void setMethodColor(uint32_t color);
-		//void setDetails(String details);
-
 	protected:
-		//virtual void mouseMove(Point& pt, int flags);
-		//virtual void mouseDown(Point& pt, int flags);
-		//virtual void mouseUp(Point& pt, int flags);
-		//virtual void mouseScrolled(Point& pt, int flags);
-		//virtual void mouseDoubleClick(Point& pt, int flags);
-
-		//void draw();
-		//void drawSelection();
-		//void drawTickLegend();
-		//void drawMethod();
-		//void drawDetails();
-		//void drawTicks();
 		TimeLineView *mParent;
 
 	public:
@@ -388,8 +368,6 @@ namespace Android {
 		const int PixelsPerTick = 50;
 
 	protected:
-		CallList* mCallList;
-		TickScaler mScaleInfo;
 		const int LeftMargin = 10;
 		const int RightMargin = 60;
 		const int rowHeight = 20;
@@ -401,31 +379,42 @@ namespace Android {
 		const int timeLineOffsetY = 58;
 		const int tickToFontSpacing = 2;
 		const int topMargin = 90;
+
+		const int MinInclusiveRange = 3;
+
+		CallList* mCallList;
+		TickScaler mScaleInfo;
+
 		int mMouseRow;
 		int mNumRows;
 		int mStartRow;
 		int mEndRow;
+
 		TraceUnits* mUnits;
 		String mClockSource;
+
 		bool mHaveCpuTime;
 		bool mHaveRealTime;
+
 		int mSmallFontWidth;
 		int mSmallFontHeight;
+
 		MethodData* mHighlightMethodData;
 		Call* mHighlightCall;
-		const int MinInclusiveRange = 3;
 		bool mSetFonts;
+		Size mSize;
 
 	public:
-		Size mSize;
 
 		Size getSize() const {
 			return mSize;
 		}
-		void setData(CallList* callList);
+
 		TickScaler& getScaleInfo() {
 			return mScaleInfo;
 		}
+
+		void setData(CallList* callList);
 
 	protected:
 		static void popFrames(RowData* rd, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);

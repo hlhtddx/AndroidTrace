@@ -80,11 +80,10 @@ namespace Android {
 		const char* getProfileName() const;
 		const char* getSignature() const;
 		void computeProfileName();
-		const char* getCalls(String& outstring);
+		const char* getCalls(String& outString);
 		int getTotalCalls();
 		COLOR getColor();
 		void setColor(COLOR color);
-		String toString();
 
 		uint32_t getElapsedExclusiveCpuTime() const;
 		uint32_t getElapsedExclusiveRealTime() const;
@@ -93,18 +92,17 @@ namespace Android {
 
 		void setFadedColor(COLOR fadedColor);
 		COLOR getFadedColor();
-		//	void setFadedImage(::org::eclipse::swt::graphics::Image* fadedImage);
-		//	::org::eclipse::swt::graphics::Image* getFadedImage();
-		void setPathname(const String & pathname);
-		const String & getPathname();
+		void setPathname(const char*pathname);
+		const char* getPathname();
 		void setLineNumber(int lineNumber);
 		int getLineNumber();
 		PNodePtrList* getProfileNodes();
-		// Generated
+
 		MethodData();
-		MethodData(id_type id, String className);
-		MethodData(id_type id, String className, String methodName, String signature, String pathname, int lineNumber);
+		MethodData(id_type id, const char* className);
+		MethodData(id_type id, const char* className, const char* methodName, const char* signature, const char* pathname, int lineNumber);
 		~MethodData();
+
 		struct Less : public std::binary_function<ThreadData*, ThreadData*, bool> {
 			TimeBase* timeBase;
 
