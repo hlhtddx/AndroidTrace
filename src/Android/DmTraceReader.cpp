@@ -1,6 +1,7 @@
 #include "DmTraceReader.hpp"
 #include "ColorController.hpp"
 #include <fstream>
+#include <iostream>
 
 namespace Android {
 
@@ -36,10 +37,15 @@ namespace Android {
 
 	void DmTraceReader::generateTrees()
 	{
+		std::cerr << "Parse keys" << std::endl;
 		filepos offset = parseKeys();
+		std::cerr << "Parse data" << std::endl;
 		parseData(offset);
+		std::cerr << "generateSegments" << std::endl;
 		generateSegments();
+		std::cerr << "analyzeData" << std::endl;
 		analyzeData();
+		std::cerr << "done" << std::endl;
 		ColorController::assignMethodColors(mSortedMethods);
 	}
 	//
@@ -551,7 +557,9 @@ namespace Android {
 			
 			mNumRows += 1;
 		}
+		std::cerr << "Begin to sort segment" << std::endl;
 		mSegments.sort();
+		std::cerr << "Sort segment done" << std::endl;
 		dumpSegments();
 
 	}
