@@ -12,10 +12,10 @@ namespace Android {
 
 	typedef std::streampos filepos;
 	typedef HashMap<String, String> PropertyMap;
-	typedef HashMap<uint32_t, MethodData*> MethodMap;
-	typedef HashMap<uint32_t, ThreadData*> ThreadMap;
-	typedef Vector<ThreadData*> ThreadList;
-	typedef Vector<MethodData*> MethodList;
+	typedef HashMap<uint32_t, ThreadData*> ThreadPtrMap;
+	typedef HashMap<uint32_t, MethodData*> MethodPtrMap;
+	typedef Vector<ThreadData*> ThreadPtrList;
+	typedef Vector<MethodData*> MethodPtrList;
 	
 	typedef enum MethodAction {
 		METHOD_TRACE_ENTER = 0,
@@ -23,13 +23,13 @@ namespace Android {
 		METHOD_TRACE_UNROLL = 2,
 	} MethodAction;
 
+	typedef enum ClockSource {
+		THREAD_CPU, WALL, DUAL, UNKNOWN,
+	} ClockSource;
+
 	class DmTraceReader : public Object
 	{
 	public:
-
-		typedef enum ClockSource {
-			THREAD_CPU, WALL, DUAL, UNKNOWN,
-		} ClockSource;
 
 	private:
 		const int TRACE_MAGIC = 0x574F4C53;
@@ -47,10 +47,10 @@ namespace Android {
 
 		Call::CallList mCallList;
 		PropertyMap mPropertiesMap;
-		MethodMap mMethodMap;
-		ThreadMap mThreadMap;
-		ThreadList* mSortedThreads;
-		MethodList* mSortedMethods;
+		MethodPtrMap mMethodMap;
+		ThreadPtrMap mThreadMap;
+		ThreadPtrList* mSortedThreads;
+		MethodPtrList* mSortedMethods;
 
 		uint32_t mTotalCpuTime;
 		uint32_t mTotalRealTime;

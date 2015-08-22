@@ -45,7 +45,7 @@ namespace Android {
 		if (mRecursiveChildren) {
 			delete mRecursiveChildren;
 		}
-		for (ProfileNodeList::iterator it = mProfileNodes.begin(); it != mProfileNodes.end(); it++) {
+		for (PNodePtrList::iterator it = mProfileNodes.begin(); it != mProfileNodes.end(); it++) {
 			ProfileNode* node = *it;
 			delete node;
 		}
@@ -145,12 +145,12 @@ namespace Android {
 
 	void MethodData::analyzeData(TimeBase* timeBase)
 	{
-		ProfileDataList* sortedParents = sortProfileData(mParents, timeBase);
-		ProfileDataList* sortedChildren = sortProfileData(mChildren, timeBase);
-		ProfileDataList* sortedRecursiveParents = sortProfileData(mRecursiveParents, timeBase);
-		ProfileDataList* sortedRecursiveChildren = sortProfileData(mRecursiveChildren, timeBase);
+		PDataPtrList* sortedParents = sortProfileData(mParents, timeBase);
+		PDataPtrList* sortedChildren = sortProfileData(mChildren, timeBase);
+		PDataPtrList* sortedRecursiveParents = sortProfileData(mRecursiveParents, timeBase);
+		PDataPtrList* sortedRecursiveChildren = sortProfileData(mRecursiveChildren, timeBase);
 
-		ProfileNodeList* nodes = &mProfileNodes;
+		PNodePtrList* nodes = &mProfileNodes;
 		nodes->clear();
 
 		if (mParents != nullptr) {
@@ -168,7 +168,7 @@ namespace Android {
 		}
 	}
 
-	ProfileDataList* MethodData::sortProfileData(ProfileDataMap* map, TimeBase* timeBase)
+	PDataPtrList* MethodData::sortProfileData(ProfileDataMap* map, TimeBase* timeBase)
 	{
 		if (map == nullptr) {
 			return nullptr;
@@ -179,7 +179,7 @@ namespace Android {
 		return sorted;
 	}
 
-	ProfileDataList* MethodData::addSelf(ProfileDataList* children)
+	PDataPtrList* MethodData::addSelf(PDataPtrList* children)
 	{
 		if (children == nullptr) {
 			children = new Vector<ProfileData*>;
@@ -353,7 +353,7 @@ namespace Android {
 		return mLineNumber;
 	}
 
-	ProfileNodeList* MethodData::getProfileNodes()
+	PNodePtrList* MethodData::getProfileNodes()
 	{
 		return &mProfileNodes;
 	}

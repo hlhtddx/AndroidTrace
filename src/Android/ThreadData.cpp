@@ -7,7 +7,7 @@ namespace Android {
 		if (mIsEmpty) {
 			mIsEmpty = false;
 			if (trace != nullptr) {
-				trace->push_back(TraceAction(TraceAction::ACTION_ENTER, mRootCall));
+				trace->push_back(TraceAction(ACTION_ENTER, mRootCall));
 			}
 		}
 		int callerIndex = top();
@@ -17,7 +17,7 @@ namespace Android {
 		mStack.push_back(callIndex);
 
 		if (trace != nullptr) {
-			trace->push_back(TraceAction(TraceAction::ACTION_ENTER, callIndex));
+			trace->push_back(TraceAction(ACTION_ENTER, callIndex));
 		}
 
 		MethodIntMap::iterator it = mStackMethods.find(method);
@@ -53,7 +53,7 @@ namespace Android {
 		mStack.pop_back();
 
 		if (trace != nullptr) {
-			trace->push_back(TraceAction(TraceAction::ACTION_EXIT, call->getIndex()));
+			trace->push_back(TraceAction(ACTION_EXIT, call->getIndex()));
 		}
 		MethodIntMap::iterator it = mStackMethods.find(method);
 		if (it != mStackMethods.end()) {
@@ -84,7 +84,7 @@ namespace Android {
 			call->mGlobalEndTime = mGlobalEndTime;
 			call->mThreadEndTime = mThreadEndTime;
 			if (trace) {
-				trace->push_back(TraceAction(TraceAction::ACTION_INCOMPLETE, call->getIndex()));
+				trace->push_back(TraceAction(ACTION_INCOMPLETE, call->getIndex()));
 			}
 		}
 		mStack.clear();

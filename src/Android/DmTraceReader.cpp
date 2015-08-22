@@ -26,10 +26,10 @@ namespace Android {
 		if (mSortedMethods != nullptr) {
 			delete mSortedMethods;
 		}
-		for (MethodMap::iterator it = mMethodMap.begin(); it != mMethodMap.end(); it++) {
+		for (MethodPtrMap::iterator it = mMethodMap.begin(); it != mMethodMap.end(); it++) {
 			delete it->second;
 		}
-		for (ThreadMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
+		for (ThreadPtrMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
 			delete it->second;
 		}
 	}
@@ -107,8 +107,8 @@ namespace Android {
 	{
 		ByteBuffer* buffer = mapFile(mTraceFileName.c_str(), offset);
 		readDataFileHeader(buffer);
-		List<TraceAction> lTrace;
-		List<TraceAction> *trace = nullptr;
+		TraceActionList lTrace;
+		TraceActionList *trace = nullptr;
 		if (mClockSource == THREAD_CPU) {
 			trace = &lTrace;
 		}
@@ -265,7 +265,7 @@ namespace Android {
 			}
 		}
 
-		for (ThreadMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
+		for (ThreadPtrMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
 			ThreadData* threadData = it->second;
 			threadData->endTrace(trace, &mCallList);
 		}
@@ -274,12 +274,12 @@ namespace Android {
 		if (!haveGlobalClock) {
 			globalTime = 0LL;
 			prevThreadData = nullptr;
-			for (List<TraceAction>::iterator it = trace->begin(); it != trace->end(); it++) {
+			for (TraceActionList::iterator it = trace->begin(); it != trace->end(); it++) {
 				TraceAction& traceAction = *it;
 				{
 					auto call = mCallList.get(traceAction.mCall);
 					auto threadData = call->getThreadData();
-					if (traceAction.mAction == TraceAction::ACTION_ENTER) {
+					if (traceAction.mAction == ACTION_ENTER) {
 						auto threadTime = call->mThreadStartTime;
 						globalTime += call->mThreadStartTime - threadData->mThreadCurrentTime;
 						call->mGlobalStartTime = globalTime;
@@ -289,7 +289,7 @@ namespace Android {
 						}
 						threadData->mThreadCurrentTime = threadTime;
 					}
-					else if (traceAction.mAction == TraceAction::ACTION_EXIT) {
+					else if (traceAction.mAction == ACTION_EXIT) {
 						auto threadTime = call->mThreadEndTime;
 						globalTime += call->mThreadEndTime - threadData->mThreadCurrentTime;
 						call->mGlobalEndTime = globalTime;
@@ -314,7 +314,7 @@ namespace Android {
 		mTotalCpuTime = 0;
 		mTotalRealTime = 0;
 
-		for (ThreadMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
+		for (ThreadPtrMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
 			ThreadData* threadData = it->second;
 			Call* rootCall = threadData->getRootCall(&mCallList);
 			threadData->updateRootCallTimeBounds(&mCallList);
@@ -472,7 +472,7 @@ namespace Android {
 		std::sort(mSortedMethods->begin(), mSortedMethods->end(), MethodData::Less(timeBase));
 
 		int nonZero = 0;
-		for (MethodList::iterator it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
+		for (MethodPtrList::iterator it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
 			MethodData* md = *(it);
 			if (timeBase->getElapsedInclusiveTime(md) == 0LL)
 			{
@@ -483,7 +483,7 @@ namespace Android {
 			nonZero++;
 		}
 
-		for (MethodList::iterator it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
+		for (MethodPtrList::iterator it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
 			MethodData* md = *(it);
 			md->analyzeData(timeBase);
 		}
@@ -547,12 +547,12 @@ namespace Android {
 		}
 	}
 
-	MethodList* DmTraceReader::getMethods()
+	MethodPtrList* DmTraceReader::getMethods()
 	{
 		return mSortedMethods;
 	}
 
-	ThreadList* DmTraceReader::getThreads()
+	ThreadPtrList* DmTraceReader::getThreads()
 	{
 		return mSortedThreads;
 	}

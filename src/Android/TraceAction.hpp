@@ -5,16 +5,15 @@
 
 namespace Android {
 
+	typedef enum ActionType {
+		ACTION_ENTER = 0,
+		ACTION_EXIT = 1,
+		ACTION_INCOMPLETE = 2,
+	} ActionType;
+
 	class TraceAction final : public Object
 	{
-
 	public:
-		typedef enum ActionType {
-			ACTION_ENTER = 0,
-			ACTION_EXIT = 1,
-			ACTION_INCOMPLETE = 2,
-		} ActionType;
-
 		int mAction;
 		int mCall;
 

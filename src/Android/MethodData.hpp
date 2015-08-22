@@ -8,9 +8,6 @@
 
 namespace Android {
 
-	typedef Vector<ProfileNode*> ProfileNodeList;
-	typedef Vector<ProfileData*> ProfileDataList;
-
 	class MethodData : public Object
 	{
 	private:
@@ -43,7 +40,7 @@ namespace Android {
 		ProfileDataMap* mChildren;
 		ProfileDataMap* mRecursiveParents;
 		ProfileDataMap* mRecursiveChildren;
-		ProfileNodeList mProfileNodes;
+		PNodePtrList mProfileNodes;
 
 		int mX;
 		int mY;
@@ -64,8 +61,8 @@ namespace Android {
 		void analyzeData(TimeBase* timeBase);
 
 	private:
-		ProfileDataList* sortProfileData(ProfileDataMap* map, TimeBase* timeBase);
-		ProfileDataList* addSelf(ProfileDataList* children);
+		PDataPtrList* sortProfileData(ProfileDataMap* map, TimeBase* timeBase);
+		PDataPtrList* addSelf(PDataPtrList* children);
 
 	public:
 		void addTopExclusive(uint32_t cpuTime, uint32_t realTime);
@@ -102,7 +99,7 @@ namespace Android {
 		const String & getPathname();
 		void setLineNumber(int lineNumber);
 		int getLineNumber();
-		ProfileNodeList* getProfileNodes();
+		PNodePtrList* getProfileNodes();
 		// Generated
 		MethodData();
 		MethodData(uint32_t id, String className);

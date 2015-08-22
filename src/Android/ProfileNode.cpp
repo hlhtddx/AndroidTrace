@@ -4,7 +4,7 @@
 
 namespace Android {
 
-	ProfileNode::ProfileNode(const char* label, MethodData* methodData, ProfileDataList* children, bool isParent, bool isRecursive)
+	ProfileNode::ProfileNode(const char* label, MethodData* methodData, PDataPtrList* children, bool isParent, bool isRecursive)
 	{
 		mLabel = label;
 		mMethodData = methodData;
@@ -25,7 +25,7 @@ namespace Android {
 		return mLabel.c_str();
 	}
 
-	ProfileDataList* ProfileNode::getChildren()
+	PDataPtrList* ProfileNode::getChildren()
 	{
 		return mChildren;
 	}
