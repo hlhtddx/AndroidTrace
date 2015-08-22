@@ -113,7 +113,11 @@ namespace Android {
 	void DmTraceReader::parseData(filepos offset) /* throws(IOException) */
 	{
 		ByteBuffer* buffer = mapFile(mTraceFileName.c_str(), offset);
-		readDataFileHeader(buffer);
+        if (buffer == nullptr) {
+            throw GeneralException("Failed to open file");
+        }
+
+        readDataFileHeader(buffer);
 		TraceActionList lTrace;
 		TraceActionList *trace = nullptr;
 		if (mClockSource == THREAD_CPU) {
@@ -346,7 +350,8 @@ namespace Android {
 		filepos offset = 0;
 		try {
 			std::ifstream in(mTraceFileName, std::ios::binary | std::ios::in);
-			int mode = 0;
+            in.exceptions(std::ios::eofbit | std::ios::failbit | std::ios::badbit);
+            int mode = 0;
 			for (;;) {
 				String line;
 				if (!readLine(in, line)) {
@@ -560,7 +565,9 @@ namespace Android {
 		std::cerr << "Begin to sort segment" << std::endl;
 		mSegments.sort();
 		std::cerr << "Sort segment done" << std::endl;
-		dumpSegments();
+        if (mRegression) {
+            dumpSegments();
+        }
 
 	}
 	

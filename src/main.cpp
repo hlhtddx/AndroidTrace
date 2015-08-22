@@ -15,15 +15,26 @@ int main(int argc, const char * argv[]) {
 		std::cerr << "Please input trace file name" << std::endl;
 		exit(-1);
 	}
+
+    bool regression = false;
+
+    if (argc > 2 && strcmp(argv[2], "--regression") == 0) {
+        regression = true;
+    }
+
+    Android::DmTraceReader *reader = nullptr;
+    Android::TimeLineView *view = nullptr;
 	
 	const char* fileName = argv[1];
-	
-	Android::DmTraceReader *reader = new Android::DmTraceReader(fileName, true);
-	Android::TimeLineView *view = new Android::TimeLineView(reader);
-	int a;
-	std::cin >> a;
-	delete view;
-	delete reader;
-	std::cout << "Hello, World!\n";
+    try {
+        reader = new Android::DmTraceReader(fileName, regression);
+        view = new Android::TimeLineView(reader);
+        delete view;
+        delete reader;
+    } catch (Android::GeneralException &e) {
+        printf("Catch a generic exception: %s\n", e.getDescription());
+    }
+    if (view) delete view;
+    if (reader) delete reader;
     return 0;
 }
