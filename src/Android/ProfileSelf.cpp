@@ -14,12 +14,12 @@ namespace Android {
 		return "self";
 	}
 
-	int64_t ProfileSelf::getElapsedInclusiveCpuTime() const
+	uint32_t ProfileSelf::getElapsedInclusiveCpuTime() const
 	{
 		return mElement->getTopExclusiveCpuTime();
 	}
 
-	int64_t ProfileSelf::getElapsedInclusiveRealTime() const
+	uint32_t ProfileSelf::getElapsedInclusiveRealTime() const
 	{
 		return mElement->getTopExclusiveRealTime();
 	}

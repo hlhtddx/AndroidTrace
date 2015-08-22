@@ -60,7 +60,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/frank/temp/squash/ddms441696095842378005.trace"
+            argument = "/Users/frank/temp/squash/ddms451489048992537767.trace"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -68,7 +68,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/Users/frank/temp/squash/ddms441696095842378005.log"
+            argument = "/Users/frank/temp/squash/ddms451489048992537767.trace.log"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>

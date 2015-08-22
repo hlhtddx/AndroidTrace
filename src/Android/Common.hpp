@@ -234,25 +234,9 @@ namespace Android {
 
 	class Object {
 	public:
-#ifdef _CRTDBG_MAP_ALLOC
-		static std::set<Object*> allObjects;
-#endif
-		static uint64_t mReferenceCount;
 		Object() {
-#ifdef _DEBUG
-			mReferenceCount++;
-#ifdef _CRTDBG_MAP_ALLOC
-			allObjects.insert(this);
-#endif
-#endif
 		}
 		virtual ~Object() {
-#ifdef _DEBUG
-			mReferenceCount--;
-#ifdef _CRTDBG_MAP_ALLOC
-			allObjects.erase(this);
-#endif
-#endif
 		}
 	};
 
@@ -274,26 +258,48 @@ namespace Android {
 				delete mData;
 			}
 		}
-
-		char getByte() {
+		
+		unsigned char getUByte() {
 			if (end()) {
 				throw BoundaryException("ByteBuffer out of bound", mCurrent - mData, mSize);
 			}
-			return *(mCurrent++);
+			return (unsigned char)(*(mCurrent++));
+		}
+
+		char getByte() {
+			return (char)getByte();
+		}
+
+		unsigned short getUShort() {
+			uint32_t val = getUByte();
+			val |= getUByte() << 8;
+			return val;
 		}
 
 		short getShort() {
-			return getByte() | getByte() << 8;
+			return (short)getUShort();
+		}
+
+		uint32_t getUInt() {
+			uint32_t val = getUShort();
+			val |= getUShort() << 16;
+			return val;
 		}
 
 		int getInt() {
-			return getShort() | getShort() << 16;
-		}	
-
-		int64_t getLong() {
-			return getInt() | ((int64_t)getInt()) << 32;
+			return (int)getUInt();
+		}
+		
+		uint64_t getULong() {
+			uint64_t val = getUInt();
+			val |= ((uint64_t)getUInt()) << 32;
+			return val;
 		}
 
+		int64_t getLong() {
+			return (int64_t)getULong();
+		}
+		
 		void skip(size_t n) {
 			mCurrent += n;
 		}

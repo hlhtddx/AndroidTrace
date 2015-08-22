@@ -4,7 +4,7 @@
 
 namespace Android {
 
-	Range::Range(int32_t xStart, int32_t width, int32_t y, uint32_t color)
+	Range::Range(uint32_t xStart, uint32_t width, uint32_t y, uint32_t color)
 	{
 		mXdim.x = xStart;
 		mXdim.y = width;
@@ -12,7 +12,7 @@ namespace Android {
 		mColor = color;
 	}
 
-	Strip::Strip(int32_t x, int32_t y, int32_t width, int32_t height, RowData* rowData, Segment* segment, uint32_t color)
+	Strip::Strip(uint32_t x, uint32_t y, uint32_t width, uint32_t height, RowData* rowData, Segment* segment, uint32_t color)
 	{
 		mX = x;
 		mY = y;
@@ -23,7 +23,7 @@ namespace Android {
 		mColor = color;
 	}
 
-	void Segment::init(RowData* rowData, Call::CallList* callList, int callIndex, int64_t startTime, int64_t endTime)
+	void Segment::init(RowData* rowData, Call::CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime)
 	{
 		mRowData = rowData;
 		Call* call = callList->get(callIndex);
@@ -117,7 +117,7 @@ namespace Android {
 		mStart = -2;
 	}
 
-	void Pixel::setFields(int32_t start, double weight, Segment* segment, uint32_t color, RowData* rowData)
+	void Pixel::setFields(uint32_t start, double weight, Segment* segment, uint32_t color, RowData* rowData)
 	{
 		this->mStart = start;
 		this->mMaxWeight = weight;
@@ -529,16 +529,18 @@ namespace Android {
 		mHighlightExclusive.clear();
 		mHighlightInclusive.clear();
 		MethodData* callMethod = nullptr;
-		int64_t callStart = 0;
-		int64_t callEnd = -1;
+		uint32_t callStart = 0;
+		uint32_t callEnd = UINT32_MAX;
 		RowData* callRowData = nullptr;
-		auto prevMethodStart = -1;
-		auto prevMethodEnd = -1;
-		auto prevCallStart = -1;
-		auto prevCallEnd = -1;
+		uint32_t prevMethodStart = UINT32_MAX;
+		uint32_t prevMethodEnd = UINT32_MAX;
+		uint32_t prevCallStart = UINT32_MAX;
+		uint32_t prevCallEnd = UINT32_MAX;
 		if (mParent->mHighlightCall != nullptr) {
-			auto callPixelStart = -1;
-			auto callPixelEnd = -1;
+
+			uint32_t callPixelStart = UINT32_MAX;
+			uint32_t callPixelEnd = UINT32_MAX;
+
 			callStart = mParent->mHighlightCall->getStartTime();
 			callEnd = mParent->mHighlightCall->getEndTime();
 			callMethod = mParent->mHighlightCall->getMethodData();
@@ -551,11 +553,11 @@ namespace Android {
 				callPixelEnd = mParent->getScaleInfo().valueToPixel(callEnd);
 			}
 
-			int threadId = mParent->mHighlightCall->getThreadId();
+			uint32_t threadId = mParent->mHighlightCall->getThreadId();
 			const String& threadName = mParent->mThreadLabels[threadId].c_str();
 			callRowData = mParent->mRowByName[threadName];
 			auto y1 = callRowData->mRank * 32 + 6;
-			auto color = callMethod->getColor();
+			uint32_t color = callMethod->getColor();
 			mHighlightInclusive.push_back(Range(callPixelStart + 10, callPixelEnd + 10, y1, color));
 		}
 
@@ -1111,7 +1113,7 @@ namespace Android {
 		//::qsort(mSegments, new TimeLineView_setData_12(this));
 	}
 
-	void TimeLineView::popFrames(RowData* rd, Call::CallList* callList, Call* top, int64_t startTime, SegmentList* segmentList)
+	void TimeLineView::popFrames(RowData* rd, Call::CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList)
 	{
 		auto topEndTime = top->getEndTime();
 		auto lastEndTime = top->getStartTime();

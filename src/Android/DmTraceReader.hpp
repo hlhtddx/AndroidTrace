@@ -10,31 +10,33 @@
 #endif
 namespace Android {
 
+	typedef std::streampos filepos;
+	typedef HashMap<String, String> PropertyMap;
+	typedef HashMap<uint32_t, MethodData*> MethodMap;
+	typedef HashMap<uint32_t, ThreadData*> ThreadMap;
+	typedef Vector<ThreadData*> ThreadList;
+	typedef Vector<MethodData*> MethodList;
+	
+	typedef enum MethodAction {
+		METHOD_TRACE_ENTER = 0,
+		METHOD_TRACE_EXIT = 1,
+		METHOD_TRACE_UNROLL = 2,
+	} MethodAction;
+
 	class DmTraceReader : public Object
 	{
 	public:
-		typedef HashMap<String, String> PropertyMap;
-		typedef HashMap<int64_t, MethodData*> MethodMap;
-		typedef HashMap<int, ThreadData*> ThreadMap;
-		typedef Vector<ThreadData*> ThreadList;
-		typedef Vector<MethodData*> MethodList;
 
 		typedef enum ClockSource {
 			THREAD_CPU, WALL, DUAL, UNKNOWN,
 		} ClockSource;
 
-		typedef enum MethodAction {
-			METHOD_TRACE_ENTER = 0,
-			METHOD_TRACE_EXIT = 1,
-			METHOD_TRACE_UNROLL = 2,
-		} MethodAction;
-
 	private:
 		const int TRACE_MAGIC = 0x574F4C53;
-		const int METHOD_ACTION_MASK = 0x3;
-		const int METHOD_ID_MASK = ~METHOD_ACTION_MASK;
+		const uint32_t METHOD_ACTION_MASK = 0x3;
+		const uint32_t METHOD_ID_MASK = ~METHOD_ACTION_MASK;
 
-		const int64_t MIN_CONTEXT_SWITCH_TIME_USEC = 100L;
+		const uint32_t MIN_CONTEXT_SWITCH_TIME_USEC = 100L;
 		int mVersionNumber;
 		bool mRegression;
 		/*ProfileProvider* mProfileProvider;*/
@@ -70,12 +72,12 @@ namespace Android {
 		//ProfileProvider* getProfileProvider();
 
 	private:
-		ByteBuffer* mapFile(const char* filename, int64_t offset);
+		ByteBuffer* mapFile(const char* filename, filepos offset);
 		void readDataFileHeader(ByteBuffer* buffer);
-		void parseData(int64_t offset) /* throws(IOException) */;
+		void parseData(filepos offset) /* throws(IOException) */;
 
 	public:
-		int64_t parseKeys() /* throws(IOException) */;
+		filepos parseKeys() /* throws(IOException) */;
 		void parseOption(const String &line);
 		void parseThread(const String &line);
 		void parseMethod(const String &line);
@@ -99,8 +101,8 @@ namespace Android {
 	public:
 		Vector<MethodData*>* getMethods();
 		Vector<ThreadData*>* getThreads();
-		int64_t getTotalCpuTime();
-		int64_t getTotalRealTime();
+		uint32_t getTotalCpuTime();
+		uint32_t getTotalRealTime();
 		bool haveCpuTime();
 		bool haveRealTime();
 		PropertyMap& getProperties();

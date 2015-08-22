@@ -3,6 +3,54 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "Android::DmTraceReader::mapFile(char const*, long long):DmTraceReader.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "size+offset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Android::DmTraceReader::readDataFileHeader(Android::ByteBuffer*):DmTraceReader.cpp">
+      </ContextState>
+      <ContextState
+         contextName = "Android::ByteBuffer::getUInt():Common.hpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "mCurrent[1]">
+            </PersistentString>
+            <PersistentString
+               value = "mCurrent[3]">
+            </PersistentString>
+            <PersistentString
+               value = "mCurrent[0]">
+            </PersistentString>
+            <PersistentString
+               value = "mCurrent[2]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Android::DmTraceReader::parseData(long long):DmTraceReader.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "methodId">
+            </PersistentString>
+            <PersistentString
+               value = "buffer-&gt;mCurrent-buffer-&gt;mData">
+            </PersistentString>
+            <PersistentString
+               value = "(double)(buffer-&gt;mCurrent-buffer-&gt;mData-32)/mRecordSize">
+            </PersistentString>
+            <PersistentString
+               value = "buffer">
+            </PersistentString>
+            <PersistentString
+               value = "offset+buffer-&gt;mCurrent-buffer-&gt;mData">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "Android::ByteBuffer::getShort():Common.hpp">
          <PersistentStrings>
             <PersistentString
@@ -10,14 +58,6 @@
             </PersistentString>
             <PersistentString
                value = "mCurrent[1]">
-            </PersistentString>
-         </PersistentStrings>
-      </ContextState>
-      <ContextState
-         contextName = "Android::DmTraceReader::mapFile(char const*, long long):DmTraceReader.cpp">
-         <PersistentStrings>
-            <PersistentString
-               value = "size+offset">
             </PersistentString>
          </PersistentStrings>
       </ContextState>
@@ -34,6 +74,9 @@
                value = "mThreadMap">
             </PersistentString>
          </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Android::DmTraceReader::dumpCallTimes():DmTraceReader.cpp">
       </ContextState>
    </ContextStates>
 </VariablesViewState>

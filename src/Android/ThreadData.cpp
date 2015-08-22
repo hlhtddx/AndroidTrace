@@ -2,45 +2,6 @@
 
 namespace Android {
 
-	ThreadData::ThreadData()
-	{
-		mId = -1;
-		mName = "Not inited";
-		mIsEmpty = true;
-		mRootCall = -1;
-	}
-
-	ThreadData::ThreadData(int id, String name, MethodData* topLevel, Call::CallList* callList)
-	{
-		mId = id;
-		std::stringstream ss;
-		ss << "[" << id << "] " << name;
-		mName = ss.str();
-		mIsEmpty = true;
-		mRootCall = callList->addNull();
-		callList->get(mRootCall)->init(this, topLevel, -1, mRootCall);
-		mStack.push_back(mRootCall);
-	}
-	
-	ThreadData::~ThreadData()
-	{
-	}
-
-	const char* ThreadData::getName() const
-	{
-		return mName.c_str();
-	}
-
-	Call* ThreadData::getRootCall(Call::CallList* callList)
-	{
-		return callList->get(mRootCall);
-	}
-
-	bool ThreadData::isEmpty()
-	{
-		return mIsEmpty;
-	}
-
 	Call* ThreadData::enter(MethodData* method, TraceActionList* trace, Call::CallList* callList)
 	{
 		if (mIsEmpty) {
@@ -54,14 +15,6 @@ namespace Android {
 		Call* call = callList->get(callIndex);
 		call->init(this, method, callerIndex, callIndex);
 		mStack.push_back(callIndex);
-
-		//TRACE("Dump stack(%p) for push\n");
-		//for (ThreadStack::iterator it = mStack.begin(); it != mStack.end(); it++) {
-		//	Call* cc = callList->get(*it);
-		//	TRACE("\tcall = %p(method=%s.%s)\n", cc, cc->getMethodData()->getClassName().c_str(), cc->getMethodData()->getMethodName().c_str());
-		//}
-		//TRACE("End Dump\n");
-
 
 		if (trace != nullptr) {
 			trace->push_back(TraceAction(TraceAction::ACTION_ENTER, callIndex));
@@ -98,14 +51,6 @@ namespace Android {
 		}
 
 		mStack.pop_back();
-
-		//TRACE("Dump stack(%p) for push\n");
-		//for (ThreadStack::iterator it = mStack.begin(); it != mStack.end(); it++) {
-		//	Call* cc = callList->get(*it);
-		//	TRACE("\tcall = %p(method=%s.%s)\n", cc, cc->getMethodData()->getClassName().c_str(), cc->getMethodData()->getMethodName().c_str());
-		//}
-		//TRACE("End Dump\n");
-
 
 		if (trace != nullptr) {
 			trace->push_back(TraceAction(TraceAction::ACTION_EXIT, call->getIndex()));
@@ -146,28 +91,4 @@ namespace Android {
 		mStackMethods.clear();
 	}
 
-	void ThreadData::updateRootCallTimeBounds(Call::CallList* callList)
-	{
-		if (!mIsEmpty) {
-			callList->get(mRootCall)->mGlobalStartTime = mGlobalStartTime;
-			callList->get(mRootCall)->mGlobalEndTime = mGlobalEndTime;
-			callList->get(mRootCall)->mThreadStartTime = mThreadStartTime;
-			callList->get(mRootCall)->mThreadEndTime = mThreadEndTime;
-		}
-	}
-
-	int ThreadData::getId()
-	{
-		return mId;
-	}
-
-	int64_t ThreadData::getCpuTime(Call::CallList* callList) const
-	{
-		return callList->get(mRootCall)->mInclusiveCpuTime;
-	}
-
-	int64_t ThreadData::getRealTime(Call::CallList* callList) const
-	{
-		return callList->get(mRootCall)->mInclusiveRealTime;
-	}
 };

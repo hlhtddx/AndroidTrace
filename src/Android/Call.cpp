@@ -65,7 +65,7 @@ namespace Android {
 		return mInclusiveRealTime;
 	}
 
-	int Call::getColor()
+	uint32_t Call::getColor()
 	{
 		return mMethodData->getColor();
 	}

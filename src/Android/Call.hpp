@@ -46,7 +46,7 @@ namespace Android {
 		uint32_t getInclusiveCpuTime();
 		uint32_t getExclusiveRealTime();
 		uint32_t getInclusiveRealTime();
-		int getColor();
+		uint32_t getColor();
 		const char* getName();
 		ThreadData* getThreadData();
 		int getThreadId();

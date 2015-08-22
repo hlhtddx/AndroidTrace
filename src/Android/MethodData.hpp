@@ -8,6 +8,9 @@
 
 namespace Android {
 
+	typedef Vector<ProfileNode*> ProfileNodeList;
+	typedef Vector<ProfileData*> ProfileDataList;
+
 	class MethodData : public Object
 	{
 	private:
@@ -35,8 +38,6 @@ namespace Android {
 		public:
 			~ProfileDataMap();
 		};
-		typedef Vector<ProfileNode*> ProfileNodeList;
-		typedef Vector<ProfileData*> ProfileDataList;
 
 		ProfileDataMap* mParents;
 		ProfileDataMap* mChildren;
@@ -53,11 +54,11 @@ namespace Android {
 		void clearWeight();
 		int getRank();
 		void setRank(int rank);
-		void addElapsedExclusive(int64_t cpuTime, int64_t realTime);
-		void addElapsedInclusive(int64_t cpuTime, int64_t realTime, bool isRecursive, int parent, Call::CallList* callList);
+		void addElapsedExclusive(uint32_t cpuTime, uint32_t realTime);
+		void addElapsedInclusive(uint32_t cpuTime, uint32_t realTime, bool isRecursive, int parent, Call::CallList* callList);
 
 	private:
-		ProfileDataMap* updateInclusive(int64_t cpuTime, int64_t realTime, MethodData* contextMethod, MethodData* elementMethod, bool elementIsParent, ProfileDataMap* map);
+		ProfileDataMap* updateInclusive(uint32_t cpuTime, uint32_t realTime, MethodData* contextMethod, MethodData* elementMethod, bool elementIsParent, ProfileDataMap* map);
 
 	public:
 		void analyzeData(TimeBase* timeBase);
@@ -84,8 +85,8 @@ namespace Android {
 		void computeProfileName();
 		const char* getCalls(String& outstring);
 		int getTotalCalls();
-		int getColor();
-		void setColor(int color);
+		uint32_t getColor();
+		void setColor(uint32_t color);
 		String toString();
 
 		uint32_t getElapsedExclusiveCpuTime() const;

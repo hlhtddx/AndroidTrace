@@ -92,7 +92,7 @@ namespace Android {
 		}
 	}
 
-	TraceUnits::TimeScale TraceUnits::getTimeScale()
+	TimeScale TraceUnits::getTimeScale()
 	{
 		return mTimeScale;
 	}

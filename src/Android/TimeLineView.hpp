@@ -38,7 +38,7 @@ namespace Android {
 		uint32_t mColor;
 
 		// Generated
-		Range(int32_t xStart, int32_t width, int32_t y, uint32_t color);
+		Range(uint32_t xStart, uint32_t width, uint32_t y, uint32_t color);
 	};
 
 	class RowData : public Object
@@ -63,13 +63,13 @@ namespace Android {
 	{
 	public:
 		RowData* mRowData;
-		int64_t mStartTime;
-		int64_t mEndTime;
+		uint32_t mStartTime;
+		uint32_t mEndTime;
 		int mBlock;
 		bool mIsContextSwitch;
 
 	public:
-		void init(RowData* rowData, Call::CallList* callList, int callIndex, int64_t startTime, int64_t endTime);
+		void init(RowData* rowData, Call::CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime);
 	} Segment;
 
 	typedef FastArray<Segment> SegmentList;
@@ -77,16 +77,16 @@ namespace Android {
 	class Strip : public Object
 	{
 	public:
-		int32_t mX;
-		int32_t mY;
-		int32_t mWidth;
-		int32_t mHeight;
+		uint32_t mX;
+		uint32_t mY;
+		uint32_t mWidth;
+		uint32_t mHeight;
 		RowData* mRowData;
 		Segment* mSegment;
 		uint32_t mColor;
 
 	public:
-		Strip(int32_t x, int32_t y, int32_t width, int32_t height, RowData* rowData, Segment* segment, uint32_t color);
+		Strip(uint32_t x, uint32_t y, uint32_t width, uint32_t height, RowData* rowData, Segment* segment, uint32_t color);
 	};
 
 	class TickScaler : public Object
@@ -95,15 +95,15 @@ namespace Android {
 		double mMinVal;
 		double mMaxVal;
 		double mRangeVal;
-		int32_t mNumPixels;
-		int32_t mPixelsPerTick;
+		uint32_t mNumPixels;
+		uint32_t mPixelsPerTick;
 		double mPixelsPerRange;
 		double mTickIncrement;
 		double mMinMajorTick;
 
 	public:
 
-		TickScaler(double minVal, double maxVal, int32_t numPixels, int32_t pixelsPerTick)
+		TickScaler(double minVal, double maxVal, uint32_t numPixels, uint32_t pixelsPerTick)
 		{
 			mMinVal = minVal;
 			mMaxVal = maxVal;
@@ -131,22 +131,22 @@ namespace Android {
 			return mMaxVal;
 		}
 
-		void setNumPixels(int32_t numPixels)
+		void setNumPixels(uint32_t numPixels)
 		{
 			mNumPixels = numPixels;
 		}
 
-		int32_t getNumPixels()
+		uint32_t getNumPixels()
 		{
 			return mNumPixels;
 		}
 
-		void setPixelsPerTick(int32_t pixelsPerTick)
+		void setPixelsPerTick(uint32_t pixelsPerTick)
 		{
 			mPixelsPerTick = pixelsPerTick;
 		}
 
-		int32_t getPixelsPerTick()
+		uint32_t getPixelsPerTick()
 		{
 			return mPixelsPerTick;
 		}
@@ -181,7 +181,7 @@ namespace Android {
 			return mMinMajorTick;
 		}
 
-		int32_t valueToPixel(double value)
+		uint32_t valueToPixel(double value)
 		{
 			return (int32_t) ceil(mPixelsPerRange * (value - mMinVal) - 0.5);
 		}
@@ -191,7 +191,7 @@ namespace Android {
 			return mPixelsPerRange * (value - mMinVal);
 		}
 
-		double pixelToValue(int32_t pixel)
+		double pixelToValue(uint32_t pixel)
 		{
 			return mMinVal + pixel / mPixelsPerRange;
 		}
@@ -205,7 +205,7 @@ namespace Android {
 	{
 	public:
 		Pixel();
-		void setFields(int32_t start, double weight, Segment* segment, uint32_t color, RowData* rowData);
+		void setFields(uint32_t start, double weight, Segment* segment, uint32_t color, RowData* rowData);
 
 	public:
 		int32_t mStart;
@@ -460,7 +460,7 @@ namespace Android {
 		}
 
 	protected:
-		static void popFrames(RowData* rd, Call::CallList* callList, Call* top, int64_t startTime, SegmentList* segmentList);
+		static void popFrames(RowData* rd, Call::CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);
 		int32_t computeVisibleRows(int32_t ydim);
 		void startHighlighting();
 

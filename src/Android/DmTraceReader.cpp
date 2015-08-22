@@ -36,7 +36,7 @@ namespace Android {
 
 	void DmTraceReader::generateTrees()
 	{
-		auto offset = parseKeys();
+		filepos offset = parseKeys();
 		parseData(offset);
 		analyzeData();
 		ColorController::assignMethodColors(mSortedMethods);
@@ -79,13 +79,13 @@ namespace Android {
 		buffer->skip(offsetToData);
 	}
 
-	ByteBuffer* DmTraceReader::mapFile(const char* filename, int64_t offset)
+	ByteBuffer* DmTraceReader::mapFile(const char* filename, filepos offset)
 	{
 		char* buffer = nullptr;
 		try {
 			std::ifstream in(filename, std::ios::binary | std::ios::in);
 			in.seekg(0, std::ios_base::end);
-			int64_t size = in.tellg() - offset;
+			filepos size = in.tellg() - offset;
 
 			char* buffer = new char[size];
 			in.exceptions(std::ios::eofbit | std::ios::failbit | std::ios::badbit);
@@ -103,7 +103,7 @@ namespace Android {
 		}
 	}
 
-	void DmTraceReader::parseData(int64_t offset) /* throws(IOException) */
+	void DmTraceReader::parseData(filepos offset) /* throws(IOException) */
 	{
 		ByteBuffer* buffer = mapFile(mTraceFileName.c_str(), offset);
 		readDataFileHeader(buffer);
@@ -117,32 +117,32 @@ namespace Android {
 		ThreadData* prevThreadData = nullptr;
 
 		while (!buffer->end()) {
-			int threadId;
-			int methodId;
+			uint32_t threadId;
+			uint32_t methodId;
 			uint32_t threadTime = 0;
 			uint32_t globalTime = 0;
 			try {
 				int recordSize = mRecordSize;
 				if (mVersionNumber == 1) {
-					threadId = buffer->getByte();
+					threadId = buffer->getUByte();
 					recordSize--;
 				}
 				else {
-					threadId = buffer->getShort();
+					threadId = buffer->getUShort();
 					recordSize -= 2;
 				}
-				methodId = buffer->getInt();
+				methodId = buffer->getUInt();
 				recordSize -= 4;
 
 				ClockSource v = mClockSource;
 				if (v == WALL) {
 					threadTime = 0LL;
-					globalTime = buffer->getInt();
+					globalTime = buffer->getUInt();
 					recordSize -= 4;
 				}
 				else if (v == DUAL) {
-					threadTime = buffer->getInt();
-					globalTime = buffer->getInt();
+					threadTime = buffer->getUInt();
+					globalTime = buffer->getUInt();
 					recordSize -= 8;
 				} if (((v == THREAD_CPU) || ((v != WALL) && (v != DUAL) && (v != THREAD_CPU)))) {
 					threadTime = buffer->getInt();
@@ -150,14 +150,14 @@ namespace Android {
 					recordSize -= 4;
 				}
 
-				offset += recordSize;
+				buffer->skip(recordSize);
 			}
 			catch (BoundaryException& e) {
 				e.getDescription();
 				break;
 			}
 
-			int methodAction = methodId & METHOD_ACTION_MASK;
+			unsigned char methodAction = methodId & METHOD_ACTION_MASK;
 			methodId &= METHOD_ID_MASK;
 
 //			TRACE("record: tid=%d, mid=%d, action=%d, ttime=%lld, gtime=%lld\n", threadId, methodId, methodAction, threadTime, globalTime);
@@ -332,9 +332,9 @@ namespace Android {
 		delete buffer;
 	}
 
-	int64_t DmTraceReader::parseKeys() /* throws(IOException) */
+	filepos DmTraceReader::parseKeys() /* throws(IOException) */
 	{
-		int64_t offset = 0;
+		filepos offset = 0;
 		try {
 			std::ifstream in(mTraceFileName, std::ios::binary | std::ios::in);
 			auto mode = 0;
@@ -497,10 +497,10 @@ namespace Android {
 	void DmTraceReader::dumpThreadTimes()
 	{
 		printf("\nThread Times\n");
-		printf("id  t-start    t-end  g-start    g-end     name\n");
+		printf("id\tt-start\tt-end\tg-start\tg-end\tname\n");
 		for (auto _i = mThreadMap.begin(); _i != mThreadMap.end(); _i++) {
 			ThreadData* threadData = _i->second;
-			printf("%2d %8d %8d %8d %8d  %s\n"
+			printf("%2u\t%8d\t%8d\t%8d\t%8d\t%s\n"
 				, threadData->getId()
 				, threadData->mThreadStartTime
 				, threadData->mThreadEndTime
@@ -513,11 +513,11 @@ namespace Android {
 	void DmTraceReader::dumpCallTimes()
 	{
 		printf("\nCall Times\n");
-		printf("id  t-start    t-end  g-start    g-end    excl.    incl.  method\n");
+		printf("id\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
 		for (auto _i = 0; _i < mCallList.size(); _i++) {
 			Call* call = mCallList.get(_i);
 			{
-				printf("%2d %8d %8d %8d %8d %8d %8d  %s\n"
+				printf("%2u\t%8d\t%8d\t%8d\t%8d\t%8d\t%8d\t%s\n"
 					, call->getThreadId()
 					, call->mThreadStartTime
 					, call->mThreadEndTime
@@ -533,11 +533,11 @@ namespace Android {
 	void DmTraceReader::dumpMethodStats()
 	{
 		printf("\nMethod Stats\n");
-		printf("Excl Cpu  Incl Cpu  Excl Real Incl Real    Calls  Method\n");
+		printf("Excl\tCpu\tIncl\tCpu\tExcl\tReal\tIncl\tReal\tCalls\tMethod\n");
 		for (auto _i = mSortedMethods->begin(); _i != mSortedMethods->end(); _i++) {
 			MethodData* md = *_i;
 			String callstr;
-			printf("%9d %9d %9d %9d %9s  %s\n"
+			printf("%9d\t%9d\t%9d\t%9d\t%9s\t%s\n"
 				, md->getElapsedExclusiveCpuTime()
 				, md->getElapsedInclusiveCpuTime()
 				, md->getElapsedExclusiveRealTime()
@@ -547,22 +547,22 @@ namespace Android {
 		}
 	}
 
-	DmTraceReader::MethodList* DmTraceReader::getMethods()
+	MethodList* DmTraceReader::getMethods()
 	{
 		return mSortedMethods;
 	}
 
-	DmTraceReader::ThreadList* DmTraceReader::getThreads()
+	ThreadList* DmTraceReader::getThreads()
 	{
 		return mSortedThreads;
 	}
 
-	int64_t DmTraceReader::getTotalCpuTime()
+	uint32_t DmTraceReader::getTotalCpuTime()
 	{
 		return mTotalCpuTime;
 	}
 
-	int64_t DmTraceReader::getTotalRealTime()
+	uint32_t DmTraceReader::getTotalRealTime()
 	{
 		return mTotalRealTime;
 	}
@@ -577,7 +577,7 @@ namespace Android {
 		return mClockSource != THREAD_CPU;
 	}
 
-	DmTraceReader::PropertyMap& DmTraceReader::getProperties()
+	PropertyMap& DmTraceReader::getProperties()
 	{
 		return mPropertiesMap;
 	}

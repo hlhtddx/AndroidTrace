@@ -87,13 +87,13 @@ namespace Android {
 		computeProfileName();
 	}
 
-	void MethodData::addElapsedExclusive(int64_t cpuTime, int64_t realTime)
+	void MethodData::addElapsedExclusive(uint32_t cpuTime, uint32_t realTime)
 	{
 		mElapsedExclusiveCpuTime += cpuTime;
 		mElapsedExclusiveRealTime += realTime;
 	}
 
-	void MethodData::addElapsedInclusive(int64_t cpuTime, int64_t realTime, bool isRecursive, int parent, Call::CallList* callList)
+	void MethodData::addElapsedInclusive(uint32_t cpuTime, uint32_t realTime, bool isRecursive, int parent, Call::CallList* callList)
 	{
 		if (!isRecursive) {
 			mElapsedInclusiveCpuTime += cpuTime;
@@ -124,7 +124,7 @@ namespace Android {
 		}
 	}
 
-	MethodData::ProfileDataMap* MethodData::updateInclusive(int64_t cpuTime, int64_t realTime, MethodData* contextMethod, MethodData* elementMethod, bool elementIsParent, MethodData::ProfileDataMap* map)
+	MethodData::ProfileDataMap* MethodData::updateInclusive(uint32_t cpuTime, uint32_t realTime, MethodData* contextMethod, MethodData* elementMethod, bool elementIsParent, MethodData::ProfileDataMap* map)
 	{
 		if (map == nullptr) {
 			map = new MethodData::ProfileDataMap;
@@ -168,7 +168,7 @@ namespace Android {
 		}
 	}
 
-	MethodData::ProfileDataList* MethodData::sortProfileData(ProfileDataMap* map, TimeBase* timeBase)
+	ProfileDataList* MethodData::sortProfileData(ProfileDataMap* map, TimeBase* timeBase)
 	{
 		if (map == nullptr) {
 			return nullptr;
@@ -179,7 +179,7 @@ namespace Android {
 		return sorted;
 	}
 
-	MethodData::ProfileDataList* MethodData::addSelf(MethodData::ProfileDataList* children)
+	ProfileDataList* MethodData::addSelf(ProfileDataList* children)
 	{
 		if (children == nullptr) {
 			children = new Vector<ProfileData*>;
@@ -269,12 +269,12 @@ namespace Android {
 		return mNumCalls[0] + mNumCalls[1];
 	}
 
-	int MethodData::getColor()
+	uint32_t MethodData::getColor()
 	{
 		return mColor;
 	}
 
-	void MethodData::setColor(int color)
+	void MethodData::setColor(uint32_t color)
 	{
 		mColor = color;
 	}
@@ -353,7 +353,7 @@ namespace Android {
 		return mLineNumber;
 	}
 
-	MethodData::ProfileNodeList* MethodData::getProfileNodes()
+	ProfileNodeList* MethodData::getProfileNodes()
 	{
 		return &mProfileNodes;
 	}

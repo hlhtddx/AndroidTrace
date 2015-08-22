@@ -10,8 +10,8 @@ namespace Android {
 	{
 	public:
 		const char* getProfileName() override;
-		int64_t getElapsedInclusiveCpuTime() const override;
-		int64_t getElapsedInclusiveRealTime() const override;
+		uint32_t getElapsedInclusiveCpuTime() const override;
+		uint32_t getElapsedInclusiveRealTime() const override;
 
 		// Generated
 		ProfileSelf(MethodData* methodData);

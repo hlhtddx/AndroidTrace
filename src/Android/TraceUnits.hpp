@@ -4,12 +4,12 @@
 
 namespace Android {
 
+	typedef enum TimeScale {
+		Seconds, MilliSeconds, MicroSeconds
+	} TimeScale;
+
 	class TraceUnits : public Object
 	{
-	public:
-		typedef enum TimeScale {
-			Seconds, MilliSeconds, MicroSeconds
-		} TimeScale;
 	private:
 		TimeScale mTimeScale;
 		double mScale;
@@ -25,7 +25,7 @@ namespace Android {
 		void setTimeScale(TimeScale val);
 		TimeScale getTimeScale();
 
-		// Generated
+	public:
 		TraceUnits();
 	};
 

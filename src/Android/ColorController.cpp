@@ -7,7 +7,7 @@ namespace Android {
 #define RGB(r,g,b) ((r) | ((g) << 8) | ((b) << 16))
 #endif
 
-	uint32_t ColorController::rgbColors[] = {
+	COLOR ColorController::rgbColors[] = {
 		RGB(90, 90, 255),
 		RGB(0, 240, 0),
 		RGB(255, 0, 0),
@@ -26,15 +26,15 @@ namespace Android {
 		RGB(70, 70, 70),
 	};
 
-	inline unsigned char GetColorRed(uint32_t color) {
+	inline unsigned char GetColorRed(COLOR color) {
 		return (unsigned char)color;
 	}
 
-	inline unsigned char GetColorGreen(uint32_t color) {
+	inline unsigned char GetColorGreen(COLOR color) {
 		return ((unsigned short)color) >> 8;
 	}
 
-	inline unsigned char GetColorBlue(uint32_t color) {
+	inline unsigned char GetColorBlue(COLOR color) {
 		return (color & 0xff0000) >> 16;
 	}
 
@@ -43,7 +43,7 @@ namespace Android {
 		int nextColorIndex = 0;
 		for (auto it = methods->begin(); it != methods->end(); it++) {
 			MethodData* md = *it;
-			uint32_t rgb = rgbColors[nextColorIndex];
+			COLOR rgb = rgbColors[nextColorIndex];
 			nextColorIndex++;
 			if (nextColorIndex == sizeof(rgbColors) / sizeof(rgbColors[0]))
 				nextColorIndex = 0;

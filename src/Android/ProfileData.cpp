@@ -34,25 +34,25 @@ namespace Android {
 		return mElement;
 	}
 
-	void ProfileData::addElapsedInclusive(int64_t cpuTime, int64_t realTime)
+	void ProfileData::addElapsedInclusive(uint32_t cpuTime, uint32_t realTime)
 	{
 		mElapsedInclusiveCpuTime += cpuTime;
 		mElapsedInclusiveRealTime += realTime;
 		mNumCalls += 1;
 	}
 
-	void ProfileData::setElapsedInclusive(int64_t cpuTime, int64_t realTime)
+	void ProfileData::setElapsedInclusive(uint32_t cpuTime, uint32_t realTime)
 	{
 		mElapsedInclusiveCpuTime = cpuTime;
 		mElapsedInclusiveRealTime = realTime;
 	}
 
-	int64_t ProfileData::getElapsedInclusiveCpuTime() const
+	uint32_t ProfileData::getElapsedInclusiveCpuTime() const
 	{
 		return mElapsedInclusiveCpuTime;
 	}
 
-	int64_t ProfileData::getElapsedInclusiveRealTime() const
+	uint32_t ProfileData::getElapsedInclusiveRealTime() const
 	{
 		return mElapsedInclusiveRealTime;
 	}

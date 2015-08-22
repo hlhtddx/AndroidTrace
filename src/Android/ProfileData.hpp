@@ -13,18 +13,18 @@ namespace Android {
 		MethodData* mElement;
 		MethodData* mContext;
 		bool mElementIsParent;
-		int64_t mElapsedInclusiveCpuTime;
-		int64_t mElapsedInclusiveRealTime;
+		uint32_t mElapsedInclusiveCpuTime;
+		uint32_t mElapsedInclusiveRealTime;
 		int mNumCalls;
 
 	public:
 //		bool operator < (const ProfileData&);
 		virtual const char* getProfileName();
 		MethodData* getMethodData();
-		void addElapsedInclusive(int64_t cpuTime, int64_t realTime);
-		void setElapsedInclusive(int64_t cpuTime, int64_t realTime);
-		virtual int64_t getElapsedInclusiveCpuTime() const;
-		virtual int64_t getElapsedInclusiveRealTime() const;
+		void addElapsedInclusive(uint32_t cpuTime, uint32_t realTime);
+		void setElapsedInclusive(uint32_t cpuTime, uint32_t realTime);
+		virtual uint32_t getElapsedInclusiveCpuTime() const;
+		virtual uint32_t getElapsedInclusiveRealTime() const;
 		void setNumCalls(int numCalls);
 		void getNumCalls(String& out_string);
 		bool isParent();
