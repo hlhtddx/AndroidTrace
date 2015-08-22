@@ -18,7 +18,7 @@ int main(int argc, const char * argv[]) {
 	
 	const char* fileName = argv[1];
 	
-	Android::DmTraceReader *reader = new Android::DmTraceReader(fileName, false);
+	Android::DmTraceReader *reader = new Android::DmTraceReader(fileName, true);
 	Android::TimeLineView *view = new Android::TimeLineView(reader);
 	int a;
 	std::cin >> a;

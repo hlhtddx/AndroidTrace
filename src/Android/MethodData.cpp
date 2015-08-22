@@ -9,12 +9,12 @@ namespace Android {
 	{
 	}
 
-	MethodData::MethodData(int64_t id, String className)
+	MethodData::MethodData(uint32_t id, String className)
 		: MethodData(id, className, "", "", "", -1)
 	{
 	}
 
-	MethodData::MethodData(int64_t id, String className, String methodName, String signature, String pathname, int lineNumber)
+	MethodData::MethodData(uint32_t id, String className, String methodName, String signature, String pathname, int lineNumber)
 		: mRank(-1)
 	{
 		mId = id;
@@ -188,23 +188,23 @@ namespace Android {
 		return children;
 	}
 
-	void MethodData::addTopExclusive(int64_t cpuTime, int64_t realTime)
+	void MethodData::addTopExclusive(uint32_t cpuTime, uint32_t realTime)
 	{
 		mTopExclusiveCpuTime += cpuTime;
 		mTopExclusiveRealTime += realTime;
 	}
 
-	int64_t MethodData::getTopExclusiveCpuTime() const
+	uint32_t MethodData::getTopExclusiveCpuTime() const
 	{
 		return mTopExclusiveCpuTime;
 	}
 
-	int64_t MethodData::getTopExclusiveRealTime() const
+	uint32_t MethodData::getTopExclusiveRealTime() const
 	{
 		return mTopExclusiveRealTime;
 	}
 
-	int64_t MethodData::getId()
+	uint32_t MethodData::getId()
 	{
 		return mId;
 	}
@@ -219,29 +219,29 @@ namespace Android {
 		mName = mClassName + '.' + mMethodName + " " + mSignature;
 	}
 
-	const String& MethodData::getName() const
+	const char* MethodData::getName() const
 	{
-		return mName;
+		return mName.c_str();
 	}
 
-	const String& MethodData::getClassName() const
+	const char* MethodData::getClassName() const
 	{
-		return mClassName;
+		return mClassName.c_str();
 	}
 
-	const String& MethodData::getMethodName() const
+	const char* MethodData::getMethodName() const
 	{
-		return mMethodName;
+		return mMethodName.c_str();
 	}
 
-	const String& MethodData::getProfileName() const
+	const char* MethodData::getProfileName() const
 	{
-		return mProfileName;
+		return mProfileName.c_str();
 	}
 
-	const String& MethodData::getSignature() const
+	const char* MethodData::getSignature() const
 	{
-		return mSignature;
+		return mSignature.c_str();
 	}
 
 	void MethodData::computeProfileName()
@@ -256,11 +256,12 @@ namespace Android {
 		mProfileName = ss.str();
 	}
 
-	void MethodData::getCalls(String& outstring)
+	const char* MethodData::getCalls(String& outstring)
 	{
 		std::stringstream ss;
 		ss << mNumCalls[0] << "+" << mNumCalls[1];
 		outstring = ss.str();
+		return outstring.c_str();
 	}
 
 	int MethodData::getTotalCalls()
@@ -290,22 +291,22 @@ namespace Android {
 	}
 #endif
 
-	int64_t MethodData::getElapsedExclusiveCpuTime() const
+	uint32_t MethodData::getElapsedExclusiveCpuTime() const
 	{
 		return mElapsedExclusiveCpuTime;
 	}
 
-	int64_t MethodData::getElapsedExclusiveRealTime() const
+	uint32_t MethodData::getElapsedExclusiveRealTime() const
 	{
 		return mElapsedExclusiveRealTime;
 	}
 
-	int64_t MethodData::getElapsedInclusiveCpuTime() const
+	uint32_t MethodData::getElapsedInclusiveCpuTime() const
 	{
 		return mElapsedInclusiveCpuTime;
 	}
 
-	int64_t MethodData::getElapsedInclusiveRealTime() const
+	uint32_t MethodData::getElapsedInclusiveRealTime() const
 	{
 		return mElapsedInclusiveRealTime;
 	}

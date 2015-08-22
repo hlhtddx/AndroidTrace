@@ -11,7 +11,7 @@ namespace Android {
 	class MethodData : public Object
 	{
 	private:
-		int64_t mId;
+		uint32_t mId;
 		int mRank;
 		String mClassName;
 		String mMethodName;
@@ -20,18 +20,17 @@ namespace Android {
 		String mProfileName;
 		String mPathname;
 		int mLineNumber;
-		int64_t mElapsedExclusiveCpuTime;
-		int64_t mElapsedInclusiveCpuTime;
-		int64_t mTopExclusiveCpuTime;
-		int64_t mElapsedExclusiveRealTime;
-		int64_t mElapsedInclusiveRealTime;
-		int64_t mTopExclusiveRealTime;
+		uint32_t mElapsedExclusiveCpuTime;
+		uint32_t mElapsedInclusiveCpuTime;
+		uint32_t mTopExclusiveCpuTime;
+		uint32_t mElapsedExclusiveRealTime;
+		uint32_t mElapsedInclusiveRealTime;
+		uint32_t mTopExclusiveRealTime;
 		int mNumCalls[2];
 		int mColor;
 		int mFadedColor;
-		//    ::org::eclipse::swt::graphics::Image* mImage;
-		//    ::org::eclipse::swt::graphics::Image* mFadedImage;
-		class ProfileDataMap : public HashMap<int64_t, ProfileData*>
+
+		class ProfileDataMap : public HashMap<uint32_t, ProfileData*>
 		{
 		public:
 			~ProfileDataMap();
@@ -68,32 +67,32 @@ namespace Android {
 		ProfileDataList* addSelf(ProfileDataList* children);
 
 	public:
-		void addTopExclusive(int64_t cpuTime, int64_t realTime);
-		int64_t getTopExclusiveCpuTime() const;
-		int64_t getTopExclusiveRealTime() const;
-		int64_t getId();
+		void addTopExclusive(uint32_t cpuTime, uint32_t realTime);
+		uint32_t getTopExclusiveCpuTime() const;
+		uint32_t getTopExclusiveRealTime() const;
+		uint32_t getId();
 
 	private:
 		void computeName();
 
 	public:
-		const String& getName() const;
-		const String& getClassName() const;
-		const String& getMethodName() const;
-		const String& getProfileName() const;
-		const String& getSignature() const;
+		const char* getName() const;
+		const char* getClassName() const;
+		const char* getMethodName() const;
+		const char* getProfileName() const;
+		const char* getSignature() const;
 		void computeProfileName();
-		void getCalls(String& outstring);
+		const char* getCalls(String& outstring);
 		int getTotalCalls();
 		int getColor();
 		void setColor(int color);
-		//void setImage(::org::eclipse::swt::graphics::Image* image);
-		//::org::eclipse::swt::graphics::Image* getImage();
 		String toString();
-		int64_t getElapsedExclusiveCpuTime() const;
-		int64_t getElapsedExclusiveRealTime() const;
-		int64_t getElapsedInclusiveCpuTime() const;
-		int64_t getElapsedInclusiveRealTime() const;
+
+		uint32_t getElapsedExclusiveCpuTime() const;
+		uint32_t getElapsedExclusiveRealTime() const;
+		uint32_t getElapsedInclusiveCpuTime() const;
+		uint32_t getElapsedInclusiveRealTime() const;
+
 		void setFadedColor(int fadedColor);
 		int getFadedColor();
 		//	void setFadedImage(::org::eclipse::swt::graphics::Image* fadedImage);
@@ -105,8 +104,8 @@ namespace Android {
 		ProfileNodeList* getProfileNodes();
 		// Generated
 		MethodData();
-		MethodData(int64_t id, String className);
-		MethodData(int64_t id, String className, String methodName, String signature, String pathname, int lineNumber);
+		MethodData(uint32_t id, String className);
+		MethodData(uint32_t id, String className, String methodName, String signature, String pathname, int lineNumber);
 		~MethodData();
 		struct Less : public std::binary_function<ThreadData*, ThreadData*, bool> {
 			TimeBase* timeBase;

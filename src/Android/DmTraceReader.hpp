@@ -50,8 +50,8 @@ namespace Android {
 		ThreadList* mSortedThreads;
 		MethodList* mSortedMethods;
 
-		int64_t mTotalCpuTime;
-		int64_t mTotalRealTime;
+		uint32_t mTotalCpuTime;
+		uint32_t mTotalRealTime;
 		int mRecordSize;
 		ClockSource mClockSource;
 
@@ -90,11 +90,11 @@ namespace Android {
 		}
 		//	::java::util::HashMap* getThreadLabels();
 		//
-		//private:
-		//	void dumpThreadTimes();
-		//	void dumpCallTimes();
-		//	void dumpMethodStats();
-		//	void dumpTimeRecs(::java::util::ArrayList* timeRecs);
+		private:
+			void dumpThreadTimes();
+			void dumpCallTimes();
+			void dumpMethodStats();
+			void dumpTimeRecs();
 
 	public:
 		Vector<MethodData*>* getMethods();

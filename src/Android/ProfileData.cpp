@@ -26,7 +26,7 @@ namespace Android {
 
 	const char* ProfileData::getProfileName()
 	{
-		return mElement->getProfileName().c_str();
+		return mElement->getProfileName();
 	}
 
 	MethodData* ProfileData::getMethodData()

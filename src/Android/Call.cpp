@@ -75,7 +75,7 @@ namespace Android {
 		if (mMethodData == nullptr) {
 			return "unknown";
 		}
-		return mMethodData->getProfileName().c_str();
+		return mMethodData->getProfileName();
 	}
 
 	ThreadData* Call::getThreadData()

@@ -57,7 +57,7 @@ namespace Android {
 		if (magic != TRACE_MAGIC) {
 			throw magic;
 		}
-		int version = buffer->getByte();
+		int version = buffer->getShort();
 		if (version != mVersionNumber) {
 			throw version;
 		}
@@ -125,16 +125,10 @@ namespace Android {
 				int recordSize = mRecordSize;
 				if (mVersionNumber == 1) {
 					threadId = buffer->getByte();
-					if (threadId <= 0) {
-						printf("The file should reach to the end\n");
-					}
 					recordSize--;
 				}
 				else {
 					threadId = buffer->getShort();
-					if (threadId <= 0) {
-						printf("The file should reach to the end\n");
-					}
 					recordSize -= 2;
 				}
 				methodId = buffer->getInt();
@@ -317,8 +311,8 @@ namespace Android {
 			call->finish(&mCallList);
 		}
 
-		mTotalCpuTime = 0LL;
-		mTotalRealTime = 0LL;
+		mTotalCpuTime = 0;
+		mTotalRealTime = 0;
 
 		for (ThreadMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
 			ThreadData* threadData = it->second;
@@ -330,10 +324,10 @@ namespace Android {
 		}
 
 		if (mRegression) {
-			//::java::lang::System::out()->format("totalCpuTime %dus\n", new ::java::lang::ObjectArray({ static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(mTotalCpuTime)) }));
-			//::java::lang::System::out()->format("totalRealTime %dus\n", new ::java::lang::ObjectArray({ static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(mTotalRealTime)) }));
-			//dumpThreadTimes();
-			//dumpCallTimes();
+			printf("totalCpuTime %dus\n", mTotalCpuTime);
+			printf("totalRealTime %dus\n", mTotalRealTime);
+			dumpThreadTimes();
+			dumpCallTimes();
 		}
 		delete buffer;
 	}
@@ -424,7 +418,7 @@ namespace Android {
 	{
 		std::stringstream str(line);
 
-		int64_t id = 0;
+		uint32_t id = 0;
 		String idStr;
 		String className;
 		String methodName;
@@ -438,7 +432,7 @@ namespace Android {
 		}
 
 		char* endPtr;
-		id = strtoul(idStr.c_str(), &endPtr, 0);
+		id = (uint32_t)strtoul(idStr.c_str(), &endPtr, 0);
 		if (*endPtr != '\0') {
 			throw "ERROR: bad method ID";
 		}
@@ -495,98 +489,63 @@ namespace Android {
 		}
 
 		if (mRegression) {
-			//dumpMethodStats();
+			dumpMethodStats();
 		}
 	}
 
-	//
-	//void DmTraceReader::dumpThreadTimes()
-	//{
-	//	::java::lang::System::out()->print("\nThread Times\n");
-	//	::java::lang::System::out()->print("id  t-start    t-end  g-start    g-end     name\n");
-	//	for (auto _i = (mThreadMap->values())->iterator(); _i->hasNext();) {
-	//		ThreadData* threadData = java_cast<ThreadData*>(_i->next());
-	//		{
-	//			::java::lang::System::out()->format("%2d %8d %8d %8d %8d  %s\n", new ::java::lang::ObjectArray({
-	//				static_cast<::java::lang::Object*>(::java::lang::Integer::valueOf(threadData->getId()))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(threadData->mThreadStartTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(threadData->mThreadEndTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(threadData->mGlobalStartTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(threadData->mGlobalEndTime))
-	//				, static_cast<::java::lang::Object*>(threadData->getName())
-	//			}));
-	//		}
-	//	}
-	//}
-	//
-	//void DmTraceReader::dumpCallTimes()
-	//{
-	//	::java::lang::System::out()->print("\nCall Times\n");
-	//	::java::lang::System::out()->print("id  t-start    t-end  g-start    g-end    excl.    incl.  method\n");
-	//	for (auto _i = (mCallList)->iterator(); _i->hasNext();) {
-	//		Call* call = java_cast<Call*>(_i->next());
-	//		{
-	//			::java::lang::System::out()->format("%2d %8d %8d %8d %8d %8d %8d  %s\n", new ::java::lang::ObjectArray({
-	//				static_cast<::java::lang::Object*>(::java::lang::Integer::valueOf(call->getThreadId()))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mThreadStartTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mThreadEndTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mGlobalStartTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mGlobalEndTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mExclusiveCpuTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mInclusiveCpuTime))
-	//				, static_cast<::java::lang::Object*>(npc(call->getMethodData())->getName())
-	//			}));
-	//		}
-	//	}
-	//}
-	//
-	//void DmTraceReader::dumpMethodStats()
-	//{
-	//	::java::lang::System::out()->print("\nMethod Stats\n");
-	//	::java::lang::System::out()->print("Excl Cpu  Incl Cpu  Excl Real Incl Real    Calls  Method\n");
-	//	for (auto md : *mSortedMethods) {
-	//		::java::lang::System::out()->format("%9d %9d %9d %9d %9s  %s\n", new ::java::lang::ObjectArray({
-	//			static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(md->getElapsedExclusiveCpuTime()))
-	//			, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(md->getElapsedInclusiveCpuTime()))
-	//			, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(md->getElapsedExclusiveRealTime()))
-	//			, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(md->getElapsedInclusiveRealTime()))
-	//			, static_cast<::java::lang::Object*>(md->getCalls())
-	//			, static_cast<::java::lang::Object*>(md->getProfileName())
-	//		}));
-	//	}
-	//}
-	//
-	//void DmTraceReader::dumpTimeRecs(::java::util::ArrayList* timeRecs)
-	//{
-	//	::java::lang::System::out()->print("\nTime Records\n");
-	//	::java::lang::System::out()->print("id  t-start    t-end  g-start    g-end  method\n");
-	//	for (auto _i = timeRecs->iterator(); _i->hasNext();) {
-	//		TimeLineView_Record* record = java_cast<TimeLineView_Record*>(_i->next());
-	//		{
-	//			auto call = java_cast<Call*>(record->block);
-	//			::java::lang::System::out()->format("%2d %8d %8d %8d %8d  %s\n", new ::java::lang::ObjectArray({
-	//				static_cast<::java::lang::Object*>(::java::lang::Integer::valueOf(call->getThreadId()))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mThreadStartTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mThreadEndTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mGlobalStartTime))
-	//				, static_cast<::java::lang::Object*>(::java::lang::Long::valueOf(call->mGlobalEndTime))
-	//				, static_cast<::java::lang::Object*>(npc(call->getMethodData())->getName())
-	//			}));
-	//		}
-	//	}
-	//}
-	//
-	//java::util::HashMap* DmTraceReader::getThreadLabels()
-	//{
-	//	auto labels = new ::java::util::HashMap();
-	//	for (auto _i = (mThreadMap->values())->iterator(); _i->hasNext();) {
-	//		ThreadData* t = java_cast<ThreadData*>(_i->next());
-	//		{
-	//			labels->put(static_cast<::java::lang::Object*>(::java::lang::Integer::valueOf(t->getId())), static_cast<::java::lang::Object*>(t->getName()));
-	//		}
-	//	}
-	//	return labels;
-	//}
+	
+	void DmTraceReader::dumpThreadTimes()
+	{
+		printf("\nThread Times\n");
+		printf("id  t-start    t-end  g-start    g-end     name\n");
+		for (auto _i = mThreadMap.begin(); _i != mThreadMap.end(); _i++) {
+			ThreadData* threadData = _i->second;
+			printf("%2d %8d %8d %8d %8d  %s\n"
+				, threadData->getId()
+				, threadData->mThreadStartTime
+				, threadData->mThreadEndTime
+				, threadData->mGlobalStartTime
+				, threadData->mGlobalEndTime
+				, threadData->getName());
+		}
+	}
+	
+	void DmTraceReader::dumpCallTimes()
+	{
+		printf("\nCall Times\n");
+		printf("id  t-start    t-end  g-start    g-end    excl.    incl.  method\n");
+		for (auto _i = 0; _i < mCallList.size(); _i++) {
+			Call* call = mCallList.get(_i);
+			{
+				printf("%2d %8d %8d %8d %8d %8d %8d  %s\n"
+					, call->getThreadId()
+					, call->mThreadStartTime
+					, call->mThreadEndTime
+					, call->mGlobalStartTime
+					, call->mGlobalEndTime
+					, call->mExclusiveCpuTime
+					, call->mInclusiveCpuTime
+					, call->getMethodData()->getName());
+			}
+		}
+	}
+	
+	void DmTraceReader::dumpMethodStats()
+	{
+		printf("\nMethod Stats\n");
+		printf("Excl Cpu  Incl Cpu  Excl Real Incl Real    Calls  Method\n");
+		for (auto _i = mSortedMethods->begin(); _i != mSortedMethods->end(); _i++) {
+			MethodData* md = *_i;
+			String callstr;
+			printf("%9d %9d %9d %9d %9s  %s\n"
+				, md->getElapsedExclusiveCpuTime()
+				, md->getElapsedInclusiveCpuTime()
+				, md->getElapsedExclusiveRealTime()
+				, md->getElapsedInclusiveRealTime()
+				, md->getCalls(callstr)
+				, md->getProfileName());
+		}
+	}
 
 	DmTraceReader::MethodList* DmTraceReader::getMethods()
 	{

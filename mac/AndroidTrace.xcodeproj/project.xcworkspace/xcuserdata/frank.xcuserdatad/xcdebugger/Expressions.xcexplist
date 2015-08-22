@@ -3,6 +3,25 @@
    version = "1.0">
    <ContextStates>
       <ContextState
+         contextName = "Android::ByteBuffer::getShort():Common.hpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "mCurrent[2]">
+            </PersistentString>
+            <PersistentString
+               value = "mCurrent[1]">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "Android::DmTraceReader::mapFile(char const*, long long):DmTraceReader.cpp">
+         <PersistentStrings>
+            <PersistentString
+               value = "size+offset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
          contextName = "DmTraceReader::parseData(long long):DmTraceReader.cpp">
          <PersistentStrings>
             <PersistentString

@@ -32,7 +32,7 @@ namespace Android {
 		uint32_t mThreadCurrentTime;
 
 	public:
-		const String& getName() const;
+		const char* getName() const;
 		Call* getRootCall(Call::CallList* callList);
 		bool isEmpty();
 

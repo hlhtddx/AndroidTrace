@@ -26,9 +26,9 @@ namespace Android {
 	{
 	}
 
-	const String& ThreadData::getName() const
+	const char* ThreadData::getName() const
 	{
-		return mName;
+		return mName.c_str();
 	}
 
 	Call* ThreadData::getRootCall(Call::CallList* callList)
@@ -89,10 +89,11 @@ namespace Android {
 			return nullptr;
 		}
 		if (call->getMethodData() != method) {
-			String error = "Method exit (" + method->getName()
-				+ ") does not match current method ("
-				+ call->getMethodData()->getName()
-				+ ")";
+			String error = "Method exit (";
+			error += method->getName();
+			error += ") does not match current method (";
+			error += call->getMethodData()->getName();
+			error += ")";
 			throw error;
 		}
 
