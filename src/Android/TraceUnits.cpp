@@ -33,7 +33,7 @@ namespace Android {
 
 		outs.fill('0');
 
-		if (static_cast<int32_t>(scaled) == scaled) {
+		if (static_cast<int>(scaled) == scaled) {
 			outs.width(6);
 			outs.precision(0);
 		}

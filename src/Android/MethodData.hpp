@@ -11,7 +11,7 @@ namespace Android {
 	class MethodData : public Object
 	{
 	private:
-		uint32_t mId;
+		id_type mId;
 		int mRank;
 		String mClassName;
 		String mMethodName;
@@ -27,10 +27,10 @@ namespace Android {
 		uint32_t mElapsedInclusiveRealTime;
 		uint32_t mTopExclusiveRealTime;
 		int mNumCalls[2];
-		int mColor;
-		int mFadedColor;
+		COLOR mColor;
+		COLOR mFadedColor;
 
-		class ProfileDataMap : public HashMap<uint32_t, ProfileData*>
+		class ProfileDataMap : public HashMap<id_type, ProfileData*>
 		{
 		public:
 			~ProfileDataMap();
@@ -52,7 +52,7 @@ namespace Android {
 		int getRank();
 		void setRank(int rank);
 		void addElapsedExclusive(uint32_t cpuTime, uint32_t realTime);
-		void addElapsedInclusive(uint32_t cpuTime, uint32_t realTime, bool isRecursive, int parent, Call::CallList* callList);
+		void addElapsedInclusive(uint32_t cpuTime, uint32_t realTime, bool isRecursive, int parent, CallList* callList);
 
 	private:
 		ProfileDataMap* updateInclusive(uint32_t cpuTime, uint32_t realTime, MethodData* contextMethod, MethodData* elementMethod, bool elementIsParent, ProfileDataMap* map);
@@ -68,7 +68,7 @@ namespace Android {
 		void addTopExclusive(uint32_t cpuTime, uint32_t realTime);
 		uint32_t getTopExclusiveCpuTime() const;
 		uint32_t getTopExclusiveRealTime() const;
-		uint32_t getId();
+		id_type getId();
 
 	private:
 		void computeName();
@@ -82,8 +82,8 @@ namespace Android {
 		void computeProfileName();
 		const char* getCalls(String& outstring);
 		int getTotalCalls();
-		uint32_t getColor();
-		void setColor(uint32_t color);
+		COLOR getColor();
+		void setColor(COLOR color);
 		String toString();
 
 		uint32_t getElapsedExclusiveCpuTime() const;
@@ -91,8 +91,8 @@ namespace Android {
 		uint32_t getElapsedInclusiveCpuTime() const;
 		uint32_t getElapsedInclusiveRealTime() const;
 
-		void setFadedColor(int fadedColor);
-		int getFadedColor();
+		void setFadedColor(COLOR fadedColor);
+		COLOR getFadedColor();
 		//	void setFadedImage(::org::eclipse::swt::graphics::Image* fadedImage);
 		//	::org::eclipse::swt::graphics::Image* getFadedImage();
 		void setPathname(const String & pathname);
@@ -102,8 +102,8 @@ namespace Android {
 		PNodePtrList* getProfileNodes();
 		// Generated
 		MethodData();
-		MethodData(uint32_t id, String className);
-		MethodData(uint32_t id, String className, String methodName, String signature, String pathname, int lineNumber);
+		MethodData(id_type id, String className);
+		MethodData(id_type id, String className, String methodName, String signature, String pathname, int lineNumber);
 		~MethodData();
 		struct Less : public std::binary_function<ThreadData*, ThreadData*, bool> {
 			TimeBase* timeBase;

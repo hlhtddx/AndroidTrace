@@ -45,7 +45,7 @@ namespace Android {
 		MethodData* mTopLevel;
 		MethodData* mContextSwitch;
 
-		Call::CallList mCallList;
+		CallList mCallList;
 		PropertyMap mPropertiesMap;
 		MethodPtrMap mMethodMap;
 		ThreadPtrMap mThreadMap;
@@ -87,7 +87,7 @@ namespace Android {
 		void analyzeData();
 
 	public:
-		Call::CallList* getThreadTimeRecords() {
+		CallList* getThreadTimeRecords() {
 			return &mCallList;
 		}
 		//	::java::util::HashMap* getThreadLabels();

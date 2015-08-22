@@ -4,8 +4,7 @@
 namespace Android {
 
 	class MethodData;
-	typedef uint32_t COLOR;
-
+	
 	class ColorController
 	{
 	private:

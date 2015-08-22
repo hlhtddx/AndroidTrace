@@ -2,7 +2,7 @@
 
 namespace Android {
 
-	Call* ThreadData::enter(MethodData* method, TraceActionList* trace, Call::CallList* callList)
+	Call* ThreadData::enter(MethodData* method, TraceActionList* trace, CallList* callList)
 	{
 		if (mIsEmpty) {
 			mIsEmpty = false;
@@ -35,7 +35,7 @@ namespace Android {
 		return call;
 	}
 
-	Call* ThreadData::exit(MethodData* method, TraceActionList* trace, Call::CallList* callList)
+	Call* ThreadData::exit(MethodData* method, TraceActionList* trace, CallList* callList)
 	{
 		Call* call = top(callList);
 		if (call->getCaller() == -1) {
@@ -63,7 +63,7 @@ namespace Android {
 		return call;
 	}
 
-	Call* ThreadData::top(Call::CallList* callList)
+	Call* ThreadData::top(CallList* callList)
 	{
 		if (mStack.size() == 0)
 			return NULL;
@@ -77,7 +77,7 @@ namespace Android {
 		return (int)mStack.back();
 	}
 
-	void ThreadData::endTrace(TraceActionList* trace, Call::CallList* callList)
+	void ThreadData::endTrace(TraceActionList* trace, CallList* callList)
 	{
 		for (ThreadStack::reverse_iterator i = mStack.rbegin(); i != mStack.rend(); i++) {
 			Call* call = callList->get(*i);

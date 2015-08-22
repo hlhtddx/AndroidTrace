@@ -65,7 +65,7 @@ namespace Android {
 		return mInclusiveRealTime;
 	}
 
-	uint32_t Call::getColor()
+	COLOR Call::getColor()
 	{
 		return mMethodData->getColor();
 	}
@@ -98,12 +98,12 @@ namespace Android {
 		return mMethodData->getId() == -1;
 	}
 
-	bool Call::isIgnoredBlock(Call::CallList* callList)
+	bool Call::isIgnoredBlock(CallList* callList)
 	{
 		return (mCaller == -1) || (isContextSwitch() && (callList->get(mCaller)->mCaller == -1));
 	}
 
-	Call* Call::getParentBlock(Call::CallList* callList)
+	Call* Call::getParentBlock(CallList* callList)
 	{
 		return callList->get(mCaller);
 	}
@@ -143,4 +143,21 @@ namespace Android {
 		}
 		mMethodData->addElapsedInclusive(mInclusiveCpuTime, mInclusiveRealTime, mIsRecursive, mCaller, callList);
 	}
+	
+	void Segment::init(RowData* rowData, CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime)
+	{
+		mRowData = rowData;
+		Call* call = callList->get(callIndex);
+		if (call->isContextSwitch()) {
+			mBlock = call->getParentBlockIndex();
+			mIsContextSwitch = true;
+		}
+		else {
+			mBlock = callIndex;
+			mIsContextSwitch = false;
+		}
+		mStartTime = startTime;
+		mEndTime = endTime;
+	}
+
 };

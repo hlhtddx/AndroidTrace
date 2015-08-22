@@ -117,8 +117,8 @@ namespace Android {
 		ThreadData* prevThreadData = nullptr;
 
 		while (!buffer->end()) {
-			uint32_t threadId;
-			uint32_t methodId;
+			id_type threadId;
+			id_type methodId;
 			uint32_t threadTime = 0;
 			uint32_t globalTime = 0;
 			try {
@@ -418,7 +418,7 @@ namespace Android {
 	{
 		std::stringstream str(line);
 
-		uint32_t id = 0;
+		id_type id = 0;
 		String idStr;
 		String className;
 		String methodName;
@@ -432,7 +432,7 @@ namespace Android {
 		}
 
 		char* endPtr;
-		id = (uint32_t)strtoul(idStr.c_str(), &endPtr, 0);
+		id = (id_type)strtoul(idStr.c_str(), &endPtr, 0);
 		if (*endPtr != '\0') {
 			throw "ERROR: bad method ID";
 		}
@@ -533,7 +533,7 @@ namespace Android {
 	void DmTraceReader::dumpMethodStats()
 	{
 		printf("\nMethod Stats\n");
-		printf("Excl\tCpu\tIncl\tCpu\tExcl\tReal\tIncl\tReal\tCalls\tMethod\n");
+		printf("Excl Cpu\tIncl Cpu\tExcl Real\tIncl Real\tCalls\tMethod\n");
 		for (auto _i = mSortedMethods->begin(); _i != mSortedMethods->end(); _i++) {
 			MethodData* md = *_i;
 			String callstr;

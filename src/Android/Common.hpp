@@ -27,6 +27,8 @@
 
 namespace Android {
 	typedef std::string String;
+	typedef uint32_t COLOR;
+	typedef uint32_t id_type;
 
 	template<class _Ty> class List : public std::list<_Ty>
 	{
