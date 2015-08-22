@@ -148,7 +148,7 @@ namespace Android {
 			return mMinMajorTick;
 		}
 
-		uint32_t valueToPixel(double value)
+		int valueToPixel(double value)
 		{
 			return (int) ceil(mPixelsPerRange * (value - mMinVal) - 0.5);
 		}
@@ -355,10 +355,10 @@ namespace Android {
 	class TimeLineView : public Object
 	{
 	protected:
-		HashMap<String, RowData*> mRowByName;
+		HashMap<id_type, RowData*> mRowById;
 		Vector<RowData*>* mRows;
 		SegmentList mSegments;
-		HashMap<int, String> mThreadLabels;
+//		HashMap<int, String> mThreadLabels;
 		Timescale* mTimescale;
 		Surface* mSurface;
 		RowLabels* mLabels;
@@ -417,10 +417,8 @@ namespace Android {
 		void setData(CallList* callList);
 
 	protected:
-		static void popFrames(RowData* rd, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);
 		int computeVisibleRows(int ydim);
 		void startHighlighting();
-		void dumpSegments();
 
 	public:
 		TimeLineView(DmTraceReader* reader/*, SelectionController* selectionController*/);

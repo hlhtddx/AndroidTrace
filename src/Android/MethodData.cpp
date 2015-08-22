@@ -45,7 +45,7 @@ namespace Android {
 		if (mRecursiveChildren) {
 			delete mRecursiveChildren;
 		}
-		for (PNodePtrList::iterator it = mProfileNodes.begin(); it != mProfileNodes.end(); it++) {
+		for (auto it = mProfileNodes.begin(); it != mProfileNodes.end(); it++) {
 			ProfileNode* node = *it;
 			delete node;
 		}
@@ -53,7 +53,7 @@ namespace Android {
 
 	MethodData::ProfileDataMap::~ProfileDataMap()
 	{
-		for (iterator it = begin(); it != end(); it++) {
+		for (auto it = begin(); it != end(); it++) {
 			delete it->second;
 		}
 	}

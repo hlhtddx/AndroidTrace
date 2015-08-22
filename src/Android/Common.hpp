@@ -49,7 +49,7 @@ namespace Android {
 
 		List<_Ty> *value_list() {
 			List<_Ty> *ret = new List<_Ty>;
-			for (typename std::map<_Kty, _Ty>::iterator it = this->begin(); it != this->end(); it++) {
+			for (auto it = this->begin(); it != this->end(); it++) {
 				ret->push_back(it->second);
 			}
 			return ret;
@@ -57,7 +57,7 @@ namespace Android {
 
 		Vector<_Ty> *value_vector() {
 			Vector<_Ty> *ret = new Vector<_Ty>;
-			for (typename std::map<_Kty, _Ty>::iterator it = this->begin(); it != this->end(); it++) {
+			for (auto it = this->begin(); it != this->end(); it++) {
 				ret->push_back(it->second);
 			}
 			return ret;
@@ -200,7 +200,12 @@ namespace Android {
 		size_t size() const {
 			return mSize;
 		}
+		
+		void sort() {
+			::qsort(mContents, mSize, sizeof(_Ty), compare);
+		}
 
+		static int compare(const void* _Left, const void* _Right);
 	private:
 		size_t mSize;
 		size_t mCapacity;

@@ -79,7 +79,7 @@ namespace Android {
 
 	void ThreadData::endTrace(TraceActionList* trace, CallList* callList)
 	{
-		for (ThreadStack::reverse_iterator i = mStack.rbegin(); i != mStack.rend(); i++) {
+		for (auto i = mStack.rbegin(); i != mStack.rend(); i++) {
 			Call* call = callList->get(*i);
 			call->mGlobalEndTime = mGlobalEndTime;
 			call->mThreadEndTime = mThreadEndTime;

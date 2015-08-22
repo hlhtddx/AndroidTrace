@@ -160,4 +160,19 @@ namespace Android {
 		mEndTime = endTime;
 	}
 
+	template<> int FastArray<Segment>::compare(const void* _Left, const void* _Right)
+	{
+		Segment* bd1 = (Segment*)_Left;
+		Segment* bd2 = (Segment*)_Right;
+		RowData* rd1 = bd1->mRowData;
+		RowData* rd2 = bd2->mRowData;
+		int diff = rd1->mRank - rd2->mRank;
+		if (diff == 0) {
+			long timeDiff = bd1->mStartTime - bd2->mStartTime;
+			if (timeDiff == 0L)
+				timeDiff = bd1->mEndTime - bd2->mEndTime;
+			return (int) timeDiff;
+		}
+		return diff;
+	}
 };

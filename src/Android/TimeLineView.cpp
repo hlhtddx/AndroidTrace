@@ -86,7 +86,7 @@ namespace Android {
 			mMinMajorTick = mMinVal;
 		}
 		else {
-			auto ival = static_cast<int>((mMinVal / mTickIncrement));
+			int ival = static_cast<int>((mMinVal / mTickIncrement));
 			mMinMajorTick = (ival * mTickIncrement);
 			if (mMinMajorTick < mMinVal) {
 				mMinMajorTick += mTickIncrement;
@@ -153,7 +153,7 @@ namespace Android {
 
 	void Surface::initZoomFractionsWithExp()
 	{
-		auto next = 0;
+		int next = 0;
 		for (auto ii = 0; ii < 4; next++) {
 			mZoomFractions[next] = ((1 << ii) / 16.0);
 			ii++;
@@ -167,7 +167,7 @@ namespace Android {
 	void Surface::initZoomFractionsWithSinWave()
 	{
 		for (auto ii = 0; ii < 8; ii++) {
-			auto offset = 3.141592653589793 * ii / 8.0;
+			double offset = 3.141592653589793 * ii / 8.0;
 			mZoomFractions[ii] = ((sin(4.71238898038469 + offset) + 1.0) / 2.0);
 		}
 	}
@@ -194,9 +194,9 @@ namespace Android {
 
 	void Surface::setScaleFromHorizontalScrollBar(int selection)
 	{
-		auto minVal = mParent->getScaleInfo().getMinVal();
-		auto maxVal = mParent->getScaleInfo().getMaxVal();
-		auto visibleRange = maxVal - minVal;
+		double minVal = mParent->getScaleInfo().getMinVal();
+		double maxVal = mParent->getScaleInfo().getMaxVal();
+		double visibleRange = maxVal - minVal;
 		minVal = mLimitMinVal + selection;
 		maxVal = minVal + visibleRange;
 		if (maxVal > mLimitMaxVal) {
@@ -207,25 +207,27 @@ namespace Android {
 		mParent->getScaleInfo().setMaxVal(maxVal);
 		mGraphicsState = Scrolling;
 	}
-	/*
-		void Surface::updateHorizontalScrollBar()
-		{
-		auto minVal = mParent->getScaleInfo().getMinVal();
-		auto maxVal = mParent->getScaleInfo().getMaxVal();
-		auto visibleRange = maxVal - minVal;
-		auto fullRange = mLimitMaxVal - mLimitMinVal;
+
+/*
+	void Surface::updateHorizontalScrollBar()
+	{
+		double minVal = mParent->getScaleInfo().getMinVal();
+		double maxVal = mParent->getScaleInfo().getMaxVal();
+		double visibleRange = maxVal - minVal;
+		double fullRange = mLimitMaxVal - mLimitMinVal;
 		auto hBar = getHorizontalBar();
 		if (fullRange > visibleRange) {
-		hBar->setVisible(true);
-		hBar->setMinimum(0);
-		hBar->setMaximum(static_cast<int>(::java::lang::Math::ceil(fullRange)));
-		hBar->setThumb(static_cast<int>(::java::lang::Math::ceil(visibleRange)));
-		hBar->setSelection(static_cast<int>(::java::lang::Math::floor(minVal - mLimitMinVal)));
+			hBar->setVisible(true);
+			hBar->setMinimum(0);
+			hBar->setMaximum(static_cast<int>(::java::lang::Math::ceil(fullRange)));
+			hBar->setThumb(static_cast<int>(::java::lang::Math::ceil(visibleRange)));
+			hBar->setSelection(static_cast<int>(::java::lang::Math::floor(minVal - mLimitMinVal)));
 		}
 		else {
-		hBar->setVisible(false);
+			hBar->setVisible(false);
 		}
-		}*/
+	}
+ */
 
 	void Surface::draw()
 	{
@@ -236,14 +238,14 @@ namespace Android {
 		if (mGraphicsState == Scaling) {
 			double diff = mMouse.x - mMouseMarkStartX;
 			if (diff > 0.0) {
-				auto newMinVal = mScaleMinVal - diff / mScalePixelsPerRange;
+				double newMinVal = mScaleMinVal - diff / mScalePixelsPerRange;
 				if (newMinVal < mLimitMinVal)
 					newMinVal = mLimitMinVal;
 
 				mParent->getScaleInfo().setMinVal(newMinVal);
 			}
 			else if (diff < 0.0) {
-				auto newMaxVal = mScaleMaxVal - diff / mScalePixelsPerRange;
+				double newMaxVal = mScaleMaxVal - diff / mScalePixelsPerRange;
 				if (newMaxVal > mLimitMaxVal)
 					newMaxVal = mLimitMaxVal;
 
@@ -256,9 +258,9 @@ namespace Android {
 		if ((mParent->mStartRow != mCachedStartRow) || (mParent->mEndRow != mCachedEndRow) || (mParent->getScaleInfo().getMinVal() != mCachedMinVal) || (mParent->getScaleInfo().getMaxVal() != mCachedMaxVal)) {
 			mCachedStartRow = mParent->mStartRow;
 			mCachedEndRow = mParent->mEndRow;
-			auto xdim = dim.cx - 70;
+			int xdim = dim.cx - 70;
 			mParent->getScaleInfo().setNumPixels(xdim);
-			auto forceEndPoints = (mGraphicsState == Scaling) || (mGraphicsState == Animating) || (mGraphicsState == Scrolling);
+			bool forceEndPoints = (mGraphicsState == Scaling) || (mGraphicsState == Animating) || (mGraphicsState == Scrolling);
 			mParent->getScaleInfo().computeTicks(forceEndPoints);
 			mCachedMinVal = mParent->getScaleInfo().getMinVal();
 			mCachedMaxVal = mParent->getScaleInfo().getMaxVal();
@@ -273,8 +275,8 @@ namespace Android {
 		if (mParent->mNumRows > 2) {
 //			gcImage->setBackground(mParent->mColorRowBack);
 			for (auto ii = 1; ii < mParent->mNumRows; ii += 2) {
-				auto rd = (*mParent->mRows)[ii];
-				auto y1 = rd->mRank * 32 - mParent->mScrollOffsetY;
+				RowData* rd = (*mParent->mRows)[ii];
+				int y1 = rd->mRank * 32 - mParent->mScrollOffsetY;
 //				gcImage->fillRectangle(0, y1, dim.cx, 32);
 			}
 		}
@@ -287,7 +289,7 @@ namespace Android {
 		String blockDetails;
 
 		if (mDebug) {
-			auto pixelsPerRange = mParent->getScaleInfo().getPixelsPerRange();
+			double pixelsPerRange = mParent->getScaleInfo().getPixelsPerRange();
 			printf("dim.x %d pixels %d minVal %f, maxVal %f ppr %f rpp %f\n",
 				dim.cx, dim.cx - 70,
 				mParent->getScaleInfo().getMinVal(), mParent->getScaleInfo().getMaxVal(),
@@ -301,7 +303,7 @@ namespace Android {
 
 				if (mParent->mMouseRow == strip->mRowData->mRank) {
 					if ((mMouse.x >= strip->mX) && (mMouse.x < strip->mX + strip->mWidth)) {
-						auto block = mParent->mCallList->get(strip->mSegment->mBlock);
+						Call* block = mParent->mCallList->get(strip->mSegment->mBlock);
 						blockName = block->getName();
 						blockColor = strip->mColor;
 
@@ -331,13 +333,14 @@ namespace Android {
 				}
 			}
 		}
+
 		mMouseSelect.x = 0;
 		mMouseSelect.y = 0;
 		if (selectBlock != nullptr) {
-			Vector<Selection*> selections;
-			auto rd = mParent->mRows[mParent->mMouseRow];
-			//selections.push_back(Selection::highlight("Thread", rd));
-			//selections.push_back(Selection::highlight("Call", selectBlock));
+//			Vector<Selection*> selections;
+//			Vector<RowData*>& rd = mParent->mRows[mParent->mMouseRow];
+//			selections.push_back(Selection::highlight("Thread", rd));
+//			selections.push_back(Selection::highlight("Call", selectBlock));
 			auto mouseX = mMouse.x - 10;
 			auto mouseXval = mParent->getScaleInfo().pixelToValue(mouseX);
 			//selections.push_back(Selection::highlight("Time", reinterpret_cast<Object*>(mouseXval)));
@@ -347,7 +350,7 @@ namespace Android {
 			mParent->startHighlighting();
 		}
 		if ((mParent->mMouseRow >= 0) && (mParent->mMouseRow < mParent->mNumRows) && (mHighlightStep == 0)) {
-			auto y1 = mParent->mMouseRow * 32 - mParent->mScrollOffsetY;
+			int y1 = mParent->mMouseRow * 32 - mParent->mScrollOffsetY;
 		}
 //		drawHighlights();
 		auto lineEnd = std::min(dim.cy, mParent->mNumRows * 32);
@@ -452,7 +455,7 @@ namespace Android {
 		double maxVal = mParent->getScaleInfo().getMaxVal();
 		Pixel* pixels = new Pixel[mParent->mNumRows];
 
-		for (size_t ii = 0; ii < mParent->mSegments.size(); ii++) {
+		for (auto ii = 0; ii < mParent->mSegments.size(); ii++) {
 			mParent->mCallList->get(mParent->mSegments[ii].mBlock)->clearWeight();
 		}
 
@@ -470,15 +473,15 @@ namespace Android {
 		uint32_t prevCallStart = UINT32_MAX;
 		uint32_t prevCallEnd = UINT32_MAX;
 
+		// if a Call in timeline view is selected, it will be highlighted
 		if (mParent->mHighlightCall != nullptr) {
 
-			uint32_t callPixelStart = UINT32_MAX;
-			uint32_t callPixelEnd = UINT32_MAX;
+			int callPixelStart = -1;
+			int callPixelEnd = -1;
 			Call* highlightCall = mParent->mHighlightCall;
 
 			callStart = highlightCall->getStartTime();
 			callEnd = highlightCall->getEndTime();
-			callMethod = highlightCall->getMethodData();
 
 			if (callStart >= minVal) {
 				callPixelStart = mParent->getScaleInfo().valueToPixel(callStart);
@@ -488,130 +491,150 @@ namespace Android {
 				callPixelEnd = mParent->getScaleInfo().valueToPixel(callEnd);
 			}
 
+			//Compute the Y axis by (thread->row)
 			id_type threadId = highlightCall->getThreadId();
-			const char* threadName = mParent->mThreadLabels[threadId].c_str();
-			callRowData = mParent->mRowByName[threadName];
-			auto y1 = callRowData->mRank * 32 + 6;
+			callRowData = mParent->mRowById[threadId];
+			int y1 = callRowData->mRank * 32 + 6;
+			
+			//Get color from method data
+			callMethod = highlightCall->getMethodData();
 			COLOR color = callMethod->getColor();
 			mHighlightInclusive.push_back(Range(callPixelStart + 10, callPixelEnd + 10, y1, color));
 		}
 
 		for (auto ii = 0; ii < mParent->mSegments.size(); ii++) {
 			Segment* segment = mParent->mSegments.get(ii);
-			if (segment->mEndTime > minVal && segment->mStartTime < maxVal) {
-				auto block = mParent->mCallList->get(segment->mBlock);
-				COLOR color = block->getColor();
-				if (color != 0) {
-					auto recordStart = std::max(static_cast<double>(segment->mStartTime), minVal);
-					auto recordEnd = std::min(static_cast<double>(segment->mEndTime), maxVal);
+			
+			//Check if segment is out of visible range
+			if (segment->mEndTime <= minVal || segment->mStartTime >= maxVal)
+			{
+				continue;
+			}
 
-					if (recordStart != recordEnd) {
-						auto pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
-						auto pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
-						auto width = pixelEnd - pixelStart;
-						auto isContextSwitch = segment->mIsContextSwitch;
-						auto rd = segment->mRowData;
-						auto md = block->getMethodData();
-						auto y1 = rd->mRank * 32 + 6;
-						if (rd->mRank > mParent->mEndRow) {
-							break;
-						}
-						if (mParent->mHighlightMethodData != nullptr) {
-							if (mParent->mHighlightMethodData == md) {
-								if ((prevMethodStart != pixelStart) || (prevMethodEnd != pixelEnd)) {
-									prevMethodStart = pixelStart;
-									prevMethodEnd = pixelEnd;
-									auto rangeWidth = width;
-									if (rangeWidth == 0)
-										rangeWidth = 1;
+			Call* block = mParent->mCallList->get(segment->mBlock);
+			COLOR color = block->getColor();
+			if (color == 0) {
+				continue;
+			}
 
-									mHighlightExclusive.push_back(Range(pixelStart + 10, rangeWidth, y1, color));
-									callStart = block->getStartTime();
-									auto callPixelStart = -1;
-									if (callStart >= minVal)
-										callPixelStart = mParent->getScaleInfo().valueToPixel(callStart);
+			// Clip block to range of minVal~maxVal
+			double recordStart = std::max(static_cast<double>(segment->mStartTime), minVal);
+			double recordEnd = std::min(static_cast<double>(segment->mEndTime), maxVal);
 
-									auto callPixelEnd = -1;
-									callEnd = block->getEndTime();
-									if (callEnd <= maxVal)
-										callPixelEnd = mParent->getScaleInfo().valueToPixel(callEnd);
+			// if range is empty
+			if (recordStart == recordEnd) {
+				continue;
+			}
 
-									if ((prevCallStart != callPixelStart) || (prevCallEnd != callPixelEnd)) {
-										prevCallStart = callPixelStart;
-										prevCallEnd = callPixelEnd;
-										mHighlightInclusive.push_back(Range(callPixelStart + 10, callPixelEnd + 10, y1, color));
-									}
-								}
-							}
-							else if (mFadeColors) {
-								color = md->getFadedColor();
-							}
-						}
-						else if (mParent->mHighlightCall != nullptr) {
-							if ((segment->mStartTime >= callStart) && (segment->mEndTime <= callEnd) && (callMethod == md) && (callRowData == rd)) {
-								if ((prevMethodStart != pixelStart) || (prevMethodEnd != pixelEnd)) {
-									prevMethodStart = pixelStart;
-									prevMethodEnd = pixelEnd;
-									auto rangeWidth = width;
-									if (rangeWidth == 0)
-										rangeWidth = 1;
+			int pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
+			int pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
+			int width = pixelEnd - pixelStart;
+			bool isContextSwitch = segment->mIsContextSwitch;
+			
+			RowData* rd = segment->mRowData;
+			MethodData* md = block->getMethodData();
+			int y1 = rd->mRank * 32 + 6;
+			
+			// if beyond the last row(thread), break the loop
+			if (rd->mRank > mParent->mEndRow) {
+				break;
+			}
+			
+			if (mParent->mHighlightMethodData != nullptr) {
+				if (mParent->mHighlightMethodData == md) {
+					if ((prevMethodStart != pixelStart) || (prevMethodEnd != pixelEnd)) {
+						prevMethodStart = pixelStart;
+						prevMethodEnd = pixelEnd;
+						int rangeWidth = width;
+						if (rangeWidth == 0)
+							rangeWidth = 1;
+						
+						mHighlightExclusive.push_back(Range(pixelStart + 10, rangeWidth, y1, color));
 
-									mHighlightExclusive.push_back(Range(pixelStart + 10, rangeWidth, y1, color));
-								}
-							}
-							else if (mFadeColors) {
-								color = md->getFadedColor();
-							}
-						}
-						auto pix = &pixels[rd->mRank];
-						if (pix->mStart != pixelStart) {
-							if (pix->mSegment != nullptr) {
-								emitPixelStrip(rd, y1, pix);
-							}
-							if (width == 0) {
-								auto weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-								weight = block->addWeight(pixelStart, rd->mRank, weight);
-								if (weight > pix->mMaxWeight) {
-									pix->setFields(pixelStart, weight, segment, color, rd);
-								}
-							}
-							else {
-								auto x1 = pixelStart + 10;
-								auto strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, rd, segment, color);
-								mStripList.push_back(strip);
-							}
-						}
-						else {
-							auto weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-							weight = block->addWeight(pixelStart, rd->mRank, weight);
-							if (weight > pix->mMaxWeight) {
-								pix->setFields(pixelStart, weight, segment, color, rd);
-							}
-							if (width == 1) {
-								emitPixelStrip(rd, y1, pix);
-								pixelStart++;
-								weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-								weight = block->addWeight(pixelStart, rd->mRank, weight);
-								pix->setFields(pixelStart, weight, segment, color, rd);
-							}
-							else if (width > 1) {
-								emitPixelStrip(rd, y1, pix);
-								pixelStart++;
-								width--;
-								auto x1 = pixelStart + 10;
-								auto strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, rd, segment, color);
-								mStripList.push_back(strip);
-							}
+						int callPixelStart = -1;
+						callStart = block->getStartTime();
+						if (callStart >= minVal)
+							callPixelStart = mParent->getScaleInfo().valueToPixel(callStart);
+						
+						int callPixelEnd = -1;
+						callEnd = block->getEndTime();
+						if (callEnd <= maxVal)
+							callPixelEnd = mParent->getScaleInfo().valueToPixel(callEnd);
+						
+						if ((prevCallStart != callPixelStart) || (prevCallEnd != callPixelEnd)) {
+							prevCallStart = callPixelStart;
+							prevCallEnd = callPixelEnd;
+							mHighlightInclusive.push_back(Range(callPixelStart + 10, callPixelEnd + 10, y1, color));
 						}
 					}
+				}
+				else if (mFadeColors) {
+					color = md->getFadedColor();
+				}
+			}
+			else if (mParent->mHighlightCall != nullptr) {
+				if ((segment->mStartTime >= callStart) && (segment->mEndTime <= callEnd) && (callMethod == md) && (callRowData == rd)) {
+					if ((prevMethodStart != pixelStart) || (prevMethodEnd != pixelEnd)) {
+						prevMethodStart = pixelStart;
+						prevMethodEnd = pixelEnd;
+						int rangeWidth = width;
+						if (rangeWidth == 0)
+							rangeWidth = 1;
+						
+						mHighlightExclusive.push_back(Range(pixelStart + 10, rangeWidth, y1, color));
+					}
+				}
+				else if (mFadeColors) {
+					color = md->getFadedColor();
+				}
+			}
+
+			Pixel* pix = &pixels[rd->mRank];
+			if (pix->mStart != pixelStart) {
+				if (pix->mSegment != nullptr) {
+					emitPixelStrip(rd, y1, pix);
+				}
+				if (width == 0) {
+					double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
+					weight = block->addWeight(pixelStart, rd->mRank, weight);
+					if (weight > pix->mMaxWeight) {
+						pix->setFields(pixelStart, weight, segment, color, rd);
+					}
+				}
+				else {
+					int x1 = pixelStart + 10;
+					Strip* strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, rd, segment, color);
+					mStripList.push_back(strip);
+				}
+			}
+			else {
+				double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
+				weight = block->addWeight(pixelStart, rd->mRank, weight);
+				if (weight > pix->mMaxWeight) {
+					pix->setFields(pixelStart, weight, segment, color, rd);
+				}
+				if (width == 1) {
+					emitPixelStrip(rd, y1, pix);
+					pixelStart++;
+					weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
+					weight = block->addWeight(pixelStart, rd->mRank, weight);
+					pix->setFields(pixelStart, weight, segment, color, rd);
+				}
+				else if (width > 1) {
+					emitPixelStrip(rd, y1, pix);
+					pixelStart++;
+					width--;
+					int x1 = pixelStart + 10;
+					Strip* strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, rd, segment, color);
+					mStripList.push_back(strip);
 				}
 			}
 		}
 		for (auto ii = 0; ii < mParent->mNumRows; ii++) {
-			auto pix = &pixels[ii];
+			Pixel* pix = &pixels[ii];
 			if (pix->mSegment != nullptr) {
-				auto rd = pix->mRowData;
-				auto y1 = rd->mRank * 32 + 6;
+				RowData* rd = pix->mRowData;
+				int y1 = rd->mRank * 32 + 6;
 				emitPixelStrip(rd, y1, pix);
 			}
 		}
@@ -622,11 +645,11 @@ namespace Android {
 		if (isContextSwitch) {
 			return 0.0;
 		}
-		auto pixelStartFraction = mParent->getScaleInfo().valueToPixelFraction(start);
-		auto pixelEndFraction = mParent->getScaleInfo().valueToPixelFraction(end);
-		auto leftEndPoint = std::max(pixelStartFraction, pixel - 0.5);
-		auto rightEndPoint = std::min(pixelEndFraction, pixel + 0.5);
-		auto weight = rightEndPoint - leftEndPoint;
+		double pixelStartFraction = mParent->getScaleInfo().valueToPixelFraction(start);
+		double pixelEndFraction = mParent->getScaleInfo().valueToPixelFraction(end);
+		double leftEndPoint = std::max(pixelStartFraction, pixel - 0.5);
+		double rightEndPoint = std::min(pixelEndFraction, pixel + 0.5);
+		double weight = rightEndPoint - leftEndPoint;
 		return weight;
 	}
 
@@ -635,17 +658,18 @@ namespace Android {
 		if (pixel->mSegment == nullptr) {
 			return;
 		}
-		auto x = pixel->mStart + 10;
-		auto height = static_cast<int>((pixel->mMaxWeight * 20.0 * 0.75));
+		int x = pixel->mStart + 10;
+		int height = static_cast<int>((pixel->mMaxWeight * 20.0 * 0.75));
 		if (height < mMinStripHeight)
 			height = mMinStripHeight;
 
-		auto remainder = 20 - height;
+		int remainder = 20 - height;
 		if (remainder > 0) {
-			auto strip = new Strip(x, y, 1, remainder, rd, pixel->mSegment, mFadeColors ? 0 : 1); // TODO
+			Strip* strip = new Strip(x, y, 1, remainder, rd, pixel->mSegment, mFadeColors ? 0 : 1); // TODO
 			mStripList.push_back(strip);
 		}
-		auto strip = new Strip(x, y + remainder, 1, height, rd, pixel->mSegment, pixel->mColor);
+
+		Strip* strip = new Strip(x, y + remainder, 1, height, rd, pixel->mSegment, pixel->mColor);
 		mStripList.push_back(strip);
 		pixel->mSegment = nullptr;
 		pixel->mMaxWeight = 0.0;
@@ -653,8 +677,8 @@ namespace Android {
 
 	void Surface::mouseMove(Point& pt, int flags)
 	{
-		auto dim = mParent->mSurface->getSize();
-		auto x = pt.x;
+		Size dim = mParent->mSurface->getSize();
+		int x = pt.x;
 		if (x < 10)
 			x = 10;
 
@@ -678,7 +702,7 @@ namespace Android {
 				//mParent->mSurface->setCursor(mDecreasingCursor);
 			}
 		}
-		auto rownum = (mMouse.y + mParent->mScrollOffsetY) / 32;
+		int rownum = (mMouse.y + mParent->mScrollOffsetY) / 32;
 		if ((pt.y < 0) || (pt.y >= dim.cy)) {
 			rownum = -1;
 		}
@@ -691,8 +715,8 @@ namespace Android {
 
 	void Surface::mouseDown(Point& pt, int flags)
 	{
-		auto dim = mParent->mSurface->getSize();
-		auto x = pt.x;
+		Size dim = mParent->mSurface->getSize();
+		int x = pt.x;
 		if (x < 10)
 			x = 10;
 
@@ -713,13 +737,13 @@ namespace Android {
 			return;
 		}
 		mGraphicsState = Animating;
-		auto dim = mParent->mSurface->getSize();
+		Size dim = mParent->mSurface->getSize();
 		if ((pt.y <= 0) || (pt.y >= dim.cy)) {
 			mGraphicsState = Normal;
 			redraw();
 			return;
 		}
-		auto x = pt.x;
+		int x = pt.x;
 		if (x < 10)
 			x = 10;
 
@@ -727,7 +751,7 @@ namespace Android {
 			x = dim.cx - 60;
 
 		mMouseMarkEndX = x;
-		auto dist = mMouseMarkEndX - mMouseMarkStartX;
+		int dist = mMouseMarkEndX - mMouseMarkStartX;
 		if (dist < 0)
 			dist = -dist;
 
@@ -739,7 +763,7 @@ namespace Android {
 			return;
 		}
 		if (mMouseMarkEndX < mMouseMarkStartX) {
-			auto temp = mMouseMarkEndX;
+			int temp = mMouseMarkEndX;
 			mMouseMarkEndX = mMouseMarkStartX;
 			mMouseMarkStartX = temp;
 		}
@@ -748,9 +772,9 @@ namespace Android {
 			redraw();
 			return;
 		}
-		auto minVal = mParent->getScaleInfo().getMinVal();
-		auto maxVal = mParent->getScaleInfo().getMaxVal();
-		auto ppr = mParent->getScaleInfo().getPixelsPerRange();
+		double minVal = mParent->getScaleInfo().getMinVal();
+		double maxVal = mParent->getScaleInfo().getMaxVal();
+		double ppr = mParent->getScaleInfo().getPixelsPerRange();
 		mZoomMin = (minVal + (mMouseMarkStartX - 10) / ppr);
 		mZoomMax = (minVal + (mMouseMarkEndX - 10) / ppr);
 		if (mZoomMin < mMinDataVal)
@@ -759,11 +783,11 @@ namespace Android {
 		if (mZoomMax > mMaxDataVal) {
 			mZoomMax = mMaxDataVal;
 		}
-		auto xdim = dim.cx - 70;
-		auto scaler = new TickScaler(mZoomMin, mZoomMax, xdim, 50);
-		scaler->computeTicks(false);
-		mZoomMin = scaler->getMinVal();
-		mZoomMax = scaler->getMaxVal();
+		int xdim = dim.cx - 70;
+		TickScaler scaler(mZoomMin, mZoomMax, xdim, 50);
+		scaler.computeTicks(false);
+		mZoomMin = scaler.getMinVal();
+		mZoomMax = scaler.getMaxVal();
 		mMouseMarkStartX = static_cast<int>(((mZoomMin - minVal) * ppr + 10.0));
 		mMouseMarkEndX = static_cast<int>(((mZoomMax - minVal) * ppr + 10.0));
 		//mParent->mTimescale->setMarkStart(mMouseMarkStartX);
@@ -787,30 +811,30 @@ namespace Android {
 	void Surface::mouseScrolled(Point& pt, int flags)
 	{
 		mGraphicsState = Scrolling;
-		auto tMin = mParent->getScaleInfo().getMinVal();
-		auto tMax = mParent->getScaleInfo().getMaxVal();
-		auto zoomFactor = 2.0;
-		auto tMinRef = mLimitMinVal;
-		auto tMaxRef = mLimitMaxVal;
+		double tMin = mParent->getScaleInfo().getMinVal();
+		double tMax = mParent->getScaleInfo().getMaxVal();
+		double zoomFactor = 2.0;
+		double tMinRef = mLimitMinVal;
+		double tMaxRef = mLimitMaxVal;
 		double tMaxNew;
 		double tMinNew;
 		double t;
 		if (pt.x > 0) {
-			auto dim = mParent->mSurface->getSize();
-			auto x = pt.x;
+			Size dim = mParent->mSurface->getSize();
+			int x = pt.x;
 			if (x < 10)
 				x = 10;
 
 			if (x > dim.cx - 60)
 				x = dim.cx - 60;
 
-			auto ppr = mParent->getScaleInfo().getPixelsPerRange();
+			double ppr = mParent->getScaleInfo().getPixelsPerRange();
 			t = tMin + (x - 10) / ppr;
 			tMinNew = std::max(tMinRef, t - (t - tMin) / zoomFactor);
 			tMaxNew = std::min(tMaxRef, t + (tMax - t) / zoomFactor);
 		}
 		else {
-			auto factor = (tMax - tMin) / (tMaxRef - tMinRef);
+			double factor = (tMax - tMin) / (tMaxRef - tMinRef);
 			if (factor < 1.0) {
 				t = (factor * tMinRef - tMin) / (factor - 1.0);
 				tMinNew = std::max(tMinRef, t - zoomFactor * (t - tMin));
@@ -831,8 +855,8 @@ namespace Android {
 
 	void Surface::startScaling(int mouseX)
 	{
-		auto dim = mParent->mSurface->getSize();
-		auto x = mouseX;
+		Size dim = mParent->mSurface->getSize();
+		int x = mouseX;
 		if (x < 10)
 			x = 10;
 
@@ -890,13 +914,13 @@ namespace Android {
 			mParent->getScaleInfo().setMinVal(mZoomMin);
 			mParent->getScaleInfo().setMaxVal(mZoomMax);
 			mMouseMarkStartX = 10;
-			auto dim = getSize();
+			Size dim = getSize();
 			mMouseMarkEndX = (dim.cx - 60);
 			//mParent->mTimescale->setMarkStart(mMouseMarkStartX);
 			//mParent->mTimescale->setMarkEnd(mMouseMarkEndX);
 		}
 		else {
-			auto fraction = mZoomFractions[mZoomStep];
+			double fraction = mZoomFractions[mZoomStep];
 			mMouseMarkStartX = static_cast<int>((mZoomMouseStart - fraction * mMouseStartDistance));
 			mMouseMarkEndX = static_cast<int>((mZoomMouseEnd + fraction * mMouseEndDistance));
 			//mParent->mTimescale->setMarkStart(mMouseMarkStartX);
@@ -907,8 +931,8 @@ namespace Android {
 			}
 			else
 				ppr = (mMouseMarkEndX - mZoomFixedPixel) / mFixed2ZoomMax;
-			auto newMin = mZoomFixed - mFixedPixelStartDistance / ppr;
-			auto newMax = mZoomFixed + mFixedPixelEndDistance / ppr;
+			double newMin = mZoomFixed - mFixedPixelStartDistance / ppr;
+			double newMax = mZoomFixed + mFixedPixelEndDistance / ppr;
 			mParent->getScaleInfo().setMinVal(newMin);
 			mParent->getScaleInfo().setMaxVal(newMax);
 		}
@@ -927,7 +951,7 @@ namespace Android {
 
 	void RowLabels::mouseMove(Point& pt, int flags)
 	{
-		auto rownum = (pt.y + mParent->mScrollOffsetY) / 32;
+		int rownum = (pt.y + mParent->mScrollOffsetY) / 32;
 		if (mParent->mMouseRow != rownum) {
 			mParent->mMouseRow = rownum;
 			redraw();
@@ -963,120 +987,15 @@ namespace Android {
 		mCallList = callList;
 		double maxVal = 0.0;
 		double minVal = 0.0;
-		if (callList->size() > 0) {
-			minVal = callList->get(0)->getStartTime();
-		}
-
-		for (size_t _i = 0; _i < callList->size(); _i++) {
-			Call* block = callList->get(_i);
-			ThreadData* row = block->getThreadData();
-			if (!block->isIgnoredBlock(callList)) {
-				auto rowName = row->getName();
-
-				RowData* rd;
-				HashMap<String, RowData*>::iterator it = mRowByName.find(rowName);
-				if (it == mRowByName.end()) {
-					rd = new RowData(row);
-					mRowByName.add(rowName, rd);
-				}
-				else {
-					rd = it->second;
-				}
-
-				auto blockStartTime = block->getStartTime();
-				auto blockEndTime = block->getEndTime();
-				if (blockEndTime > rd->mEndTime) {
-					auto start = std::max(blockStartTime, rd->mEndTime);
-					rd->mElapsed = blockEndTime - start;
-					rd->mEndTime = blockEndTime;
-				}
-				if (blockEndTime > maxVal) {
-					maxVal = blockEndTime;
-				}
-				auto top = rd->top();
-				if (top == -1) {
-					rd->push(block->getIndex());
-				}
-				else {
-					Call* topCall = mCallList->get(top);
-					auto topStartTime = topCall->getStartTime();
-					auto topEndTime = topCall->getEndTime();
-					if (topEndTime >= blockStartTime) {
-						if (topStartTime < blockStartTime) {
-							auto segment = mSegments.addNull2();
-							segment->init(rd, callList, topCall->getIndex(), topStartTime, blockStartTime);
-						}
-						if (topEndTime == blockStartTime)
-							rd->pop();
-
-						rd->push(block->getIndex());
-					}
-					else {
-						popFrames(rd, callList, topCall, blockStartTime, &mSegments);
-						rd->push(block->getIndex());
-					}
-				}
-			}
-		}
-
-		for (auto _i = mRowByName.begin(); _i != mRowByName.end(); _i++) {
-			RowData* rd = _i->second;
-			{
-				auto top = rd->top();
-				popFrames(rd, callList, callList->get(top), INT_MAX, &mSegments);
-			}
-		}
 
 		mSurface->setRange(minVal, maxVal);
 		mSurface->setLimitRange(minVal, maxVal);
-		mRows = mRowByName.value_vector();
-		std::sort(mRows->begin(), mRows->begin(), RowData::Less());
-
-		int index = 0;
-		for (auto ii = mRows->begin(); ii < mRows->end(); ii++) {
-			(*ii)->mRank = index++;
-		}
-
-		mNumRows = 0;
-		for (auto ii = mRows->begin(); ii < mRows->end(); ii++) {
-			if ((*ii)->mElapsed == 0LL)
-				break;
-
-			mNumRows += 1;
-		}
-		//::qsort(mSegments, new TimeLineView_setData_12(this));
-		dumpSegments();
-	}
-
-	void TimeLineView::popFrames(RowData* rd, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList)
-	{
-		auto topEndTime = top->getEndTime();
-		auto lastEndTime = top->getStartTime();
-		while (topEndTime <= startTime) {
-			if (topEndTime > lastEndTime) {
-				auto segment = segmentList->addNull2();
-				segment->init(rd, callList, top->getIndex(), lastEndTime, topEndTime);
-				lastEndTime = topEndTime;
-			}
-			rd->pop();
-
-			int topIndex = rd->top();
-			if (topIndex == -1)
-				return;
-			top = callList->get(topIndex);
-
-			topEndTime = top->getEndTime();
-		}
-		if (lastEndTime < startTime) {
-			auto bd = segmentList->addNull2();
-			bd->init(rd, callList, top->getIndex(), lastEndTime, startTime);
-		}
 	}
 
 	int TimeLineView::computeVisibleRows(int ydim)
 	{
-		auto offsetY = mScrollOffsetY;
-		auto spaceNeeded = mNumRows * 32;
+		int offsetY = mScrollOffsetY;
+		int spaceNeeded = mNumRows * 32;
 		if (offsetY + ydim > spaceNeeded) {
 			offsetY = spaceNeeded - ydim;
 			if (offsetY < 0) {
@@ -1096,23 +1015,6 @@ namespace Android {
 		mSurface->mHighlightStep = 0;
 		mSurface->mFadeColors = true;
 		mSurface->mCachedEndRow = -1;
-	}
-	
-	void TimeLineView::dumpSegments()
-	{
-		printf("\nSegments\n");
-		printf("id\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
-		for (auto _i = 0; _i < mSegments.size(); _i++) {
-			Segment* segment = mSegments.get(_i);
-			Call* call = mCallList->get(segment->mBlock);
-			printf("%2d\t%s\t%4d\t%4d\t%s\n"
-				   , call->getThreadId()
-				   , segment->mRowData->mName.c_str()
-				   , segment->mStartTime
-				   , segment->mEndTime
-				   , call->getMethodData()->getName()
-				   );
-		}
 	}
 
 };

@@ -26,10 +26,10 @@ namespace Android {
 		if (mSortedMethods != nullptr) {
 			delete mSortedMethods;
 		}
-		for (MethodPtrMap::iterator it = mMethodMap.begin(); it != mMethodMap.end(); it++) {
+		for (auto it = mMethodMap.begin(); it != mMethodMap.end(); it++) {
 			delete it->second;
 		}
-		for (ThreadPtrMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
+		for (auto it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
 			delete it->second;
 		}
 	}
@@ -38,6 +38,7 @@ namespace Android {
 	{
 		filepos offset = parseKeys();
 		parseData(offset);
+		generateSegments();
 		analyzeData();
 		ColorController::assignMethodColors(mSortedMethods);
 	}
@@ -210,10 +211,10 @@ namespace Android {
 					if ((prevThreadData != nullptr) && (prevThreadData != threadData)) {
 						Call* switchCall = prevThreadData->enter(mContextSwitch, trace, &mCallList);
 						switchCall->mThreadStartTime = prevThreadData->mThreadEndTime;
-						auto top = threadData->top(&mCallList);
+						Call* top = threadData->top(&mCallList);
 						if (top->getMethodData() == mContextSwitch) {
 							threadData->exit(mContextSwitch, trace, &mCallList);
-							auto beforeSwitch = elapsedThreadTime / 2;
+							uint32_t beforeSwitch = elapsedThreadTime / 2;
 							top->mThreadStartTime += beforeSwitch;
 							top->mThreadEndTime = top->mThreadStartTime;
 						}
@@ -233,7 +234,7 @@ namespace Android {
 						threadData->exit(mContextSwitch, trace, &mCallList);
 					}
 				}
-				auto top = threadData->top(&mCallList);
+				Call* top = threadData->top(&mCallList);
 				top->addCpuTime(elapsedThreadTime);
 			}
 			Call* call;
@@ -265,7 +266,7 @@ namespace Android {
 			}
 		}
 
-		for (ThreadPtrMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
+		for (auto it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
 			ThreadData* threadData = it->second;
 			threadData->endTrace(trace, &mCallList);
 		}
@@ -274,13 +275,14 @@ namespace Android {
 		if (!haveGlobalClock) {
 			globalTime = 0LL;
 			prevThreadData = nullptr;
-			for (TraceActionList::iterator it = trace->begin(); it != trace->end(); it++) {
+			for (auto it = trace->begin(); it != trace->end(); it++) {
 				TraceAction& traceAction = *it;
 				{
-					auto call = mCallList.get(traceAction.mCall);
-					auto threadData = call->getThreadData();
+					Call* call = mCallList.get(traceAction.mCall);
+					ThreadData* threadData = call->getThreadData();
+
 					if (traceAction.mAction == ACTION_ENTER) {
-						auto threadTime = call->mThreadStartTime;
+						uint32_t threadTime = call->mThreadStartTime;
 						globalTime += call->mThreadStartTime - threadData->mThreadCurrentTime;
 						call->mGlobalStartTime = globalTime;
 						if (!threadData->mHaveGlobalTime) {
@@ -290,12 +292,13 @@ namespace Android {
 						threadData->mThreadCurrentTime = threadTime;
 					}
 					else if (traceAction.mAction == ACTION_EXIT) {
-						auto threadTime = call->mThreadEndTime;
+						uint32_t threadTime = call->mThreadEndTime;
 						globalTime += call->mThreadEndTime - threadData->mThreadCurrentTime;
 						call->mGlobalEndTime = globalTime;
 						threadData->mGlobalEndTime = globalTime;
 						threadData->mThreadCurrentTime = threadTime;
 					}
+					
 					prevThreadData = threadData;
 				}
 			}
@@ -303,7 +306,7 @@ namespace Android {
 
 		mCallList.freeExtra();
 
-		for (size_t i = mCallList.size() - 1; i >= 1; i--) {
+		for (auto i = mCallList.size() - 1; i >= 1; i--) {
 			Call* call = mCallList.get(i);
 			uint32_t realTime = call->mGlobalEndTime - call->mGlobalStartTime;
 			call->mExclusiveRealTime = std::max<uint32_t>(realTime - call->mInclusiveRealTime, 0);
@@ -314,7 +317,7 @@ namespace Android {
 		mTotalCpuTime = 0;
 		mTotalRealTime = 0;
 
-		for (ThreadPtrMap::iterator it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
+		for (auto it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
 			ThreadData* threadData = it->second;
 			Call* rootCall = threadData->getRootCall(&mCallList);
 			threadData->updateRootCallTimeBounds(&mCallList);
@@ -337,7 +340,7 @@ namespace Android {
 		filepos offset = 0;
 		try {
 			std::ifstream in(mTraceFileName, std::ios::binary | std::ios::in);
-			auto mode = 0;
+			int mode = 0;
 			for (;;) {
 				String line;
 				if (!readLine(in, line)) {
@@ -460,6 +463,126 @@ namespace Android {
 		}
 	}
 
+	void DmTraceReader::generateSegments()
+	{
+		mMinTime = UINT_MAX;
+		mMaxTime = 0;
+
+		if (mCallList.size() > 0) {
+			mMinTime = mCallList.get(0)->getStartTime();
+		}
+
+		for (auto _i = 0; _i < mCallList.size(); _i++) {
+			Call* block = mCallList.get(_i);
+			ThreadData* row = block->getThreadData();
+			if (!block->isIgnoredBlock(&mCallList)) {
+				id_type rowId = row->getId();
+				
+				RowData* rd;
+				HashMap<id_type, RowData*>::iterator it = mRowById.find(rowId);
+				if (it == mRowById.end()) {
+					rd = new RowData(row);
+					mRowById.add(rowId, rd);
+				}
+				else {
+					rd = it->second;
+				}
+				
+				uint32_t blockStartTime = block->getStartTime();
+				uint32_t blockEndTime = block->getEndTime();
+				
+				if (blockEndTime > rd->mEndTime) {
+					auto start = std::max(blockStartTime, rd->mEndTime);
+					rd->mElapsed = blockEndTime - start;
+					rd->mEndTime = blockEndTime;
+				}
+
+				if (blockEndTime > mMaxTime) {
+					mMaxTime = blockEndTime;
+				}
+				
+				int top = rd->top();
+				if (top == -1) {
+					rd->push(block->getIndex());
+				}
+				else {
+					Call* topCall = mCallList.get(top);
+					uint32_t topStartTime = topCall->getStartTime();
+					uint32_t topEndTime = topCall->getEndTime();
+					
+					if (topEndTime >= blockStartTime) {
+						if (topStartTime < blockStartTime) {
+							Segment* segment = mSegments.addNull2();
+							segment->init(rd, &mCallList, topCall->getIndex(), topStartTime, blockStartTime);
+						}
+						if (topEndTime == blockStartTime)
+							rd->pop();
+						
+						rd->push(block->getIndex());
+					}
+					else {
+						popFrames(rd, &mCallList, topCall, blockStartTime, &mSegments);
+						rd->push(block->getIndex());
+					}
+				}
+			}
+		}
+		
+		for (auto _i = mRowById.begin(); _i != mRowById.end(); _i++) {
+			RowData* rd = _i->second;
+			{
+				int top = rd->top();
+				popFrames(rd, &mCallList, mCallList.get(top), INT_MAX, &mSegments);
+			}
+		}
+		
+		mRows = mRowById.value_vector();
+		std::sort(mRows->begin(), mRows->begin(), RowData::Less());
+		
+		int index = 0;
+		for (auto ii = mRows->begin(); ii < mRows->end(); ii++) {
+			(*ii)->mRank = index++;
+		}
+		
+		mNumRows = 0;
+		for (auto ii = mRows->begin(); ii < mRows->end(); ii++) {
+			if ((*ii)->mElapsed == 0LL)
+				break;
+			
+			mNumRows += 1;
+		}
+		mSegments.sort();
+		dumpSegments();
+
+	}
+	
+	void DmTraceReader::popFrames(RowData* rd, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList)
+	{
+		uint32_t topEndTime = top->getEndTime();
+		uint32_t lastEndTime = top->getStartTime();
+		
+		while (topEndTime <= startTime) {
+			if (topEndTime > lastEndTime) {
+				auto segment = segmentList->addNull2();
+				segment->init(rd, callList, top->getIndex(), lastEndTime, topEndTime);
+				lastEndTime = topEndTime;
+			}
+			rd->pop();
+			
+			int topIndex = rd->top();
+			if (topIndex == -1)
+				return;
+			top = callList->get(topIndex);
+			
+			topEndTime = top->getEndTime();
+		}
+		
+		if (lastEndTime < startTime) {
+			Segment* bd = segmentList->addNull2();
+			bd->init(rd, callList, top->getIndex(), lastEndTime, startTime);
+		}
+	}
+
 	void DmTraceReader::analyzeData()
 	{
 		TimeBase* timeBase = getPreferredTimeBase();
@@ -471,7 +594,7 @@ namespace Android {
 		std::sort(mSortedMethods->begin(), mSortedMethods->end(), MethodData::Less(timeBase));
 
 		int nonZero = 0;
-		for (MethodPtrList::iterator it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
+		for (auto it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
 			MethodData* md = *(it);
 			if (timeBase->getElapsedInclusiveTime(md) == 0LL)
 			{
@@ -482,7 +605,7 @@ namespace Android {
 			nonZero++;
 		}
 
-		for (MethodPtrList::iterator it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
+		for (auto it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
 			MethodData* md = *(it);
 			md->analyzeData(timeBase);
 		}
@@ -491,7 +614,23 @@ namespace Android {
 			dumpMethodStats();
 		}
 	}
-
+	
+	void DmTraceReader::dumpSegments()
+	{
+		printf("\nSegments\n");
+		printf("id\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
+		for (auto _i = 0; _i < mSegments.size(); _i++) {
+			Segment* segment = mSegments.get(_i);
+			Call* call = mCallList.get(segment->mBlock);
+			printf("%2d\t%s\t%4d\t%4d\t%s\n"
+				   , call->getThreadId()
+				   , segment->mRowData->mName.c_str()
+				   , segment->mStartTime
+				   , segment->mEndTime
+				   , call->getMethodData()->getName()
+				   );
+		}
+	}
 	
 	void DmTraceReader::dumpThreadTimes()
 	{

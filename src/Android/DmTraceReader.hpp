@@ -52,8 +52,16 @@ namespace Android {
 		ThreadPtrList* mSortedThreads;
 		MethodPtrList* mSortedMethods;
 
+		HashMap<id_type, RowData*> mRowById;
+		Vector<RowData*>* mRows;
+		SegmentList mSegments;
+		int mNumRows;
+
+		uint32_t mMinTime;
+		uint32_t mMaxTime;
 		uint32_t mTotalCpuTime;
 		uint32_t mTotalRealTime;
+
 		int mRecordSize;
 		ClockSource mClockSource;
 
@@ -75,12 +83,12 @@ namespace Android {
 		ByteBuffer* mapFile(const char* filename, filepos offset);
 		void readDataFileHeader(ByteBuffer* buffer);
 		void parseData(filepos offset) /* throws(IOException) */;
-
-	public:
 		filepos parseKeys() /* throws(IOException) */;
 		void parseOption(const String &line);
 		void parseThread(const String &line);
 		void parseMethod(const String &line);
+		void generateSegments();
+		static void popFrames(RowData* rd, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);
 
 	private:
 		void constructPathname(String &className, String &pathname);
@@ -97,6 +105,7 @@ namespace Android {
 			void dumpCallTimes();
 			void dumpMethodStats();
 			void dumpTimeRecs();
+			void dumpSegments();
 
 	public:
 		Vector<MethodData*>* getMethods();
