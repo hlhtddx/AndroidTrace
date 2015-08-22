@@ -10,7 +10,7 @@ namespace Android {
 	TimeBase* TimeBase::CPU_TIME = &CpuTimeBase::TIME;
 	TimeBase* TimeBase::REAL_TIME = &RealTimeBase::TIME;
 
-	uint32_t CpuTimeBase::getTime(const ThreadData* threadData, Call::CallList* callList)
+	uint32_t CpuTimeBase::getTime(const ThreadData* threadData, CallList* callList)
 	{
 		return threadData->getCpuTime(callList);
 	}
@@ -30,7 +30,7 @@ namespace Android {
 		return profileData->getElapsedInclusiveCpuTime();
 	}
 
-	uint32_t RealTimeBase::getTime(const ThreadData* threadData, Call::CallList* callList)
+	uint32_t RealTimeBase::getTime(const ThreadData* threadData, CallList* callList)
 	{
 		return threadData->getRealTime(callList);
 	}

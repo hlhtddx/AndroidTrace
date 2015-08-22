@@ -12,8 +12,8 @@ namespace Android {
 
 	typedef std::streampos filepos;
 	typedef HashMap<String, String> PropertyMap;
-	typedef HashMap<uint32_t, MethodData*> MethodMap;
-	typedef HashMap<uint32_t, ThreadData*> ThreadMap;
+	typedef HashMap<id_type, MethodData*> MethodMap;
+	typedef HashMap<id_type, ThreadData*> ThreadMap;
 	typedef Vector<ThreadData*> ThreadList;
 	typedef Vector<MethodData*> MethodList;
 	
@@ -45,7 +45,7 @@ namespace Android {
 		MethodData* mTopLevel;
 		MethodData* mContextSwitch;
 
-		Call::CallList mCallList;
+		CallList mCallList;
 		PropertyMap mPropertiesMap;
 		MethodMap mMethodMap;
 		ThreadMap mThreadMap;
@@ -87,16 +87,16 @@ namespace Android {
 		void analyzeData();
 
 	public:
-		Call::CallList* getThreadTimeRecords() {
+		CallList* getThreadTimeRecords() {
 			return &mCallList;
 		}
 		//	::java::util::HashMap* getThreadLabels();
 		//
-		private:
-			void dumpThreadTimes();
-			void dumpCallTimes();
-			void dumpMethodStats();
-			void dumpTimeRecs();
+	private:
+		void dumpThreadTimes();
+		void dumpCallTimes();
+		void dumpMethodStats();
+		void dumpTimeRecs();
 
 	public:
 		Vector<MethodData*>* getMethods();

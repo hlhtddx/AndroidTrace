@@ -34,59 +34,26 @@ namespace Android {
 	{
 	public:
 		Point mXdim;
-		int32_t mY;
-		uint32_t mColor;
+		int mY;
+		COLOR mColor;
 
 		// Generated
-		Range(uint32_t xStart, uint32_t width, uint32_t y, uint32_t color);
+		Range(int xStart, int width, int y, COLOR color);
 	};
-
-	class RowData : public Object
-	{
-	public:
-		String mName;
-		uint32_t mRank;
-		uint32_t mElapsed;
-		Vector<int> mStack;
-		uint32_t mEndTime;
-
-	public:
-		virtual void push(int index);
-		virtual int top();
-		virtual void pop();
-
-	public:
-		RowData(ThreadData* row);
-	};
-
-	typedef struct Segment
-	{
-	public:
-		RowData* mRowData;
-		uint32_t mStartTime;
-		uint32_t mEndTime;
-		int mBlock;
-		bool mIsContextSwitch;
-
-	public:
-		void init(RowData* rowData, Call::CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime);
-	} Segment;
-
-	typedef FastArray<Segment> SegmentList;
 
 	class Strip : public Object
 	{
 	public:
-		uint32_t mX;
-		uint32_t mY;
-		uint32_t mWidth;
-		uint32_t mHeight;
+		int mX;
+		int mY;
+		int mWidth;
+		int mHeight;
 		RowData* mRowData;
 		Segment* mSegment;
-		uint32_t mColor;
+		COLOR mColor;
 
 	public:
-		Strip(uint32_t x, uint32_t y, uint32_t width, uint32_t height, RowData* rowData, Segment* segment, uint32_t color);
+		Strip(int x, int y, int width, int height, RowData* rowData, Segment* segment, COLOR color);
 	};
 
 	class TickScaler : public Object
@@ -95,15 +62,15 @@ namespace Android {
 		double mMinVal;
 		double mMaxVal;
 		double mRangeVal;
-		uint32_t mNumPixels;
-		uint32_t mPixelsPerTick;
+		int mNumPixels;
+		int mPixelsPerTick;
 		double mPixelsPerRange;
 		double mTickIncrement;
 		double mMinMajorTick;
 
 	public:
 
-		TickScaler(double minVal, double maxVal, uint32_t numPixels, uint32_t pixelsPerTick)
+		TickScaler(double minVal, double maxVal, int numPixels, int pixelsPerTick)
 		{
 			mMinVal = minVal;
 			mMaxVal = maxVal;
@@ -131,7 +98,7 @@ namespace Android {
 			return mMaxVal;
 		}
 
-		void setNumPixels(uint32_t numPixels)
+		void setNumPixels(int numPixels)
 		{
 			mNumPixels = numPixels;
 		}
@@ -141,7 +108,7 @@ namespace Android {
 			return mNumPixels;
 		}
 
-		void setPixelsPerTick(uint32_t pixelsPerTick)
+		void setPixelsPerTick(int pixelsPerTick)
 		{
 			mPixelsPerTick = pixelsPerTick;
 		}
@@ -183,7 +150,7 @@ namespace Android {
 
 		uint32_t valueToPixel(double value)
 		{
-			return (int32_t) ceil(mPixelsPerRange * (value - mMinVal) - 0.5);
+			return (int) ceil(mPixelsPerRange * (value - mMinVal) - 0.5);
 		}
 
 		double valueToPixelFraction(double value)
@@ -191,7 +158,7 @@ namespace Android {
 			return mPixelsPerRange * (value - mMinVal);
 		}
 
-		double pixelToValue(uint32_t pixel)
+		double pixelToValue(int pixel)
 		{
 			return mMinVal + pixel / mPixelsPerRange;
 		}
@@ -205,13 +172,13 @@ namespace Android {
 	{
 	public:
 		Pixel();
-		void setFields(uint32_t start, double weight, Segment* segment, uint32_t color, RowData* rowData);
+		void setFields(int start, double weight, Segment* segment, COLOR color, RowData* rowData);
 
 	public:
-		int32_t mStart;
+		int mStart;
 		double mMaxWeight;
 		Segment* mSegment;
-		uint32_t mColor;
+		COLOR mColor;
 		RowData* mRowData;
 
 	protected:
@@ -255,9 +222,9 @@ namespace Android {
 	class Surface : public Canvas
 	{
 	protected:
-		const int32_t TotalXMargin = 70;
-		const int32_t yMargin = 1;
-		const int32_t MinZoomPixelMargin = 10;
+		const int TotalXMargin = 70;
+		const int yMargin = 1;
+		const int MinZoomPixelMargin = 10;
 
 	protected:
 		void initZoomFractionsWithExp();
@@ -267,15 +234,15 @@ namespace Android {
 		void setRange(double minVal, double maxVal);
 		void setLimitRange(double minVal, double maxVal);
 		void resetScale();
-		void setScaleFromHorizontalScrollBar(int32_t selection);
+		void setScaleFromHorizontalScrollBar(int selection);
 
 	protected:
 		void draw();
 		void drawHighlights(Point dim);
 		bool drawingSelection();
 		void computeStrips();
-		double computeWeight(double start, double end, bool isContextSwitch, int32_t pixel);
-		void emitPixelStrip(RowData* rd, int32_t y, Pixel* pixel);
+		double computeWeight(double start, double end, bool isContextSwitch, int pixel);
+		void emitPixelStrip(RowData* rd, int y, Pixel* pixel);
 		virtual void mouseMove(Point& pt, int flags);
 		virtual void mouseDown(Point& pt, int flags);
 		virtual void mouseUp(Point& pt, int flags);
@@ -283,23 +250,23 @@ namespace Android {
 		virtual void mouseDoubleClick(Point& pt, int flags);
 
 	public:
-		virtual void startScaling(int32_t mouseX);
-		virtual void stopScaling(int32_t mouseX);
+		void startScaling(int mouseX);
+		void stopScaling(int mouseX);
 
 	protected:
 		GraphicsState mGraphicsState;
 		Point mMouse;
-		int32_t mMouseMarkStartX;
-		int32_t mMouseMarkEndX;
+		int mMouseMarkStartX;
+		int mMouseMarkEndX;
 		bool mDebug;
 		Vector<Strip*> mStripList;
 		Vector<Range> mHighlightExclusive;
 		Vector<Range> mHighlightInclusive;
-		int32_t mMinStripHeight;
+		int mMinStripHeight;
 		double mCachedMinVal;
 		double mCachedMaxVal;
-		int32_t mCachedStartRow;
-		int32_t mCachedEndRow;
+		int mCachedStartRow;
+		int mCachedEndRow;
 		double mScalePixelsPerRange;
 		double mScaleMinVal;
 		double mScaleMaxVal;
@@ -311,17 +278,17 @@ namespace Android {
 		const int HIGHLIGHT_TIMER_INTERVAL = 50;
 		const int ZOOM_STEPS = 8;
 
-		int32_t mHighlightHeight;
+		int mHighlightHeight;
 		static int highlightHeights[];
-		int32_t HIGHLIGHT_STEPS;
+		int HIGHLIGHT_STEPS;
 		bool mFadeColors;
 		bool mShowHighlightName;
 		double mZoomFractions[8];
-		int32_t mZoomStep;
-		int32_t mZoomMouseStart;
-		int32_t mZoomMouseEnd;
-		int32_t mMouseStartDistance;
-		int32_t mMouseEndDistance;
+		int mZoomStep;
+		int mZoomMouseStart;
+		int mZoomMouseEnd;
+		int mMouseStartDistance;
+		int mMouseEndDistance;
 		Point mMouseSelect;
 		double mZoomFixed;
 		double mZoomFixedPixel;
@@ -333,12 +300,12 @@ namespace Android {
 		double mZoomMax2Max;
 		double mZoomMin;
 		double mZoomMax;
-		int32_t mHighlightStep;
+		int mHighlightStep;
 
 	protected:		//Callbacks
-		virtual void animateHighlight();
-		virtual void clearHighlights();
-		virtual void animateZoom();
+		void animateHighlight();
+		void clearHighlights();
+		void animateZoom();
 
 	public:
 		Surface(TimeLineView *parent);
@@ -353,18 +320,18 @@ namespace Android {
 	protected:
 		Point mMouse;
 		String mMethodName;
-		uint32_t mMethodColor;
+		COLOR mMethodColor;
 		String mDetails;
-		int32_t mMethodStartY;
-		int32_t mDetailsStartY;
-		int32_t mMarkStartX;
-		int32_t mMarkEndX;
-		const int32_t METHOD_BLOCK_MARGIN = 10;
+		int mMethodStartY;
+		int mDetailsStartY;
+		int mMarkStartX;
+		int mMarkEndX;
+		const int METHOD_BLOCK_MARGIN = 10;
 
 	public:
-		//void setVbarPosition(int32_t x);
-		//void setMarkStart(int32_t x);
-		//void setMarkEnd(int32_t x);
+		//void setVbarPosition(int x);
+		//void setMarkStart(int x);
+		//void setMarkEnd(int x);
 		//void setMethodName(String name);
 		//void setMethodColor(uint32_t color);
 		//void setDetails(String details);
@@ -387,10 +354,11 @@ namespace Android {
 	public:
 		Timescale(TimeLineView *parent);
 	};
+
 	class RowLabels : public Canvas
 	{
 	protected:
-		const int32_t labelMarginX = 2;
+		const int labelMarginX = 2;
 
 	protected:
 		void mouseMove(Point& pt, int flags);
@@ -414,16 +382,16 @@ namespace Android {
 		Timescale* mTimescale;
 		Surface* mSurface;
 		RowLabels* mLabels;
-		int32_t mScrollOffsetY;
+		int mScrollOffsetY;
 
 	public:
-		const int32_t PixelsPerTick = 50;
+		const int PixelsPerTick = 50;
 
 	protected:
-		Call::CallList* mCallList;
+		CallList* mCallList;
 		TickScaler mScaleInfo;
-		const int32_t LeftMargin = 10;
-		const int32_t RightMargin = 60;
+		const int LeftMargin = 10;
+		const int RightMargin = 60;
 		const int rowHeight = 20;
 		const int rowYMargin = 12;
 		const int rowYMarginHalf = 6;
@@ -433,19 +401,19 @@ namespace Android {
 		const int timeLineOffsetY = 58;
 		const int tickToFontSpacing = 2;
 		const int topMargin = 90;
-		int32_t mMouseRow;
-		int32_t mNumRows;
-		int32_t mStartRow;
-		int32_t mEndRow;
+		int mMouseRow;
+		int mNumRows;
+		int mStartRow;
+		int mEndRow;
 		TraceUnits* mUnits;
 		String mClockSource;
 		bool mHaveCpuTime;
 		bool mHaveRealTime;
-		int32_t mSmallFontWidth;
-		int32_t mSmallFontHeight;
+		int mSmallFontWidth;
+		int mSmallFontHeight;
 		MethodData* mHighlightMethodData;
 		Call* mHighlightCall;
-		const int32_t MinInclusiveRange = 3;
+		const int MinInclusiveRange = 3;
 		bool mSetFonts;
 
 	public:
@@ -454,15 +422,16 @@ namespace Android {
 		Size getSize() const {
 			return mSize;
 		}
-		void setData(Call::CallList* callList);
+		void setData(CallList* callList);
 		TickScaler& getScaleInfo() {
 			return mScaleInfo;
 		}
 
 	protected:
-		static void popFrames(RowData* rd, Call::CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);
-		int32_t computeVisibleRows(int32_t ydim);
+		static void popFrames(RowData* rd, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);
+		int computeVisibleRows(int ydim);
 		void startHighlighting();
+		void dumpSegments();
 
 	public:
 		TimeLineView(DmTraceReader* reader/*, SelectionController* selectionController*/);

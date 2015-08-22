@@ -16,7 +16,7 @@ namespace Android {
 	public:
 
 	private:
-		uint32_t mId;
+		id_type mId;
 		String mName;
 		bool mIsEmpty;
 		int mRootCall;
@@ -39,7 +39,7 @@ namespace Android {
 		{
 			return mName.c_str();
 		}
-		Call* getRootCall(Call::CallList* callList)
+		Call* getRootCall(CallList* callList)
 		{
 			return callList->get(mRootCall);
 		}
@@ -50,12 +50,12 @@ namespace Android {
 		}
 
 	public:
-		Call* enter(MethodData* method, TraceActionList* trace, Call::CallList* callList);
-		Call* exit(MethodData* method, TraceActionList* trace, Call::CallList* callList);
-		Call* top(Call::CallList* callList);
+		Call* enter(MethodData* method, TraceActionList* trace, CallList* callList);
+		Call* exit(MethodData* method, TraceActionList* trace, CallList* callList);
+		Call* top(CallList* callList);
 		int top();
-		void endTrace(TraceActionList* trace, Call::CallList* callList);
-		void updateRootCallTimeBounds(Call::CallList* callList)
+		void endTrace(TraceActionList* trace, CallList* callList);
+		void updateRootCallTimeBounds(CallList* callList)
 		{
 			if (!mIsEmpty) {
 				callList->get(mRootCall)->mGlobalStartTime = mGlobalStartTime;
@@ -68,17 +68,17 @@ namespace Android {
 	public:
 		String toString();
 		
-		uint32_t getId()
+		id_type getId()
 		{
 			return mId;
 		}
 		
-		uint32_t getCpuTime(Call::CallList* callList) const
+		uint32_t getCpuTime(CallList* callList) const
 		{
 			return callList->get(mRootCall)->mInclusiveCpuTime;
 		}
 		
-		uint32_t getRealTime(Call::CallList* callList) const
+		uint32_t getRealTime(CallList* callList) const
 		{
 			return callList->get(mRootCall)->mInclusiveRealTime;
 		}
@@ -92,7 +92,7 @@ namespace Android {
 			mRootCall = -1;
 		}
 
-		ThreadData(uint32_t id, String name, MethodData* topLevel, Call::CallList* callList)
+		ThreadData(id_type id, String name, MethodData* topLevel, CallList* callList)
 		{
 			mId = id;
 			std::stringstream ss;
@@ -110,9 +110,9 @@ namespace Android {
 
 		struct Less : public std::binary_function<ThreadData*, ThreadData*, bool> {
 			TimeBase* timeBase;
-			Call::CallList* callList;
+			CallList* callList;
 
-			Less(TimeBase* timeBase, Call::CallList* callList) {
+			Less(TimeBase* timeBase, CallList* callList) {
 				this->timeBase = timeBase;
 				this->callList = callList;
 			}

@@ -9,12 +9,12 @@ namespace Android {
 	{
 	}
 
-	MethodData::MethodData(uint32_t id, String className)
+	MethodData::MethodData(id_type id, String className)
 		: MethodData(id, className, "", "", "", -1)
 	{
 	}
 
-	MethodData::MethodData(uint32_t id, String className, String methodName, String signature, String pathname, int lineNumber)
+	MethodData::MethodData(id_type id, String className, String methodName, String signature, String pathname, int lineNumber)
 		: mRank(-1)
 	{
 		mId = id;
@@ -93,7 +93,7 @@ namespace Android {
 		mElapsedExclusiveRealTime += realTime;
 	}
 
-	void MethodData::addElapsedInclusive(uint32_t cpuTime, uint32_t realTime, bool isRecursive, int parent, Call::CallList* callList)
+	void MethodData::addElapsedInclusive(uint32_t cpuTime, uint32_t realTime, bool isRecursive, int parent, CallList* callList)
 	{
 		if (!isRecursive) {
 			mElapsedInclusiveCpuTime += cpuTime;
@@ -204,7 +204,7 @@ namespace Android {
 		return mTopExclusiveRealTime;
 	}
 
-	uint32_t MethodData::getId()
+	id_type MethodData::getId()
 	{
 		return mId;
 	}
@@ -269,12 +269,12 @@ namespace Android {
 		return mNumCalls[0] + mNumCalls[1];
 	}
 
-	uint32_t MethodData::getColor()
+	COLOR MethodData::getColor()
 	{
 		return mColor;
 	}
 
-	void MethodData::setColor(uint32_t color)
+	void MethodData::setColor(COLOR color)
 	{
 		mColor = color;
 	}
@@ -311,12 +311,12 @@ namespace Android {
 		return mElapsedInclusiveRealTime;
 	}
 
-	void MethodData::setFadedColor(int fadedColor)
+	void MethodData::setFadedColor(COLOR fadedColor)
 	{
 		mFadedColor = fadedColor;
 	}
 
-	int MethodData::getFadedColor()
+	COLOR MethodData::getFadedColor()
 	{
 		return mFadedColor;
 	}
