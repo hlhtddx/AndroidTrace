@@ -1,4 +1,4 @@
-#include "ProfileNode.hpp"
+﻿#include "ProfileNode.hpp"
 #include "MethodData.hpp"
 #include "ProfileData.hpp"
 

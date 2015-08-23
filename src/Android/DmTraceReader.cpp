@@ -1,4 +1,4 @@
-#include "DmTraceReader.hpp"
+﻿#include "DmTraceReader.hpp"
 #include "ColorController.hpp"
 #include <fstream>
 #include <iostream>

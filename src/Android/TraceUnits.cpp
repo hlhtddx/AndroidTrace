@@ -1,4 +1,4 @@
-// Generated from /Traceview/src/com/android/traceview/TraceUnits.java
+﻿// Generated from /Traceview/src/com/android/traceview/TraceUnits.java
 #include "TraceUnits.hpp"
 
 namespace Android {

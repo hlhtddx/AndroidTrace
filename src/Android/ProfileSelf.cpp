@@ -1,4 +1,4 @@
-#include "ProfileSelf.hpp"
+﻿#include "ProfileSelf.hpp"
 #include "MethodData.hpp"
 
 namespace Android {

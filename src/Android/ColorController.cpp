@@ -1,4 +1,4 @@
-#include "ColorController.hpp"
+﻿#include "ColorController.hpp"
 #include "MethodData.hpp"
 
 namespace Android {
