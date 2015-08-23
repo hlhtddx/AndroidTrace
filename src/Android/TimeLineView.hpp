@@ -98,6 +98,7 @@ namespace Android {
 			return mMaxVal;
 		}
 
+		// Set the pixels for visible width
 		void setNumPixels(int numPixels)
 		{
 			mNumPixels = numPixels;
@@ -163,6 +164,17 @@ namespace Android {
 			return mMinVal + pixel / mPixelsPerRange;
 		}
 
+		/* Compute the scale ticks for following parameters:
+			 1. mMinVal, mMaxVal ==> The visible range of min/max timeline in us(which is aligned with scaled tick
+				  mRangeVal          = mMaxVal - mMinVal
+			 
+			 2. mNumPixels       ==> How many pixels is visible width range
+
+			 3. mTickIncrement   ==> Scaling unit (1, 2, 5 * 10^N)
+				  minorTickIncrement = 1/5 of mTickIncrement
+
+			 4. mPixelsPerRange  ==> How many pixels within one Tick
+		 */
 		void computeTicks(bool useGivenEndPoints)
 		{
 			int numTicks = mNumPixels / mPixelsPerTick;
@@ -210,8 +222,7 @@ namespace Android {
 		}
 	};
 
-	class Pixel
-		: public Object
+	class Pixel : public Object
 	{
 	public:
 		Pixel();

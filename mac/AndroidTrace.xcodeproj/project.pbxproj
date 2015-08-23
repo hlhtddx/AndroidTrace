@@ -35,32 +35,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0111B98A1B86B2EB0005A657 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../main.cpp; sourceTree = "<group>"; };
-		0111B98C1B86B3BB0005A657 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Call.cpp; sourceTree = "<group>"; };
-		0111B98D1B86B3BB0005A657 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Call.hpp; sourceTree = "<group>"; };
-		0111B98E1B86B3BB0005A657 /* ColorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ColorController.cpp; sourceTree = "<group>"; };
-		0111B98F1B86B3BB0005A657 /* ColorController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ColorController.hpp; sourceTree = "<group>"; };
-		0111B9901B86B3BB0005A657 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Common.cpp; sourceTree = "<group>"; };
-		0111B9911B86B3BB0005A657 /* Common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Common.hpp; sourceTree = "<group>"; };
-		0111B9921B86B3BB0005A657 /* DmTraceReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DmTraceReader.cpp; sourceTree = "<group>"; };
-		0111B9931B86B3BB0005A657 /* DmTraceReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DmTraceReader.hpp; sourceTree = "<group>"; };
-		0111B9941B86B3BB0005A657 /* MethodData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MethodData.cpp; sourceTree = "<group>"; };
-		0111B9951B86B3BB0005A657 /* MethodData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MethodData.hpp; sourceTree = "<group>"; };
-		0111B9961B86B3BB0005A657 /* ProfileData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfileData.cpp; sourceTree = "<group>"; };
-		0111B9971B86B3BB0005A657 /* ProfileData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProfileData.hpp; sourceTree = "<group>"; };
-		0111B9981B86B3BB0005A657 /* ProfileNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfileNode.cpp; sourceTree = "<group>"; };
-		0111B9991B86B3BB0005A657 /* ProfileNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProfileNode.hpp; sourceTree = "<group>"; };
-		0111B99A1B86B3BB0005A657 /* ProfileSelf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ProfileSelf.cpp; sourceTree = "<group>"; };
-		0111B99B1B86B3BB0005A657 /* ProfileSelf.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ProfileSelf.hpp; sourceTree = "<group>"; };
-		0111B99C1B86B3BB0005A657 /* ThreadData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ThreadData.cpp; sourceTree = "<group>"; };
-		0111B99D1B86B3BB0005A657 /* ThreadData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ThreadData.hpp; sourceTree = "<group>"; };
-		0111B99E1B86B3BB0005A657 /* TimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeBase.cpp; sourceTree = "<group>"; };
-		0111B99F1B86B3BB0005A657 /* TimeBase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TimeBase.hpp; sourceTree = "<group>"; };
-		0111B9A01B86B3BB0005A657 /* TimeLineView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TimeLineView.cpp; sourceTree = "<group>"; };
-		0111B9A11B86B3BB0005A657 /* TimeLineView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TimeLineView.hpp; sourceTree = "<group>"; };
-		0111B9A21B86B3BB0005A657 /* TraceAction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TraceAction.hpp; sourceTree = "<group>"; };
-		0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TraceUnits.cpp; sourceTree = "<group>"; };
-		0111B9A41B86B3BB0005A657 /* TraceUnits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = TraceUnits.hpp; sourceTree = "<group>"; };
+		0111B98A1B86B2EB0005A657 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = main.cpp; path = ../main.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B98C1B86B3BB0005A657 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Call.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B98D1B86B3BB0005A657 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = Call.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B98E1B86B3BB0005A657 /* ColorController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ColorController.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B98F1B86B3BB0005A657 /* ColorController.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = ColorController.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9901B86B3BB0005A657 /* Common.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Common.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9911B86B3BB0005A657 /* Common.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = Common.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9921B86B3BB0005A657 /* DmTraceReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = DmTraceReader.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9931B86B3BB0005A657 /* DmTraceReader.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = DmTraceReader.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9941B86B3BB0005A657 /* MethodData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = MethodData.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9951B86B3BB0005A657 /* MethodData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = MethodData.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9961B86B3BB0005A657 /* ProfileData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ProfileData.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9971B86B3BB0005A657 /* ProfileData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = ProfileData.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9981B86B3BB0005A657 /* ProfileNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ProfileNode.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9991B86B3BB0005A657 /* ProfileNode.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = ProfileNode.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B99A1B86B3BB0005A657 /* ProfileSelf.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ProfileSelf.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B99B1B86B3BB0005A657 /* ProfileSelf.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = ProfileSelf.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B99C1B86B3BB0005A657 /* ThreadData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = ThreadData.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B99D1B86B3BB0005A657 /* ThreadData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = ThreadData.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B99E1B86B3BB0005A657 /* TimeBase.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = TimeBase.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B99F1B86B3BB0005A657 /* TimeBase.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = TimeBase.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9A01B86B3BB0005A657 /* TimeLineView.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = TimeLineView.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9A11B86B3BB0005A657 /* TimeLineView.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = TimeLineView.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9A21B86B3BB0005A657 /* TraceAction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = TraceAction.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = TraceUnits.cpp; sourceTree = "<group>"; usesTabs = 0; };
+		0111B9A41B86B3BB0005A657 /* TraceUnits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = TraceUnits.hpp; sourceTree = "<group>"; usesTabs = 0; };
 		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 

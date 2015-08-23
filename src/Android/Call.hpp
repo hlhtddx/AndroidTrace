@@ -67,11 +67,11 @@ namespace Android {
 	class RowData : public Object
 	{
 	public:
-		String mName;
-		uint32_t mRank;
-		uint32_t mElapsed;
+		String      mName;
+		int         mRank;
+		uint32_t    mElapsed;
 		Vector<int> mStack;
-		uint32_t mEndTime;
+		uint32_t    mEndTime;
 		
 	public:
 		void push(int index);

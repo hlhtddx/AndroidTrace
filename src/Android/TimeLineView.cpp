@@ -418,8 +418,8 @@ namespace Android {
 		mHighlightInclusive.clear();
 
 		MethodData* callMethod = nullptr;
-
 		RowData* callRowData = nullptr;
+
 		uint32_t callStart = 0;
 		uint32_t callEnd = UINT32_MAX;
 		uint32_t prevMethodStart = UINT32_MAX;
@@ -486,14 +486,15 @@ namespace Android {
 			bool isContextSwitch = segment->mIsContextSwitch;
 			
 			RowData* rd = segment->mRowData;
-			MethodData* md = block->getMethodData();
-			int y1 = rd->mRank * 32 + 6;
 			
 			// if beyond the last row(thread), break the loop
 			if (rd->mRank > mParent->mEndRow) {
 				break;
 			}
+			int y1 = rd->mRank * 32 + 6;
 			
+			MethodData* md = block->getMethodData();
+
 			if (mParent->mHighlightMethodData != nullptr) {
 				if (mParent->mHighlightMethodData == md) {
 					if ((prevMethodStart != pixelStart) || (prevMethodEnd != pixelEnd)) {
@@ -544,11 +545,18 @@ namespace Android {
 			}
 
 			Pixel* pix = &pixels[rd->mRank];
+			
 			if (pix->mStart != pixelStart) {
+
+				// Compare the current segment to previous pixel. If pixel shifted, the previous pixel should be emitted.
 				if (pix->mSegment != nullptr) {
+					
+					// There is segment recorded for the pixel. Create a strip for it.
 					emitPixelStrip(rd, y1, pix);
 				}
 				if (width == 0) {
+					// If the segment is within one pixel, the Call with most weight will be displayed.
+					// But at first, we record the pixel(with its weight and color) to Pixel* pix
 					double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
 					weight = block->addWeight(pixelStart, rd->mRank, weight);
 					if (weight > pix->mMaxWeight) {
@@ -556,18 +564,23 @@ namespace Android {
 					}
 				}
 				else {
+					// if the segment larger than 1 pixel, create a multi-pixel strip
 					int x1 = pixelStart + 10;
 					Strip* strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, rd, segment, color);
 					mStripList.push_back(strip);
 				}
 			}
 			else {
+				
+				// Still start with same pixel, need to compute weight for the first pixel
 				double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
 				weight = block->addWeight(pixelStart, rd->mRank, weight);
 				if (weight > pix->mMaxWeight) {
 					pix->setFields(pixelStart, weight, segment, color, rd);
 				}
+
 				if (width == 1) {
+					// For one new pixel, finish current pixel and start a new pixel weighting
 					emitPixelStrip(rd, y1, pix);
 					pixelStart++;
 					weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
@@ -575,6 +588,7 @@ namespace Android {
 					pix->setFields(pixelStart, weight, segment, color, rd);
 				}
 				else if (width > 1) {
+					// Finish current pixel and create new multi-pixel strip
 					emitPixelStrip(rd, y1, pix);
 					pixelStart++;
 					width--;
@@ -584,6 +598,7 @@ namespace Android {
 				}
 			}
 		}
+
 		for (auto ii = 0; ii < mParent->mNumRows; ii++) {
 			Pixel* pix = &pixels[ii];
 			if (pix->mSegment != nullptr) {
@@ -607,6 +622,11 @@ namespace Android {
 		return weight;
 	}
 
+	/* Create a strip which has only one plixel
+		1. The pixel should be splitted into 2 parts: upper for call,
+	      and lower in background color
+	    2. After emit the pixel, clear Pixel element for next pixel
+	 */
 	void Surface::emitPixelStrip(RowData* rd, int y, Pixel* pixel)
 	{
 		if (pixel->mSegment == nullptr) {
