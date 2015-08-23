@@ -936,14 +936,12 @@ namespace Android {
 	TimeLineView::TimeLineView(DmTraceReader* reader/*, SelectionController* selectionController*/)
 		: mScaleInfo(0.0, 0.0, 0, 50)
 		, mMouseRow(-1)
-		, mSetFonts(false)
 	{
 		mCallList = nullptr;
 		//mUnits = reader->getTraceUnits();
 		mClockSource = reader->getClockSource();
 		mHaveCpuTime = reader->haveCpuTime();
 		mHaveRealTime = reader->haveRealTime();
-//		mThreadLabels = reader->getThreadLabels();
 
 		mTimescale = new Timescale(this);
 		mSurface = new Surface(this);
@@ -969,15 +967,15 @@ namespace Android {
 	int TimeLineView::computeVisibleRows(int ydim)
 	{
 		int offsetY = mScrollOffsetY;
-		int spaceNeeded = mNumRows * 32;
+		int spaceNeeded = mNumRows * rowYSpace;
 		if (offsetY + ydim > spaceNeeded) {
 			offsetY = spaceNeeded - ydim;
 			if (offsetY < 0) {
 				offsetY = 0;
 			}
 		}
-		mStartRow = (offsetY / 32);
-		mEndRow = ((offsetY + ydim) / 32);
+		mStartRow = (offsetY / rowYSpace);
+		mEndRow = ((offsetY + ydim) / rowYSpace);
 		if (mEndRow >= mNumRows) {
 			mEndRow = (mNumRows - 1);
 		}

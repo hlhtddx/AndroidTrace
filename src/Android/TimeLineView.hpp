@@ -412,7 +412,6 @@ namespace Android {
 		HashMap<id_type, RowData*> mRowById;
 		Vector<RowData*>* mRows;
 		SegmentList mSegments;
-//		HashMap<int, String> mThreadLabels;
 		Timescale* mTimescale;
 		Surface* mSurface;
 		RowLabels* mLabels;
