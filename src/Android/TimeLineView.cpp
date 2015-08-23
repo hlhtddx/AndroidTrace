@@ -50,52 +50,6 @@ namespace Android {
 		mStack.pop_back();
 	}
 
-	void TickScaler::computeTicks(bool useGivenEndPoints)
-	{
-		int numTicks = mNumPixels / mPixelsPerTick;
-		mRangeVal = (mMaxVal - mMinVal);
-		mTickIncrement = (mRangeVal / numTicks);
-		double dlogTickIncrement = log10(mTickIncrement);
-		double logTickIncrement = floor(dlogTickIncrement);
-		double scale = pow(10.0, logTickIncrement);
-		double scaledTickIncr = mTickIncrement / scale;
-
-		if (scaledTickIncr > 5.0) {
-			scaledTickIncr = 10.0;
-		}
-		else if (scaledTickIncr > 2.0) {
-			scaledTickIncr = 5.0;
-		}
-		else if (scaledTickIncr > 1.0) {
-			scaledTickIncr = 2.0;
-		}
-		else
-			scaledTickIncr = 1.0;
-
-		mTickIncrement = (scaledTickIncr * scale);
-
-		if (!useGivenEndPoints) {
-			double minorTickIncrement = mTickIncrement / 5.0;
-			double dval = mMaxVal / minorTickIncrement;
-			int ival = (int)dval;
-			if (ival != dval) {
-				mMaxVal = ((ival + 1) * minorTickIncrement);
-			}
-			ival = static_cast<int>((mMinVal / mTickIncrement));
-			mMinVal = (ival * mTickIncrement);
-			mMinMajorTick = mMinVal;
-		}
-		else {
-			int ival = static_cast<int>((mMinVal / mTickIncrement));
-			mMinMajorTick = (ival * mTickIncrement);
-			if (mMinMajorTick < mMinVal) {
-				mMinMajorTick += mTickIncrement;
-			}
-		}
-		mRangeVal = (mMaxVal - mMinVal);
-		mPixelsPerRange = (mNumPixels / mRangeVal);
-	}
-
 	Pixel::Pixel()
 	{
 		mStart = -2;
