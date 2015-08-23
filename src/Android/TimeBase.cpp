@@ -1,4 +1,4 @@
-#include "TimeBase.hpp"
+﻿#include "TimeBase.hpp"
 #include "MethodData.hpp"
 #include "ThreadData.hpp"
 #include "ProfileData.hpp"
