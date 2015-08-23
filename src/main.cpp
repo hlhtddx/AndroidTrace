@@ -29,8 +29,6 @@ int main(int argc, const char * argv[]) {
     try {
         reader = new Android::DmTraceReader(fileName, regression);
         view = new Android::TimeLineView(reader);
-        delete view;
-        delete reader;
     } catch (Android::GeneralException &e) {
         printf("Catch a generic exception: %s\n", e.getDescription());
     }
