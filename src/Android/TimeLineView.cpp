@@ -223,9 +223,9 @@ namespace Android {
 
 			if (mLimitMaxVal < mParent->getScaleInfo().getMaxVal()) {
 				mLimitMaxVal = mParent->getScaleInfo().getMaxVal();
-			}
+            }
 			computeStrips();
-		}
+        }
 		if (mParent->mNumRows > 2) {
 //			gcImage->setBackground(mParent->mColorRowBack);
 			for (auto ii = 1; ii < mParent->mNumRows; ii += 2) {
