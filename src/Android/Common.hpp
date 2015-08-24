@@ -12,19 +12,6 @@
 #include <utility>
 #include <iomanip>
 
-#if (defined _DEBUG) && 1
-	#define NOMINMAX
-	#include <afx.h>
-	#define new DEBUG_NEW
-	//	#define _CRTDBG_MAP_ALLOC
-	#include <stdlib.h>
-	#include <crtdbg.h>
-#else
-	#ifndef TRACE
-		#define TRACE(x, ...)
-	#endif
-#endif
-
 namespace Android {
 	typedef std::string String;
 	typedef uint32_t COLOR;
@@ -187,13 +174,19 @@ namespace Android {
 			else if (mCapacity == mSize) {
 				return;
 			}
+            else if (mSize == 0) {
+                free(mContents);
+                mContents = nullptr;
+            }
+            else
+            {
+                _Ty* newContents = (_Ty*)realloc(mContents, sizeof(_Ty) * mSize);
+                if (newContents == nullptr) {
+                    throw MemoryException("Cannot reallocate memory for freeExtra");
+                }
 
-			_Ty* newContents = (_Ty*)realloc(mContents, sizeof(_Ty) * mSize);
-			if (newContents == nullptr) {
-				throw MemoryException("Cannot reallocate memory for freeExtra");
-			}
-
-			mContents = newContents;
+                mContents = newContents;
+            }
 			mCapacity = mSize;
 		}
 
@@ -228,6 +221,9 @@ namespace Android {
 
 		size_t getNewCapacity(size_t size) {
 			size_t newSize = mCapacity;
+            if (newSize == 0) {
+                newSize = 16;
+            }
 			while (newSize < size) {
 				newSize *= 2;
 			}

@@ -13,10 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Android">
-      <UniqueIdentifier>{0cc46652-d532-4f00-8d57-855f0799bfb6}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd;cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -61,45 +57,6 @@
     <ClInclude Include="PropertiesWnd.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Android\Call.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\ColorController.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\Common.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\DmTraceReader.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\MethodData.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\ProfileData.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\ProfileNode.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\ProfileSelf.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\ThreadData.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\TimeBase.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\TimeLineView.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\TraceAction.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Android\TraceUnits.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DmTraceViewer.cpp">
@@ -134,42 +91,6 @@
     </ClCompile>
     <ClCompile Include="PropertiesWnd.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\Call.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\ColorController.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\Common.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\DmTraceReader.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\MethodData.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\ProfileData.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\ProfileNode.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\ProfileSelf.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\ThreadData.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\TimeBase.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\TimeLineView.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Android\TraceUnits.cpp">
-      <Filter>Android</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

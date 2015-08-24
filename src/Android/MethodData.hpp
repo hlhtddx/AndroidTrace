@@ -103,18 +103,18 @@ namespace Android {
 		MethodData(id_type id, const char* className, const char* methodName, const char* signature, const char* pathname, int lineNumber);
 		~MethodData();
 
-		struct Less : public std::binary_function<ThreadData*, ThreadData*, bool> {
+		struct Greater : public std::binary_function<ThreadData*, ThreadData*, bool> {
 			TimeBase* timeBase;
 
-			Less(TimeBase* timeBase) {
+            Greater(TimeBase* timeBase) {
 				this->timeBase = timeBase;
 			}
 
 			bool operator() (const MethodData* _Left, const MethodData* _Right) const {
 				if (timeBase->getElapsedInclusiveTime(_Left) == timeBase->getElapsedInclusiveTime(_Right)) {
-					return _Left->getName() < _Right->getName();
+					return _Left->getName() > _Right->getName();
 				}
-				return timeBase->getElapsedInclusiveTime(_Left) < timeBase->getElapsedInclusiveTime(_Right);
+				return timeBase->getElapsedInclusiveTime(_Left) > timeBase->getElapsedInclusiveTime(_Right);
 			}
 		};
 	};

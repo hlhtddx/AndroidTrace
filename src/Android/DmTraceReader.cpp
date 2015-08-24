@@ -41,13 +41,20 @@ namespace Android {
 		filepos offset = parseKeys();
 		std::cerr << "Parse data" << std::endl;
 		parseData(offset);
-		std::cerr << "generateSegments" << std::endl;
-		generateSegments();
 		std::cerr << "analyzeData" << std::endl;
 		analyzeData();
-		std::cerr << "done" << std::endl;
+        std::cerr << "generateSegments" << std::endl;
+        generateSegments();
+        std::cerr << "done" << std::endl;
 		ColorController::assignMethodColors(mSortedMethods);
-	}
+
+        if (mRegression) {
+            printf("totalCpuTime %dus\n", mTotalCpuTime);
+            printf("totalRealTime %dus\n", mTotalRealTime);
+            dumpThreadTimes();
+            dumpCallTimes();
+        }
+    }
 	//
 	//ProfileProvider* DmTraceReader::getProfileProvider()
 	//{
@@ -108,241 +115,6 @@ namespace Android {
 			}
 			return nullptr;
 		}
-	}
-
-	void DmTraceReader::parseData(filepos offset) /* throws(IOException) */
-	{
-		ByteBuffer* buffer = mapFile(mTraceFileName.c_str(), offset);
-        if (buffer == nullptr) {
-            throw GeneralException("Failed to open file");
-        }
-
-        readDataFileHeader(buffer);
-		TraceActionList lTrace;
-		TraceActionList *trace = nullptr;
-		if (mClockSource == THREAD_CPU) {
-			trace = &lTrace;
-		}
-		bool haveThreadClock = mClockSource != WALL;
-		bool haveGlobalClock = mClockSource != THREAD_CPU;
-		ThreadData* prevThreadData = nullptr;
-
-		while (!buffer->end()) {
-			id_type threadId;
-			id_type methodId;
-			uint32_t threadTime = 0;
-			uint32_t globalTime = 0;
-			try {
-				int recordSize = mRecordSize;
-				if (mVersionNumber == 1) {
-					threadId = buffer->getUByte();
-					recordSize--;
-				}
-				else {
-					threadId = buffer->getUShort();
-					recordSize -= 2;
-				}
-				methodId = buffer->getUInt();
-				recordSize -= 4;
-
-				ClockSource v = mClockSource;
-				if (v == WALL) {
-					threadTime = 0LL;
-					globalTime = buffer->getUInt();
-					recordSize -= 4;
-				}
-				else if (v == DUAL) {
-					threadTime = buffer->getUInt();
-					globalTime = buffer->getUInt();
-					recordSize -= 8;
-				} if (((v == THREAD_CPU) || ((v != WALL) && (v != DUAL) && (v != THREAD_CPU)))) {
-					threadTime = buffer->getInt();
-					globalTime = 0LL;
-					recordSize -= 4;
-				}
-
-				buffer->skip(recordSize);
-			}
-			catch (BoundaryException& e) {
-				e.getDescription();
-				break;
-			}
-
-			unsigned char methodAction = methodId & METHOD_ACTION_MASK;
-			methodId &= METHOD_ID_MASK;
-
-//			TRACE("record: tid=%d, mid=%d, action=%d, ttime=%lld, gtime=%lld\n", threadId, methodId, methodAction, threadTime, globalTime);
-			MethodData* methodData = NULL;
-			if (mMethodMap.find(methodId) == mMethodMap.end()) {
-				std::stringstream ss;
-				ss << "0x" << std::ios::hex << methodId;
-				methodData = new MethodData(methodId, ss.str().c_str());
-				mMethodMap.add(methodId, methodData);
-			}
-			else {
-				methodData = mMethodMap[methodId];
-			}
-
-			ThreadData* threadData = NULL;
-			if (mThreadMap.find(threadId) == mThreadMap.end()) {
-				std::stringstream ss;
-				ss << "[" << std::ios::dec << threadId << "]";
-				threadData = new ThreadData(threadId, ss.str().c_str(), mTopLevel, &mCallList);
-				mThreadMap.add(threadId, threadData);
-			}
-			else {
-				threadData = mThreadMap[threadId];
-			}
-
-			uint32_t elapsedGlobalTime = 0;
-
-			if (haveGlobalClock) {
-				if (!threadData->mHaveGlobalTime) {
-					threadData->mGlobalStartTime = globalTime;
-					threadData->mHaveGlobalTime = true;
-				}
-				else {
-					elapsedGlobalTime = globalTime - threadData->mGlobalEndTime;
-				}
-				threadData->mGlobalEndTime = globalTime;
-			}
-			if (haveThreadClock) {
-				uint32_t elapsedThreadTime = 0;
-				if (!threadData->mHaveThreadTime) {
-					threadData->mThreadStartTime = threadTime;
-					threadData->mThreadCurrentTime = threadTime;
-					threadData->mHaveThreadTime = true;
-				}
-				else {
-					elapsedThreadTime = threadTime - threadData->mThreadEndTime;
-				}
-				threadData->mThreadEndTime = threadTime;
-				if (!haveGlobalClock) {
-					if ((prevThreadData != nullptr) && (prevThreadData != threadData)) {
-						Call* switchCall = prevThreadData->enter(mContextSwitch, trace, &mCallList);
-						switchCall->mThreadStartTime = prevThreadData->mThreadEndTime;
-						Call* top = threadData->top(&mCallList);
-						if (top->getMethodData() == mContextSwitch) {
-							threadData->exit(mContextSwitch, trace, &mCallList);
-							uint32_t beforeSwitch = elapsedThreadTime / 2;
-							top->mThreadStartTime += beforeSwitch;
-							top->mThreadEndTime = top->mThreadStartTime;
-						}
-					}
-					prevThreadData = threadData;
-				}
-				else {
-					uint32_t sleepTime = elapsedGlobalTime - elapsedThreadTime;
-					if (sleepTime > 100) {
-						Call* switchCall = threadData->enter(mContextSwitch, trace, &mCallList);
-						uint32_t beforeSwitch = elapsedThreadTime / 2;
-						uint32_t afterSwitch = elapsedThreadTime - beforeSwitch;
-						switchCall->mGlobalStartTime = (globalTime - elapsedGlobalTime + beforeSwitch);
-						switchCall->mGlobalEndTime = (globalTime - afterSwitch);
-						switchCall->mThreadStartTime = (threadTime - afterSwitch);
-						switchCall->mThreadEndTime = switchCall->mThreadStartTime;
-						threadData->exit(mContextSwitch, trace, &mCallList);
-					}
-				}
-				Call* top = threadData->top(&mCallList);
-				top->addCpuTime(elapsedThreadTime);
-			}
-			Call* call;
-			switch (methodAction) {
-			case METHOD_TRACE_ENTER:
-				call = threadData->enter(methodData, trace, &mCallList);
-				if (haveGlobalClock) {
-					call->mGlobalStartTime = globalTime;
-				}
-				if (haveThreadClock) {
-					call->mThreadStartTime = threadTime;
-				}
-				break;
-			case METHOD_TRACE_EXIT:
-			case METHOD_TRACE_UNROLL:
-				call = threadData->exit(methodData, trace, &mCallList);
-				if (call != nullptr) {
-					if (haveGlobalClock) {
-						call->mGlobalEndTime = globalTime;
-					}
-					if (haveThreadClock) {
-						call->mThreadEndTime = threadTime;
-					}
-				}
-				break;
-			default:
-				delete buffer;
-				throw "Unrecognized method action: ";
-			}
-		}
-
-		for (auto it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
-			ThreadData* threadData = it->second;
-			threadData->endTrace(trace, &mCallList);
-		}
-
-		uint32_t globalTime;
-		if (!haveGlobalClock) {
-			globalTime = 0LL;
-			prevThreadData = nullptr;
-			for (auto it = trace->begin(); it != trace->end(); it++) {
-				TraceAction& traceAction = *it;
-				{
-					Call* call = mCallList.get(traceAction.mCall);
-					ThreadData* threadData = call->getThreadData();
-
-					if (traceAction.mAction == ACTION_ENTER) {
-						uint32_t threadTime = call->mThreadStartTime;
-						globalTime += call->mThreadStartTime - threadData->mThreadCurrentTime;
-						call->mGlobalStartTime = globalTime;
-						if (!threadData->mHaveGlobalTime) {
-							threadData->mHaveGlobalTime = true;
-							threadData->mGlobalStartTime = globalTime;
-						}
-						threadData->mThreadCurrentTime = threadTime;
-					}
-					else if (traceAction.mAction == ACTION_EXIT) {
-						uint32_t threadTime = call->mThreadEndTime;
-						globalTime += call->mThreadEndTime - threadData->mThreadCurrentTime;
-						call->mGlobalEndTime = globalTime;
-						threadData->mGlobalEndTime = globalTime;
-						threadData->mThreadCurrentTime = threadTime;
-					}
-					
-					prevThreadData = threadData;
-				}
-			}
-		}
-
-		mCallList.freeExtra();
-
-		for (auto i = mCallList.size() - 1; i >= 1; i--) {
-			Call* call = mCallList.get(i);
-			uint32_t realTime = call->mGlobalEndTime - call->mGlobalStartTime;
-			call->mExclusiveRealTime = std::max<uint32_t>(realTime - call->mInclusiveRealTime, 0);
-			call->mInclusiveRealTime = realTime;
-			call->finish(&mCallList);
-		}
-
-		mTotalCpuTime = 0;
-		mTotalRealTime = 0;
-
-		for (auto it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
-			ThreadData* threadData = it->second;
-			Call* rootCall = threadData->getRootCall(&mCallList);
-			threadData->updateRootCallTimeBounds(&mCallList);
-			rootCall->finish(&mCallList);
-			mTotalCpuTime += rootCall->mInclusiveCpuTime;
-			mTotalRealTime += rootCall->mInclusiveRealTime;
-		}
-
-		if (mRegression) {
-			printf("totalCpuTime %dus\n", mTotalCpuTime);
-			printf("totalRealTime %dus\n", mTotalRealTime);
-			dumpThreadTimes();
-			dumpCallTimes();
-		}
-		delete buffer;
 	}
 
 	filepos DmTraceReader::parseKeys() /* throws(IOException) */
@@ -424,7 +196,7 @@ namespace Android {
 		String idStr, name;
 		if (readToken(str, idStr, '\t') && readToken(str, name, '\n')) {
 			int id = atoi(idStr.c_str());
-			mThreadMap.add(id, new ThreadData(id, name.c_str(), mTopLevel, &mCallList));
+			mThreadMap.add(id, new ThreadData(id, name.c_str()));
 		}
 	}
 
@@ -466,6 +238,265 @@ namespace Android {
 		mMethodMap.add(id, new MethodData(id, className.c_str(), methodName.c_str(), signature.c_str(), pathname.c_str(), lineNumber));
 	}
 
+    void DmTraceReader::parseData(filepos offset) /* throws(IOException) */
+    {
+        ByteBuffer* buffer = mapFile(mTraceFileName.c_str(), offset);
+        if (buffer == nullptr) {
+            throw GeneralException("Failed to open file");
+        }
+
+        readDataFileHeader(buffer);
+
+#ifdef CLOCK_SOURCE_THREAD_CPU
+        TraceActionList lTrace;
+        TraceActionList *trace = nullptr;
+        if (mClockSource == THREAD_CPU) {
+            trace = &lTrace;
+        }
+#endif
+
+        bool haveThreadClock = mClockSource != WALL;
+        bool haveGlobalClock = mClockSource != THREAD_CPU;
+        ThreadData* prevThreadData = nullptr;
+
+        while (!buffer->end()) {
+            id_type threadId;
+            id_type methodId;
+            uint32_t threadTime = 0;
+            uint32_t globalTime = 0;
+            try {
+                int recordSize = mRecordSize;
+                if (mVersionNumber == 1) {
+                    threadId = buffer->getUByte();
+                    recordSize--;
+                }
+                else {
+                    threadId = buffer->getUShort();
+                    recordSize -= 2;
+                }
+                methodId = buffer->getUInt();
+                recordSize -= 4;
+
+                ClockSource v = mClockSource;
+                if (v == WALL) {
+                    threadTime = 0LL;
+                    globalTime = buffer->getUInt();
+                    recordSize -= 4;
+                }
+                else if (v == DUAL) {
+                    threadTime = buffer->getUInt();
+                    globalTime = buffer->getUInt();
+                    recordSize -= 8;
+                } if (((v == THREAD_CPU) || ((v != WALL) && (v != DUAL) && (v != THREAD_CPU)))) {
+                    threadTime = buffer->getInt();
+                    globalTime = 0LL;
+                    recordSize -= 4;
+                }
+
+                buffer->skip(recordSize);
+            }
+            catch (BoundaryException& e) {
+                e.getDescription();
+                break;
+            }
+
+            unsigned char methodAction = methodId & METHOD_ACTION_MASK;
+            methodId &= METHOD_ID_MASK;
+
+            //			TRACE("record: tid=%d, mid=%d, action=%d, ttime=%lld, gtime=%lld\n", threadId, methodId, methodAction, threadTime, globalTime);
+            MethodData* methodData = NULL;
+            if (mMethodMap.find(methodId) == mMethodMap.end()) {
+                std::stringstream ss;
+                ss << "0x" << std::ios::hex << methodId;
+                methodData = new MethodData(methodId, ss.str().c_str());
+                mMethodMap.add(methodId, methodData);
+            }
+            else {
+                methodData = mMethodMap[methodId];
+            }
+
+            ThreadData* threadData = NULL;
+            if (mThreadMap.find(threadId) == mThreadMap.end()) {
+                std::stringstream ss;
+                ss << "[" << std::ios::dec << threadId << "]";
+                threadData = new ThreadData(threadId, ss.str().c_str());
+                mThreadMap.add(threadId, threadData);
+            }
+            else {
+                threadData = mThreadMap[threadId];
+            }
+
+            uint32_t elapsedGlobalTime = 0;
+
+            if (haveGlobalClock) {
+                if (!threadData->mHaveGlobalTime) {
+                    threadData->mGlobalStartTime = globalTime;
+                    threadData->mHaveGlobalTime = true;
+                }
+                else {
+                    elapsedGlobalTime = globalTime - threadData->mGlobalEndTime;
+                }
+                threadData->mGlobalEndTime = globalTime;
+            }
+
+            if (haveThreadClock) {
+                uint32_t elapsedThreadTime = 0;
+                if (!threadData->mHaveThreadTime) {
+                    threadData->mThreadStartTime = threadTime;
+                    threadData->mThreadCurrentTime = threadTime;
+                    threadData->mHaveThreadTime = true;
+                }
+                else {
+                    elapsedThreadTime = threadTime - threadData->mThreadEndTime;
+                }
+                threadData->mThreadEndTime = threadTime;
+                if (!haveGlobalClock) {
+                    if ((prevThreadData != nullptr) && (prevThreadData != threadData)) {
+#ifdef CLOCK_SOURCE_THREAD_CPU
+                        Call* switchCall = prevThreadData->enter(mContextSwitch, trace, mTopLevel);
+#else
+                        Call* switchCall = prevThreadData->enter(mContextSwitch, mTopLevel);
+#endif
+                        switchCall->mThreadStartTime = prevThreadData->mThreadEndTime;
+                        Call* top = threadData->topCall();
+                        if (top->getMethodData() == mContextSwitch) {
+#ifdef CLOCK_SOURCE_THREAD_CPU
+                            threadData->exit(mContextSwitch, trace);
+#else
+                            threadData->exit(mContextSwitch);
+#endif
+                            uint32_t beforeSwitch = elapsedThreadTime / 2;
+                            top->mThreadStartTime += beforeSwitch;
+                            top->mThreadEndTime = top->mThreadStartTime;
+                        }
+                    }
+                    prevThreadData = threadData;
+                }
+                else {
+                    uint32_t sleepTime = elapsedGlobalTime - elapsedThreadTime;
+                    if (sleepTime > 100) {
+#ifdef CLOCK_SOURCE_THREAD_CPU
+                        Call* switchCall = threadData->enter(mContextSwitch, trace, mTopLevel);
+#else
+                        Call* switchCall = threadData->enter(mContextSwitch, mTopLevel);
+#endif
+                        uint32_t beforeSwitch = elapsedThreadTime / 2;
+                        uint32_t afterSwitch = elapsedThreadTime - beforeSwitch;
+                        switchCall->mGlobalStartTime = (globalTime - elapsedGlobalTime + beforeSwitch);
+                        switchCall->mGlobalEndTime = (globalTime - afterSwitch);
+                        switchCall->mThreadStartTime = (threadTime - afterSwitch);
+                        switchCall->mThreadEndTime = switchCall->mThreadStartTime;
+#ifdef CLOCK_SOURCE_THREAD_CPU
+                        threadData->exit(mContextSwitch, trace);
+#else
+                        threadData->exit(mContextSwitch);
+#endif
+                    }
+                }
+                Call* top = threadData->topCall();
+                if (top) {
+                    top->addCpuTime(elapsedThreadTime);
+                }
+            }
+
+            Call* call;
+            switch (methodAction) {
+            case METHOD_TRACE_ENTER:
+#ifdef CLOCK_SOURCE_THREAD_CPU
+                call = threadData->enter(methodData, trace, mTopLevel);
+#else
+                call = threadData->enter(methodData, mTopLevel);
+#endif
+                if (haveGlobalClock) {
+                    call->mGlobalStartTime = globalTime;
+                }
+                if (haveThreadClock) {
+                    call->mThreadStartTime = threadTime;
+                }
+                break;
+            case METHOD_TRACE_EXIT:
+            case METHOD_TRACE_UNROLL:
+#ifdef CLOCK_SOURCE_THREAD_CPU
+                call = threadData->exit(methodData, trace);
+#else
+                call = threadData->exit(methodData);
+#endif
+                if (call != nullptr) {
+                    if (haveGlobalClock) {
+                        call->mGlobalEndTime = globalTime;
+                    }
+                    if (haveThreadClock) {
+                        call->mThreadEndTime = threadTime;
+                    }
+                }
+                break;
+            default:
+                delete buffer;
+                throw "Unrecognized method action: ";
+            }
+        }
+
+        for (auto it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
+            ThreadData* threadData = it->second;
+#ifdef CLOCK_SOURCE_THREAD_CPU
+            threadData->endTrace(trace);
+#else
+            threadData->endTrace();
+#endif
+        }
+
+#ifdef CLOCK_SOURCE_THREAD_CPU
+        uint32_t globalTime;
+        if (!haveGlobalClock) {
+            globalTime = 0LL;
+            prevThreadData = nullptr;
+            for (auto it = trace->begin(); it != trace->end(); it++) {
+                TraceAction& traceAction = *it;
+                {
+                    Call* call = mCallList.get(traceAction.mCall);
+                    ThreadData* threadData = call->getThreadData();
+
+                    if (traceAction.mAction == ACTION_ENTER) {
+                        uint32_t threadTime = call->mThreadStartTime;
+                        globalTime += call->mThreadStartTime - threadData->mThreadCurrentTime;
+                        call->mGlobalStartTime = globalTime;
+                        if (!threadData->mHaveGlobalTime) {
+                            threadData->mHaveGlobalTime = true;
+                            threadData->mGlobalStartTime = globalTime;
+                        }
+                        threadData->mThreadCurrentTime = threadTime;
+                    }
+                    else if (traceAction.mAction == ACTION_EXIT) {
+                        uint32_t threadTime = call->mThreadEndTime;
+                        globalTime += call->mThreadEndTime - threadData->mThreadCurrentTime;
+                        call->mGlobalEndTime = globalTime;
+                        threadData->mGlobalEndTime = globalTime;
+                        threadData->mThreadCurrentTime = threadTime;
+                    }
+
+                    prevThreadData = threadData;
+                }
+            }
+        }
+#endif
+
+        mTotalCpuTime = 0;
+        mTotalRealTime = 0;
+
+        for (auto it = mThreadMap.begin(); it != mThreadMap.end(); it++) {
+            ThreadData* threadData = it->second;
+            if (threadData->isEmpty()) {
+                continue;
+            }
+            Call* rootCall = threadData->getRootCall();
+            threadData->updateRootCallTimeBounds();
+            rootCall->finish(threadData->getCallList());
+            mTotalCpuTime += rootCall->mInclusiveCpuTime;
+            mTotalRealTime += rootCall->mInclusiveRealTime;
+        }
+        delete buffer;
+    }
+
 	void DmTraceReader::constructPathname(String& className, String& pathname)
 	{
 		size_t index = className.find('/');
@@ -479,99 +510,82 @@ namespace Android {
 		mMinTime = UINT_MAX;
 		mMaxTime = 0;
 
-		if (mCallList.size() > 0) {
-			mMinTime = mCallList.get(0)->getStartTime();
-		}
+        for (auto _t = mSortedThreads->begin(); _t != mSortedThreads->end(); _t++) {
+            ThreadData *thread = *_t;
+            CallList* callList = thread->getCallList();
+            if (callList->size() > 0) {
+                mMinTime = callList->get(0)->getStartTime();
+            }
 
-		for (auto _i = 0; _i < mCallList.size(); _i++) {
-			Call* block = mCallList.get(_i);
-			ThreadData* row = block->getThreadData();
-			if (!block->isIgnoredBlock(&mCallList)) {
-				id_type rowId = row->getId();
-				
-				RowData* rd;
-				HashMap<id_type, RowData*>::iterator it = mRowById.find(rowId);
-				if (it == mRowById.end()) {
-					rd = new RowData(row);
-					mRowById.add(rowId, rd);
-				}
-				else {
-					rd = it->second;
-				}
-				
-				uint32_t blockStartTime = block->getStartTime();
-				uint32_t blockEndTime = block->getEndTime();
-				
-				if (blockEndTime > rd->mEndTime) {
-					auto start = std::max(blockStartTime, rd->mEndTime);
-					rd->mElapsed = blockEndTime - start;
-					rd->mEndTime = blockEndTime;
-				}
+            for (auto _i = 0; _i < callList->size(); _i++) {
+                Call* call = callList->get(_i);
+                if (!call->isIgnoredBlock(callList)) {
+                    uint32_t blockStartTime = call->getStartTime();
+                    uint32_t blockEndTime = call->getEndTime();
 
-				if (blockEndTime > mMaxTime) {
-					mMaxTime = blockEndTime;
-				}
-				
-				int top = rd->top();
-				if (top == -1) {
-					rd->push(block->getIndex());
-				}
-				else {
-					Call* topCall = mCallList.get(top);
-					uint32_t topStartTime = topCall->getStartTime();
-					uint32_t topEndTime = topCall->getEndTime();
-					
-					if (topEndTime >= blockStartTime) {
-						if (topStartTime < blockStartTime) {
-							Segment* segment = mSegments.addNull2();
-							segment->init(rd, &mCallList, topCall->getIndex(), topStartTime, blockStartTime);
-						}
-						if (topEndTime == blockStartTime)
-							rd->pop();
-						
-						rd->push(block->getIndex());
-					}
-					else {
-						popFrames(rd, &mCallList, topCall, blockStartTime, &mSegments);
-						rd->push(block->getIndex());
-					}
-				}
-			}
-		}
-		
-		for (auto _i = mRowById.begin(); _i != mRowById.end(); _i++) {
-			RowData* rd = _i->second;
-			{
-				int top = rd->top();
-				popFrames(rd, &mCallList, mCallList.get(top), INT_MAX, &mSegments);
-			}
-		}
-		
-		mRows = mRowById.value_vector();
-		std::sort(mRows->begin(), mRows->begin(), RowData::Less());
+                    if (blockEndTime > mMaxTime) {
+                        mMaxTime = blockEndTime;
+                    }
+
+                    int top = thread->top();
+                    if (top == -1) {
+                        thread->push(call->getIndex());
+                    }
+                    else {
+                        Call* topCall = callList->get(top);
+                        uint32_t topStartTime = topCall->getStartTime();
+                        uint32_t topEndTime = topCall->getEndTime();
+
+                        if (topEndTime >= blockStartTime) {
+                            if (topStartTime < blockStartTime) {
+                                Segment* segment = mSegments.addNull2();
+                                segment->init(thread, callList, topCall->getIndex(), topStartTime, blockStartTime);
+                            }
+                            if (topEndTime == blockStartTime)
+                                thread->pop();
+
+                            thread->push(call->getIndex());
+                        }
+                        else {
+                            popFrames(thread, callList, topCall, blockStartTime, &mSegments);
+                            thread->push(call->getIndex());
+                        }
+                    }
+                }
+
+                int top = thread->top();
+                if (top != -1)
+                {
+                    popFrames(thread, callList, callList->get(top), INT_MAX, &mSegments);
+                }
+
+            }
+        }
+
+		std::sort(mSortedThreads->begin(), mSortedThreads->begin(), ThreadData::GreaterElapse());
 		
 		int index = 0;
-		for (auto ii = mRows->begin(); ii < mRows->end(); ii++) {
+		for (auto ii = mSortedThreads->begin(); ii < mSortedThreads->end(); ii++) {
 			(*ii)->mRank = index++;
 		}
 		
 		mNumRows = 0;
-		for (auto ii = mRows->begin(); ii < mRows->end(); ii++) {
-			if ((*ii)->mElapsed == 0LL)
+		for (auto ii = mSortedThreads->begin(); ii < mSortedThreads->end(); ii++) {
+			if ((*ii)->getElapseTime() == 0LL)
 				break;
 			
 			mNumRows += 1;
 		}
-		std::cerr << "Begin to sort segment" << std::endl;
+
+        std::cerr << "Begin to sort segment" << std::endl;
 		mSegments.sort();
 		std::cerr << "Sort segment done" << std::endl;
         if (mRegression) {
             dumpSegments();
         }
-
 	}
 	
-	void DmTraceReader::popFrames(RowData* rd, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList)
+	void DmTraceReader::popFrames(ThreadData* thread, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList)
 	{
 		uint32_t topEndTime = top->getEndTime();
 		uint32_t lastEndTime = top->getStartTime();
@@ -579,12 +593,12 @@ namespace Android {
 		while (topEndTime <= startTime) {
 			if (topEndTime > lastEndTime) {
 				auto segment = segmentList->addNull2();
-				segment->init(rd, callList, top->getIndex(), lastEndTime, topEndTime);
+				segment->init(thread, callList, top->getIndex(), lastEndTime, topEndTime);
 				lastEndTime = topEndTime;
 			}
-			rd->pop();
+			thread->pop();
 			
-			int topIndex = rd->top();
+			int topIndex = thread->top();
 			if (topIndex == -1)
 				return;
 			top = callList->get(topIndex);
@@ -594,7 +608,7 @@ namespace Android {
 		
 		if (lastEndTime < startTime) {
 			Segment* bd = segmentList->addNull2();
-			bd->init(rd, callList, top->getIndex(), lastEndTime, startTime);
+			bd->init(thread, callList, top->getIndex(), lastEndTime, startTime);
 		}
 	}
 
@@ -603,10 +617,10 @@ namespace Android {
 		TimeBase* timeBase = getPreferredTimeBase();
 
 		mSortedThreads = mThreadMap.value_vector();
-		std::sort(mSortedThreads->begin(), mSortedThreads->end(), ThreadData::Less(timeBase, &mCallList));
+		std::sort(mSortedThreads->begin(), mSortedThreads->end(), ThreadData::Greater(timeBase));
 
 		mSortedMethods = mMethodMap.value_vector();
-		std::sort(mSortedMethods->begin(), mSortedMethods->end(), MethodData::Less(timeBase));
+		std::sort(mSortedMethods->begin(), mSortedMethods->end(), MethodData::Greater(timeBase));
 
 		int nonZero = 0;
 		for (auto it = mSortedMethods->begin(); it != mSortedMethods->end(); it++) {
@@ -632,27 +646,26 @@ namespace Android {
 	
 	void DmTraceReader::dumpSegments()
 	{
-		printf("\nSegments\n");
-		printf("id\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
-		for (auto _i = 0; _i < mSegments.size(); _i++) {
-			Segment* segment = mSegments.get(_i);
-			Call* call = mCallList.get(segment->mBlock);
-			printf("%2d\t%s\t%4d\t%4d\t%s\n"
-				   , call->getThreadId()
-				   , segment->mRowData->mName.c_str()
-				   , segment->mStartTime
-				   , segment->mEndTime
-				   , call->getMethodData()->getName()
-				   );
-		}
+		//printf("\nSegments\n");
+		//printf("id\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
+		//for (auto _i = 0; _i < mSegments.size(); _i++) {
+		//	Segment* segment = mSegments.get(_i);
+		//	printf("%2d\t%s\t%4d\t%4d\t%s\n"
+		//		   , call->getThreadId()
+		//		   , segment->mThreadData->mName.c_str()
+		//		   , segment->mStartTime
+		//		   , segment->mEndTime
+		//		   , call->getMethodData()->getName()
+		//		   );
+		//}
 	}
 	
 	void DmTraceReader::dumpThreadTimes()
 	{
 		printf("\nThread Times\n");
 		printf("id\tt-start\tt-end\tg-start\tg-end\tname\n");
-		for (auto _i = mThreadMap.begin(); _i != mThreadMap.end(); _i++) {
-			ThreadData* threadData = _i->second;
+		for (auto _i = mSortedThreads->begin(); _i != mSortedThreads->end(); _i++) {
+			ThreadData* threadData = *_i;
 			printf("%2u\t%8d\t%8d\t%8d\t%8d\t%s\n"
 				, threadData->getId()
 				, threadData->mThreadStartTime
@@ -666,21 +679,29 @@ namespace Android {
 	void DmTraceReader::dumpCallTimes()
 	{
 		printf("\nCall Times\n");
-		printf("id\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
-		for (auto _i = 0; _i < mCallList.size(); _i++) {
-			Call* call = mCallList.get(_i);
-			{
-				printf("%2u\t%8d\t%8d\t%8d\t%8d\t%8d\t%8d\t%s\n"
-					, call->getThreadId()
-					, call->mThreadStartTime
-					, call->mThreadEndTime
-					, call->mGlobalStartTime
-					, call->mGlobalEndTime
-					, call->mExclusiveCpuTime
-					, call->mInclusiveCpuTime
-					, call->getMethodData()->getName());
-			}
-		}
+		printf("   i\t  id\tcaller\tnext\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
+        for (auto _i = mSortedThreads->begin(); _i != mSortedThreads->end(); _i++) {
+            ThreadData* threadData = *_i;
+            CallList* callList = threadData->getCallList();
+            for (auto _i = 0; _i < callList->size(); _i++) {
+                Call* call = callList->get(_i);
+                {
+                    printf("%4u\t%4u\t%4d\t%4d\t%8d\t%8d\t%8d\t%8d\t%8d\t%8d\t%s\n"
+                        , call->getIndex()
+                        , call->getThreadId()
+                        , call->getCaller()
+                        , call->getNext()
+                        , call->mThreadStartTime
+                        , call->mThreadEndTime
+                        , call->mGlobalStartTime
+                        , call->mGlobalEndTime
+                        , call->mExclusiveCpuTime
+                        , call->mInclusiveCpuTime
+                        , call->getMethodData()->getName()
+                        );
+                }
+            }
+        }
 	}
 	
 	void DmTraceReader::dumpMethodStats()
@@ -709,6 +730,24 @@ namespace Android {
 	{
 		return mSortedThreads;
 	}
+ 
+    ThreadData* DmTraceReader::getThreadData(id_type threadId)
+    {
+        auto i = mThreadMap.find(threadId);
+        if (i == mThreadMap.end()) {
+            return nullptr;
+        }
+        return i->second;
+    }
+
+    CallList* DmTraceReader::getCallList(id_type threadId)
+    {
+        ThreadData* threadData = getThreadData(threadId);
+        if (threadData == nullptr) {
+            return nullptr;
+        }
+        return threadData->getCallList();
+    }
 
 	uint32_t DmTraceReader::getTotalCpuTime()
 	{

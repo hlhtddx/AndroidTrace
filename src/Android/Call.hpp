@@ -5,9 +5,9 @@
 namespace Android {
 	class ThreadData;
 	class MethodData;
-	class Call;
+    typedef struct Call Call;
 
-	typedef FastArray<Call> CallList;
+	class CallList;
 
 	typedef struct Call
 	{
@@ -70,7 +70,37 @@ namespace Android {
 		void finish(CallList* callList);
 		void init(ThreadData* threadData, MethodData* methodData, int caller, int index = -1);
 	} Call;
-	
+
+    class CallList : public FastArray<Call>
+    {
+    public:
+        Call* getNextSiblings(Call* call) {
+            int callIndex = call->getNext();
+            if (callIndex == -1) {
+                return nullptr;
+            }
+            return get(callIndex);
+        }
+        Call* getCaller(Call* call) {
+            int callIndex = call->getCaller();
+            if (callIndex == -1) {
+                return nullptr;
+            }
+            return get(callIndex);
+        }
+        Call* getNextCall(Call* call) {
+            int callIndex = call->getNext();
+            while (callIndex == -1) {
+                int caller = call->getParentBlockIndex();
+                if (caller == -1) {
+                    // Call List is over
+                    return nullptr;
+                }
+                callIndex = get(caller)->getNext();
+            }
+        }
+    };
+#if 0
 	class RowData : public Object
 	{
 	public:
@@ -93,18 +123,18 @@ namespace Android {
 			}
 		};
 	};
-
+#endif
 	typedef struct Segment
 	{
 	public:
-		RowData* mRowData;
-		uint32_t mStartTime;
-		uint32_t mEndTime;
-		int mBlock;
+        ThreadData* mThreadData;
+        Call*       mBlock;
+        uint32_t    mStartTime;
+		uint32_t    mEndTime;
 		bool mIsContextSwitch;
 		
 	public:
-		void init(RowData* rowData, CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime);
+		void init(ThreadData* rowData, CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime);
 	} Segment;
 	
 	typedef FastArray<Segment> SegmentList;

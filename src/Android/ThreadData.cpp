@@ -1,31 +1,45 @@
 ﻿#include "ThreadData.hpp"
+#include <iostream>
 
 namespace Android {
 
-	Call* ThreadData::enter(MethodData* method, TraceActionList* trace, CallList* callList)
-	{
+#ifdef CLOCK_SOURCE_THREAD_CPU
+    Call* ThreadData::enter(MethodData* method, TraceActionList* trace, MethodData* topLevel, CallList* callList)
+#else
+    Call* ThreadData::enter(MethodData* method, MethodData* topLevel)
+#endif
+    {
 		if (mIsEmpty) {
-			mIsEmpty = false;
-			if (trace != nullptr) {
+            addRoot(topLevel);
+#ifdef CLOCK_SOURCE_THREAD_CPU
+            if (trace != nullptr) {
 				trace->push_back(TraceAction(ACTION_ENTER, mRootCall));
 			}
+#endif
 		}
 
         int callerIndex = top();
-		int callIndex = callList->addNull();
-		Call* call = callList->get(callIndex);
+		int callIndex = mCallList.addNull();
+		Call* call = mCallList.get(callIndex);
 		call->init(this, method, callerIndex, callIndex);
         
         if (mLastCall != -1) {
-            Call* lastCall = callList->get(mLastCall);
+            Call* lastCall = mCallList.get(mLastCall);
+            if (call->getCaller() != lastCall->getCaller()) {
+                std::cerr << "Caller doesn't match(" << call->getCaller() << "!=" << lastCall->getCaller() << ")" << std::endl;
+                throw GeneralException("Caller doesn't match");
+            }
             lastCall->setNext(callIndex);
+            mLastCall = -1;
         }
 
         mStack.push_back(callIndex);
 
-		if (trace != nullptr) {
+#ifdef CLOCK_SOURCE_THREAD_CPU
+        if (trace != nullptr) {
 			trace->push_back(TraceAction(ACTION_ENTER, callIndex));
 		}
+#endif
 
 		MethodIntMap::iterator it = mStackMethods.find(method);
 		int num = 0;
@@ -42,10 +56,14 @@ namespace Android {
 		return call;
 	}
 
-	Call* ThreadData::exit(MethodData* method, TraceActionList* trace, CallList* callList)
+#ifdef CLOCK_SOURCE_THREAD_CPU
+    Call* ThreadData::exit(MethodData* method, TraceActionList* trace)
+#else
+    Call* ThreadData::exit(MethodData* method)
+#endif
 	{
         mLastCall = top();
-        Call* call = callList->get(mLastCall);
+        Call* call = mCallList.get(mLastCall);
 
 		if (call->getCaller() == -1) {
 			return nullptr;
@@ -62,9 +80,11 @@ namespace Android {
 
 		mStack.pop_back();
 
-		if (trace != nullptr) {
+#ifdef CLOCK_SOURCE_THREAD_CPU
+        if (trace != nullptr) {
 			trace->push_back(TraceAction(ACTION_EXIT, call->getIndex()));
 		}
+#endif
 		MethodIntMap::iterator it = mStackMethods.find(method);
 		if (it != mStackMethods.end()) {
 			mStackMethods[method] = it->second - 1;
@@ -73,11 +93,11 @@ namespace Android {
 		return call;
 	}
 
-	Call* ThreadData::top(CallList* callList)
+	Call* ThreadData::topCall()
 	{
 		if (mStack.size() == 0)
 			return NULL;
-		return callList->get(mStack.back());
+		return mCallList.get(mStack.back());
 	}
 
 	int ThreadData::top()
@@ -87,17 +107,32 @@ namespace Android {
 		return (int)mStack.back();
 	}
 
-	void ThreadData::endTrace(TraceActionList* trace, CallList* callList)
+#ifdef CLOCK_SOURCE_THREAD_CPU
+    void ThreadData::endTrace(TraceActionList* trace)
+#else
+    void ThreadData::endTrace()
+#endif
 	{
 		for (auto i = mStack.rbegin(); i != mStack.rend(); i++) {
-			Call* call = callList->get(*i);
+			Call* call = mCallList.get(*i);
 			call->mGlobalEndTime = mGlobalEndTime;
 			call->mThreadEndTime = mThreadEndTime;
-			if (trace) {
+#ifdef CLOCK_SOURCE_THREAD_CPU
+            if (trace) {
 				trace->push_back(TraceAction(ACTION_INCOMPLETE, call->getIndex()));
 			}
-		}
-		mStack.clear();
+#endif
+
+            for (auto i = mCallList.size() - 1; i >= 1; i--) {
+                Call* call = mCallList.get(i);
+                uint32_t realTime = call->mGlobalEndTime - call->mGlobalStartTime;
+                call->mExclusiveRealTime = std::max<uint32_t>(realTime - call->mInclusiveRealTime, 0);
+                call->mInclusiveRealTime = realTime;
+                call->finish(&mCallList);
+            }
+        }
+        mCallList.freeExtra();
+        mStack.clear();
 		mStackMethods.clear();
 	}
 

@@ -17,7 +17,7 @@ namespace Android {
 		static TimeBase* REAL_TIME;
 
 	public:
-		virtual uint32_t getTime(const ThreadData* paramThreadData, CallList* callList) = 0;
+		virtual uint32_t getTime(const ThreadData* paramThreadData) = 0;
 		virtual uint32_t getElapsedInclusiveTime(const MethodData* paramMethodData) = 0;
 		virtual uint32_t getElapsedExclusiveTime(const MethodData* paramMethodData) = 0;
 		virtual uint32_t getElapsedInclusiveTime(const ProfileData* paramProfileData) = 0;
@@ -28,7 +28,7 @@ namespace Android {
 	{
 	public:
 		static CpuTimeBase TIME;
-		virtual uint32_t getTime(const ThreadData* threadData, CallList* callList) override;
+		virtual uint32_t getTime(const ThreadData* threadData) override;
 		virtual uint32_t getElapsedInclusiveTime(const MethodData* methodData) override;
 		virtual uint32_t getElapsedExclusiveTime(const MethodData* methodData) override;
 		virtual uint32_t getElapsedInclusiveTime(const ProfileData* profileData) override;
@@ -39,7 +39,7 @@ namespace Android {
 	{
 	public:
 		static RealTimeBase TIME;
-		virtual uint32_t getTime(const ThreadData* threadData, CallList* callList) override;
+		virtual uint32_t getTime(const ThreadData* threadData) override;
 		virtual uint32_t getElapsedInclusiveTime(const MethodData* methodData) override;
 		virtual uint32_t getElapsedExclusiveTime(const MethodData* methodData) override;
 		virtual uint32_t getElapsedInclusiveTime(const ProfileData* profileData) override;

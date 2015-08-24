@@ -45,15 +45,12 @@ namespace Android {
 		MethodData* mTopLevel;
 		MethodData* mContextSwitch;
 
-		CallList mCallList;
 		PropertyMap mPropertiesMap;
 		MethodPtrMap mMethodMap;
 		ThreadPtrMap mThreadMap;
 		ThreadPtrList* mSortedThreads;
 		MethodPtrList* mSortedMethods;
 
-		HashMap<id_type, RowData*> mRowById;
-		Vector<RowData*>* mRows;
 		SegmentList mSegments;
 		int mNumRows;
 
@@ -75,8 +72,6 @@ namespace Android {
 
 	public:
 		void generateTrees() /* throws(IOException) */;
-
-	public:
 		//ProfileProvider* getProfileProvider();
 
 	private:
@@ -88,33 +83,37 @@ namespace Android {
 		void parseThread(const String &line);
 		void parseMethod(const String &line);
 		void generateSegments();
-		static void popFrames(RowData* rd, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);
+		static void popFrames(ThreadData* thread, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);
 
 	private:
 		void constructPathname(String &className, String &pathname);
 		void analyzeData();
 
-	public:
-		CallList* getThreadTimeRecords() {
-			return &mCallList;
-		}
-		//	::java::util::HashMap* getThreadLabels();
-		//
-		private:
-			void dumpThreadTimes();
-			void dumpCallTimes();
-			void dumpMethodStats();
-			void dumpTimeRecs();
-			void dumpSegments();
+	private:
+		void dumpThreadTimes();
+		void dumpCallTimes();
+		void dumpMethodStats();
+		void dumpSegments();
 
 	public:
 		Vector<MethodData*>* getMethods();
 		Vector<ThreadData*>* getThreads();
-		uint32_t getTotalCpuTime();
+        ThreadData* getThreadData(id_type threadId);
+        CallList* getCallList(id_type threadId);
+        PropertyMap& getProperties();
+
+        uint32_t getMinTime() const {
+            return mMinTime;
+        }
+
+        uint32_t getMaxTime() const {
+            return mMaxTime;
+        }
+        
+        uint32_t getTotalCpuTime();
 		uint32_t getTotalRealTime();
 		bool haveCpuTime();
 		bool haveRealTime();
-		PropertyMap& getProperties();
 		TimeBase* getPreferredTimeBase();
 		const char* getClockSource();
 

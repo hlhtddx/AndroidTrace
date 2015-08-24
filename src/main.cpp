@@ -2,8 +2,8 @@
 //  main.cpp
 //  AndroidTrace
 //
-//  Created by 张航 on 15/8/16.
-//  Copyright (c) 2015年 Frank Zhang. All rights reserved.
+//  Created by Frank Zhang on 15/8/16.
+//  Copyright (c) 2015 Frank Zhang. All rights reserved.
 //
 
 #include <iostream>

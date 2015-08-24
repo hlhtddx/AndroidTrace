@@ -3,13 +3,17 @@
 #include "Common.hpp"
 #include "MethodData.hpp"
 #include "Call.hpp"
-#include "TraceAction.hpp"
+#ifdef CLOCK_SOURCE_THREAD_CPU
+    #include "TraceAction.hpp"
+#endif
 
 namespace Android {
 
 	typedef List<size_t> ThreadStack;
 	typedef HashMap<MethodData*, int> MethodIntMap;
-	typedef List<TraceAction> TraceActionList;
+#ifdef CLOCK_SOURCE_THREAD_CPU
+    typedef List<TraceAction> TraceActionList;
+#endif
 
 	class ThreadData : public Object
 	{
@@ -21,11 +25,13 @@ namespace Android {
 		bool mIsEmpty;
 		int mRootCall;
         int mLastCall;
-		ThreadStack mStack;
+        ThreadStack mStack;
 		MethodIntMap mStackMethods;
+        CallList mCallList;
 
 	public:
-		bool mHaveGlobalTime;
+        int mRank;
+        bool mHaveGlobalTime;
 		bool mHaveThreadTime;
 
 		uint32_t mGlobalStartTime;
@@ -40,34 +46,53 @@ namespace Android {
 		{
 			return mName.c_str();
 		}
-		Call* getRootCall(CallList* callList)
+		Call* getRootCall()
 		{
-			return callList->get(mRootCall);
+			return mCallList.get(mRootCall);
 		}
 
-		bool isEmpty()
+		bool isEmpty() const
 		{
 			return mIsEmpty;
 		}
 
 	public:
-		Call* enter(MethodData* method, TraceActionList* trace, CallList* callList);
-		Call* exit(MethodData* method, TraceActionList* trace, CallList* callList);
-		Call* top(CallList* callList);
-		int top();
-		void endTrace(TraceActionList* trace, CallList* callList);
-		void updateRootCallTimeBounds(CallList* callList)
+#ifdef CLOCK_SOURCE_THREAD_CPU
+        Call* enter(MethodData* method, TraceActionList* trace, MethodData* topLevel);
+		Call* exit(MethodData* method, TraceActionList* trace);
+		void endTrace(TraceActionList* trace);
+#else
+        Call* enter(MethodData* method, MethodData* topLevel);
+        Call* exit(MethodData* method);
+        void endTrace();
+#endif
+
+        Call* topCall();
+        int top();
+
+        void push(int index)
+        {
+            mStack.push_back(index);
+        }
+
+        void pop()
+        {
+            if (mStack.size() == 0) {
+                return;
+            }
+
+            mStack.pop_back();
+        }
+
+        void updateRootCallTimeBounds()
 		{
 			if (!mIsEmpty) {
-				callList->get(mRootCall)->mGlobalStartTime = mGlobalStartTime;
-				callList->get(mRootCall)->mGlobalEndTime = mGlobalEndTime;
-				callList->get(mRootCall)->mThreadStartTime = mThreadStartTime;
-				callList->get(mRootCall)->mThreadEndTime = mThreadEndTime;
+				mCallList.get(mRootCall)->mGlobalStartTime = mGlobalStartTime;
+				mCallList.get(mRootCall)->mGlobalEndTime = mGlobalEndTime;
+				mCallList.get(mRootCall)->mThreadStartTime = mThreadStartTime;
+				mCallList.get(mRootCall)->mThreadEndTime = mThreadEndTime;
 			}
 		}
-
-    protected:
-        Call* getLastCall(CallList* callList);
 
 	public:
 		id_type getId()
@@ -75,55 +100,89 @@ namespace Android {
 			return mId;
 		}
 		
-		uint32_t getCpuTime(CallList* callList) const
+		uint32_t getCpuTime() const
 		{
-			return callList->get(mRootCall)->mInclusiveCpuTime;
+            if (mRootCall == -1) {
+                return 0;
+            }
+			return mCallList.get(mRootCall)->mInclusiveCpuTime;
 		}
 		
-		uint32_t getRealTime(CallList* callList) const
+		uint32_t getRealTime() const
 		{
-			return callList->get(mRootCall)->mInclusiveRealTime;
+            if (mRootCall == -1) {
+                return 0;
+            }
+            return mCallList.get(mRootCall)->mInclusiveRealTime;
 		}
+
+        CallList* getCallList()
+        {
+            return &mCallList;
+        }
+
+        int32_t getElapseTime() const
+        {
+            if (isEmpty()) {
+                return -1;
+            }
+            return mGlobalEndTime - mGlobalStartTime;
+        }
 
 	public:
 		ThreadData()
+            : ThreadData(0, "Unknown")
 		{
-			mId = 0;
-			mName = "Not inited";
-			mIsEmpty = true;
-			mRootCall = -1;
-            mLastCall = -1;
         }
 
-		ThreadData(id_type id, const char* name, MethodData* topLevel, CallList* callList)
+		ThreadData(id_type id, const char* name)
 		{
 			mId = id;
 			std::stringstream ss;
 			ss << "[" << id << "] " << name;
 			mName = ss.str();
 			mIsEmpty = true;
-			mRootCall = callList->addNull();
-			callList->get(mRootCall)->init(this, topLevel, -1, mRootCall);
-			mStack.push_back(mRootCall);
+            mRootCall = -1;
             mLastCall = -1;
+            mRank = -1;
+            mHaveGlobalTime = false;
+            mHaveThreadTime = false;
         }
 
 		~ThreadData()
 		{
 		}
 
-		struct Less : public std::binary_function<ThreadData*, ThreadData*, bool> {
-			TimeBase* timeBase;
-			CallList* callList;
+        void addRoot(MethodData* topLevel)
+        {
+            mRootCall = mCallList.addNull();
+            mCallList.get(mRootCall)->init(this, topLevel, -1, mRootCall);
+            mStack.push_back(mRootCall);
+            mIsEmpty = false;
+        }
 
-			Less(TimeBase* timeBase, CallList* callList) {
-				this->timeBase = timeBase;
-				this->callList = callList;
+		struct Greater : public std::binary_function<ThreadData*, ThreadData*, bool> {
+			TimeBase* mTimeBase;
+
+            Greater(TimeBase* timeBase) {
+                mTimeBase = timeBase;
 			}
 
 			bool operator() (const ThreadData* _Left, const ThreadData* _Right) const {
-				return timeBase->getTime(_Left, callList) < timeBase->getTime(_Right, callList);
+                if (_Left->isEmpty()) {
+                    return false;
+                }
+                if (_Right->isEmpty()) {
+                    return true;
+                }
+                return mTimeBase->getTime(_Left) > mTimeBase->getTime(_Right);
 			}
 		};
-	};
+
+        struct GreaterElapse : public std::binary_function<ThreadData*, ThreadData*, bool> {
+            bool operator() (const ThreadData* _Left, const ThreadData* _Right) const {
+                return _Left->getElapseTime() > _Right->getElapseTime();
+            }
+        };
+    };
 };

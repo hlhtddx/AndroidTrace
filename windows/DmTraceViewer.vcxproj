@@ -80,7 +80,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)/../src;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)..\src\Android;$(IncludePath)</IncludePath>
+    <LibraryPath>$(OutDir);$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -120,6 +121,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>AndroidTraceFile.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -186,19 +188,6 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\Android\Call.hpp" />
-    <ClInclude Include="..\src\Android\ColorController.hpp" />
-    <ClInclude Include="..\src\Android\Common.hpp" />
-    <ClInclude Include="..\src\Android\DmTraceReader.hpp" />
-    <ClInclude Include="..\src\Android\MethodData.hpp" />
-    <ClInclude Include="..\src\Android\ProfileData.hpp" />
-    <ClInclude Include="..\src\Android\ProfileNode.hpp" />
-    <ClInclude Include="..\src\Android\ProfileSelf.hpp" />
-    <ClInclude Include="..\src\Android\ThreadData.hpp" />
-    <ClInclude Include="..\src\Android\TimeBase.hpp" />
-    <ClInclude Include="..\src\Android\TimeLineView.hpp" />
-    <ClInclude Include="..\src\Android\TraceAction.hpp" />
-    <ClInclude Include="..\src\Android\TraceUnits.hpp" />
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
     <ClInclude Include="DmTraceViewer.h" />
@@ -214,18 +203,6 @@
     <ClInclude Include="ViewTree.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\Android\Call.cpp" />
-    <ClCompile Include="..\src\Android\ColorController.cpp" />
-    <ClCompile Include="..\src\Android\Common.cpp" />
-    <ClCompile Include="..\src\Android\DmTraceReader.cpp" />
-    <ClCompile Include="..\src\Android\MethodData.cpp" />
-    <ClCompile Include="..\src\Android\ProfileData.cpp" />
-    <ClCompile Include="..\src\Android\ProfileNode.cpp" />
-    <ClCompile Include="..\src\Android\ProfileSelf.cpp" />
-    <ClCompile Include="..\src\Android\ThreadData.cpp" />
-    <ClCompile Include="..\src\Android\TimeBase.cpp" />
-    <ClCompile Include="..\src\Android\TimeLineView.cpp" />
-    <ClCompile Include="..\src\Android\TraceUnits.cpp" />
     <ClCompile Include="ChildFrm.cpp" />
     <ClCompile Include="ClassView.cpp" />
     <ClCompile Include="DmTraceViewer.cpp" />

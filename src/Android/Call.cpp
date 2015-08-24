@@ -140,17 +140,48 @@ namespace Android {
 		}
 		mMethodData->addElapsedInclusive(mInclusiveCpuTime, mInclusiveRealTime, mIsRecursive, mCaller, callList);
 	}
-	
-	void Segment::init(RowData* rowData, CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime)
+
+#if 0
+    RowData::RowData(ThreadData* row)
+    {
+        mName = row->getName();
+        mElapsed = 0;
+        mEndTime = 0;
+    }
+
+    void RowData::push(int index)
+    {
+        mStack.push_back(index);
+    }
+
+    int RowData::top()
+    {
+        if (mStack.size() == 0) {
+            return -1;
+        }
+        return mStack.back();
+    }
+
+    void RowData::pop()
+    {
+        if (mStack.size() == 0) {
+            return;
+        }
+
+        mStack.pop_back();
+    }
+#endif
+
+	void Segment::init(ThreadData* threadData, CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime)
 	{
-		mRowData = rowData;
+		mThreadData = threadData;
 		Call* call = callList->get(callIndex);
 		if (call->isContextSwitch()) {
-			mBlock = call->getParentBlockIndex();
+			mBlock = call->getParentBlock(callList);
 			mIsContextSwitch = true;
 		}
 		else {
-			mBlock = callIndex;
+			mBlock = call;
 			mIsContextSwitch = false;
 		}
 		mStartTime = startTime;
@@ -161,8 +192,8 @@ namespace Android {
 	{
 		Segment* bd1 = (Segment*)_Left;
 		Segment* bd2 = (Segment*)_Right;
-		RowData* rd1 = bd1->mRowData;
-		RowData* rd2 = bd2->mRowData;
+        ThreadData* rd1 = bd1->mThreadData;
+        ThreadData* rd2 = bd2->mThreadData;
 		int diff = rd1->mRank - rd2->mRank;
 		if (diff == 0) {
 			long timeDiff = bd1->mStartTime - bd2->mStartTime;

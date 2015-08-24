@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "Android/DmTraceReader.hpp"
-#include "Android/TimeLineView.hpp"
+#include "DmTraceReader.hpp"
+#include "TimeLineView.hpp"
 
 class CDmTraceViewerDoc : public CDocument
 {
