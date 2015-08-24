@@ -303,7 +303,7 @@ namespace Android {
             unsigned char methodAction = methodId & METHOD_ACTION_MASK;
             methodId &= METHOD_ID_MASK;
 
-            //			TRACE("record: tid=%d, mid=%d, action=%d, ttime=%lld, gtime=%lld\n", threadId, methodId, methodAction, threadTime, globalTime);
+            //printf("record: tid=%d, mid=%p, action=%d, ttime=%lld, gtime=%lld\n", threadId, (int64_t)methodId, methodAction, threadTime, globalTime);
             MethodData* methodData = NULL;
             if (mMethodMap.find(methodId) == mMethodMap.end()) {
                 std::stringstream ss;
