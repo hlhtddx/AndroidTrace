@@ -20,6 +20,7 @@ namespace Android {
 		String mName;
 		bool mIsEmpty;
 		int mRootCall;
+        int mLastCall;
 		ThreadStack mStack;
 		MethodIntMap mStackMethods;
 
@@ -65,9 +66,10 @@ namespace Android {
 			}
 		}
 
+    protected:
+        Call* getLastCall(CallList* callList);
+
 	public:
-		String toString();
-		
 		id_type getId()
 		{
 			return mId;
@@ -90,7 +92,8 @@ namespace Android {
 			mName = "Not inited";
 			mIsEmpty = true;
 			mRootCall = -1;
-		}
+            mLastCall = -1;
+        }
 
 		ThreadData(id_type id, const char* name, MethodData* topLevel, CallList* callList)
 		{
@@ -102,7 +105,8 @@ namespace Android {
 			mRootCall = callList->addNull();
 			callList->get(mRootCall)->init(this, topLevel, -1, mRootCall);
 			mStack.push_back(mRootCall);
-		}
+            mLastCall = -1;
+        }
 
 		~ThreadData()
 		{

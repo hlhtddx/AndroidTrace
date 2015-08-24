@@ -17,8 +17,9 @@ namespace Android {
 
 	private:
 		bool mIsRecursive;
-		int mCaller;
 		int mIndex;
+        int mCaller;
+        int mNext;
 
 	public:
 		uint32_t mGlobalStartTime;
@@ -31,14 +32,20 @@ namespace Android {
 		uint32_t mExclusiveCpuTime;
 
 	public:
-		int getCaller() const {
-			return mCaller;
-		}
 		int getIndex() const {
 			return mIndex;
 		}
-		void updateName();
-		double addWeight(int x, int y, double weight);
+        int getCaller() const {
+            return mCaller;
+        }
+        int getNext() const {
+            return mNext;
+        }
+        void setNext(int next) {
+            mNext = next;
+        }
+
+        double addWeight(int x, int y, double weight);
 		void clearWeight();
 		uint32_t getStartTime();
 		uint32_t getEndTime();

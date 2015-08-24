@@ -11,6 +11,7 @@ namespace Android {
 		mMethodData = methodData;
 		mCaller = caller;
 		mIndex = index;
+        mNext = -1;
 		mGlobalStartTime = 0;
 		mGlobalEndTime = 0;
 		mThreadStartTime = 0;
@@ -19,10 +20,6 @@ namespace Android {
 		mExclusiveRealTime = 0;
 		mInclusiveCpuTime = 0;
 		mExclusiveCpuTime = 0;
-	}
-
-	void Call::updateName()
-	{
 	}
 
 	double Call::addWeight(int x, int y, double weight)

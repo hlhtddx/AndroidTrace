@@ -10,11 +10,18 @@ namespace Android {
 				trace->push_back(TraceAction(ACTION_ENTER, mRootCall));
 			}
 		}
-		int callerIndex = top();
+
+        int callerIndex = top();
 		int callIndex = callList->addNull();
 		Call* call = callList->get(callIndex);
 		call->init(this, method, callerIndex, callIndex);
-		mStack.push_back(callIndex);
+        
+        if (mLastCall != -1) {
+            Call* lastCall = callList->get(mLastCall);
+            lastCall->setNext(callIndex);
+        }
+
+        mStack.push_back(callIndex);
 
 		if (trace != nullptr) {
 			trace->push_back(TraceAction(ACTION_ENTER, callIndex));
@@ -37,11 +44,14 @@ namespace Android {
 
 	Call* ThreadData::exit(MethodData* method, TraceActionList* trace, CallList* callList)
 	{
-		Call* call = top(callList);
+        mLastCall = top();
+        Call* call = callList->get(mLastCall);
+
 		if (call->getCaller() == -1) {
 			return nullptr;
 		}
-		if (call->getMethodData() != method) {
+
+        if (call->getMethodData() != method) {
 			String error = "Method exit (";
 			error += method->getName();
 			error += ") does not match current method (";
