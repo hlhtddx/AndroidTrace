@@ -98,6 +98,7 @@ namespace Android {
                 }
                 callIndex = get(caller)->getNext();
             }
+            return get(callIndex);
         }
     };
 #if 0
