@@ -74,6 +74,8 @@ namespace Android {
     class CallList : public FastArray<Call>
     {
     public:
+        
+        // Get the sibling of this call. If no, return null
         Call* getNextSiblings(Call* call) {
             int callIndex = call->getNext();
             if (callIndex == -1) {
@@ -81,6 +83,8 @@ namespace Android {
             }
             return get(callIndex);
         }
+
+        // Get the caller of this call. If it is root call, return null
         Call* getCaller(Call* call) {
             int callIndex = call->getCaller();
             if (callIndex == -1) {
@@ -88,18 +92,33 @@ namespace Android {
             }
             return get(callIndex);
         }
+
+        // 1. Get the sibling of this call.
+        // 2. Try to return ancestors's siblings
+        // 3. If no, return null
         Call* getNextCall(Call* call) {
-            int callIndex = call->getNext();
-            while (callIndex == -1) {
-                int caller = call->getParentBlockIndex();
-                if (caller == -1) {
-                    // Call List is over
-                    return nullptr;
+            while (call != nullptr) {
+                Call* sibling = getNextSiblings(call);
+                if (sibling != nullptr) {
+                    return sibling;
                 }
-                callIndex = get(caller)->getNext();
+                call = getCaller(call);
+            }
+            return nullptr;
+        }
+
+        // Get the first child of this call. If no child, return null
+        Call* getFirstChild(Call* call) {
+            int callIndex = call->getIndex() + 1;
+            if (callIndex >= size()) {
+                return nullptr;
+            }
+            if (callIndex == call->getNext()) {
+                return nullptr;
             }
             return get(callIndex);
         }
+        
     };
 #if 0
 	class RowData : public Object

@@ -606,18 +606,40 @@ namespace Android {
                 break;
             }
 
+            if (thread->isEmpty()) {
+                continue;
+            }
+
             CallList* callList = thread->getCallList();
-            Call* call = mParent->startBetween(thread->getId(), minVal, maxVal);
-            Pixel pix;
-            COLOR color = call->getColor();
+            Call* call = callList->get(0);
+//            Pixel pix;
+
+            int mStart = -2;
+            double mMaxWeight = 0.0;
+            Call* mCall = nullptr;
+            COLOR mColor = 0;
 
             while (call != nullptr) {
+
+                COLOR color = call->getColor();
+                
+                //Check if segment is out of visible range
+                if (call->getEndTime() <= minVal)
+                {
+                    call = callList->getNextCall(call);
+                    continue;
+                }
+
+                if (call->getStartTime() >= maxVal)
+                {
+                    break;
+                }
 
                 // Clip block to range of minVal~maxVal
                 double recordStart = std::max(static_cast<double>(call->getStartTime()), minVal);
                 double recordEnd = std::min(static_cast<double>(call->getEndTime()), maxVal);
 
-                // if range is empty
+                // if range of the Call is empty
                 if (recordStart == recordEnd) {
                     //TODO
                     continue;
@@ -630,26 +652,43 @@ namespace Android {
 
                 int y1 = thread->mRank * 32 + 6;
 
-                if (pix.mStart != pixelStart) {
+                if (mStart != pixelStart) {
+                    // pix.mStart ==> prev pixel
+                    // pixelStart ==> curr pixel (of current call)
+                    // Compare the current pixel to previous pixel. If pixel shifted, the previous pixel should be emitted.
 
-                    // Compare the current segment to previous pixel. If pixel shifted, the previous pixel should be emitted.
-                    if (pix.mCall != nullptr) {
-
-                        // There is segment recorded for the pixel. Create a strip for it.
-                        emitPixelStrip(thread, y1, &pix);
+                    // If there was a call recorded for the pixel. Create a strip for it.
+                    if (mCall != nullptr) {
+                        int x = mStart;
+                        Strip* strip = new Strip(x, y1, 1, 20, thread, call, mColor); // TODO
+                        mStripList.push_back(strip);
+                        mCall = nullptr;
+                        mStart++;
                     }
+
+                    // If the current Call is less than 1 pixel, we will measure the Call
+                    // If the weight is larger than 0.5, set it as current Pixel and proceed to next Call and next Pixel
+                    // Else, try the other siblings Call. If no sibling's weight is higher than 0.5, set it to parent Call
                     if (width == 0) {
-                        // If the segment is within one pixel, the Call with most weight will be displayed.
-                        // But at first, we record the pixel(with its weight and color) to Pixel* pix
                         double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-                        weight = call->addWeight(pixelStart, thread->mRank, weight);
-                        if (weight > pix.mMaxWeight) {
-                            pix.setFields(pixelStart, weight, call, color, thread);
+                        if (weight > Pixel::qualifiedWeight) {
+                            Strip* strip = new Strip(mStart, y1, 1, 20, thread, call, color); // TODO
+                            mStripList.push_back(strip);
+                            call = callList->getNextCall(<#Call *call#>)(call);
+                            continue;
+                        }
+                        else {
+                            Call* sibling = callList->getNextSiblings(call);
+                            if (sibling == nullptr) {
+                                Strip* strip = new Strip(mStart, y1, 1, 20, thread, call, color); // TODO
+                                mStripList.push_back(strip);
+                            }
+                            continue;
                         }
                     }
                     else {
                         // if the segment larger than 1 pixel, create a multi-pixel strip
-                        int x1 = pixelStart + 10;
+                        int x1 = pixelStart;
                         Strip* strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, thread, call, color);
                         mStripList.push_back(strip);
                     }
@@ -688,9 +727,9 @@ namespace Android {
 
     double Surface::computeWeight(double start, double end, bool isContextSwitch, int pixel)
     {
-        if (isContextSwitch) {
-            return 0.0;
-        }
+//        if (isContextSwitch) {
+//            return 0.0;
+//        }
         double pixelStartFraction = mParent->getScaleInfo().valueToPixelFraction(start);
         double pixelEndFraction = mParent->getScaleInfo().valueToPixelFraction(end);
         double leftEndPoint = std::max(pixelStartFraction, pixel - 0.5);

@@ -227,6 +227,8 @@ namespace Android {
     class Pixel : public Object
     {
     public:
+        
+        static const double qualifiedWeight = 0.5;
         Pixel()
         {
             mStart = -2;
