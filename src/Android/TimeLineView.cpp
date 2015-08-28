@@ -3,6 +3,7 @@
 #include "TraceUnits.hpp"
 
 namespace Android {
+    const double Pixel::qualifiedWeight = 0.5;
 
     Range::Range(int xStart, int width, int y, COLOR color)
     {
@@ -611,114 +612,86 @@ namespace Android {
             }
 
             CallList* callList = thread->getCallList();
-            Call* call = callList->get(0);
-//            Pixel pix;
 
             int mStart = -2;
+            double mStartFraction = mParent->getScaleInfo().pixelToValue(mStart);
+            double mPixelFraction = mParent->getScaleInfo().pixelToValue(mStart + 1);
+
+            int y1 = thread->mRank * 32 + 6;
             double mMaxWeight = 0.0;
             Call* mCall = nullptr;
             COLOR mColor = 0;
+            Strip currStrip(0, 0, 0, 0, nullptr, (Call*)nullptr, 0);
 
-            while (call != nullptr) {
+            CallStack stack;
 
+            for (int callIndex = 0; callIndex < callList->size(); callIndex++) {
+                Call* call = callList->get(callIndex);
                 COLOR color = call->getColor();
-                
+                uint32_t blockStartTime = call->getStartTime();
+                uint32_t blockEndTime = call->getEndTime();
+
                 //Check if segment is out of visible range
-                if (call->getEndTime() <= minVal)
+                if (blockEndTime <= minVal)
                 {
-                    call = callList->getNextCall(call);
+                    callIndex = call->getEnd();
                     continue;
                 }
-
-                if (call->getStartTime() >= maxVal)
+                if (blockStartTime >= maxVal)
                 {
                     break;
                 }
 
-                // Clip block to range of minVal~maxVal
-                double recordStart = std::max(static_cast<double>(call->getStartTime()), minVal);
-                double recordEnd = std::min(static_cast<double>(call->getEndTime()), maxVal);
+                if (!call->isIgnoredBlock(callList)) {
 
-                // if range of the Call is empty
-                if (recordStart == recordEnd) {
-                    //TODO
-                    continue;
-                }
+                    // Clip block to range of minVal~maxVal
+                    double recordStart = std::max(static_cast<double>(blockStartTime), minVal);
+                    double recordEnd = std::min(static_cast<double>(blockEndTime), maxVal);
 
-                int pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
-                int pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
-                int width = pixelEnd - pixelStart;
-                bool isContextSwitch = call->isContextSwitch();
-
-                int y1 = thread->mRank * 32 + 6;
-
-                if (mStart != pixelStart) {
-                    // pix.mStart ==> prev pixel
-                    // pixelStart ==> curr pixel (of current call)
-                    // Compare the current pixel to previous pixel. If pixel shifted, the previous pixel should be emitted.
-
-                    // If there was a call recorded for the pixel. Create a strip for it.
-                    if (mCall != nullptr) {
-                        int x = mStart;
-                        Strip* strip = new Strip(x, y1, 1, 20, thread, call, mColor); // TODO
-                        mStripList.push_back(strip);
-                        mCall = nullptr;
-                        mStart++;
+                    // if range of the Call is empty, skip to next call
+                    if (recordStart == recordEnd) {
+                        callIndex = call->getEnd();
+                        continue;
                     }
 
-                    // If the current Call is less than 1 pixel, we will measure the Call
-                    // If the weight is larger than 0.5, set it as current Pixel and proceed to next Call and next Pixel
-                    // Else, try the other siblings Call. If no sibling's weight is higher than 0.5, set it to parent Call
-                    if (width == 0) {
-                        double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-                        if (weight > Pixel::qualifiedWeight) {
-                            Strip* strip = new Strip(mStart, y1, 1, 20, thread, call, color); // TODO
-                            mStripList.push_back(strip);
-                            call = callList->getNextCall(<#Call *call#>)(call);
-                            continue;
-                        }
-                        else {
-                            Call* sibling = callList->getNextSiblings(call);
-                            if (sibling == nullptr) {
-                                Strip* strip = new Strip(mStart, y1, 1, 20, thread, call, color); // TODO
-                                mStripList.push_back(strip);
-                            }
-                            continue;
-                        }
+                    int pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
+                    int pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
+                    int width = pixelEnd - pixelStart;
+                    bool isContextSwitch = call->isContextSwitch();
+
+                    int top = stack.top();
+                    if (top == -1) {
+                        stack.push(call->getIndex());
                     }
                     else {
-                        // if the segment larger than 1 pixel, create a multi-pixel strip
-                        int x1 = pixelStart;
-                        Strip* strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, thread, call, color);
-                        mStripList.push_back(strip);
+                        Call* topCall = callList->get(top);
+                        uint32_t topStartTime = topCall->getStartTime();
+                        uint32_t topEndTime = topCall->getEndTime();
+
+                        // topEndTime > blockStartTime ==> current block is inside top block
+                        // topEndTime = blockStartTime ==> current block is behind top block
+                        // topEndTime < blockStartTime ==> current block is behind top block
+                        if (topEndTime >= blockStartTime) {
+                            if (topStartTime < blockStartTime) {
+                                Segment* segment = mSegments.addNull2();
+                                segment->init(thread, callList, topCall->getIndex(), topStartTime, blockStartTime);
+                            }
+                            if (topEndTime == blockStartTime)
+                                stack.pop();
+
+                            stack.push(call->getIndex());
+                        }
+                        else {
+                            popFrames(thread, callList, topCall, blockStartTime, &mSegments);
+                            stack.push(call->getIndex());
+                        }
                     }
                 }
-                else {
 
-                    // Still start with same pixel, need to compute weight for the first pixel
-                    double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-                    weight = call->addWeight(pixelStart, thread->mRank, weight);
-                    if (weight > pix.mMaxWeight) {
-                        pix.setFields(pixelStart, weight, call, color, thread);
-                    }
-
-                    if (width == 1) {
-                        // For one new pixel, finish current pixel and start a new pixel weighting
-                        emitPixelStrip(thread, y1, &pix);
-                        pixelStart++;
-                        weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-                        weight = call->addWeight(pixelStart, thread->mRank, weight);
-                        pix.setFields(pixelStart, weight, call, color, thread);
-                    }
-                    else if (width > 1) {
-                        // Finish current pixel and create new multi-pixel strip
-                        emitPixelStrip(thread, y1, &pix);
-                        pixelStart++;
-                        width--;
-                        int x1 = pixelStart + 10;
-                        Strip* strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, thread, call, color);
-                        mStripList.push_back(strip);
-                    }
+                int top = stack.top();
+                if (top != -1)
+                {
+                    popFrames(thread, callList, callList->get(top), INT_MAX, &mSegments);
                 }
 
             }

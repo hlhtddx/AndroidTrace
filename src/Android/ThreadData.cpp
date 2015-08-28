@@ -22,18 +22,8 @@ namespace Android {
 		int callIndex = mCallList.addNull();
 		Call* call = mCallList.get(callIndex);
 		call->init(this, method, callerIndex, callIndex);
-        
-        if (mLastCall != -1) {
-            Call* lastCall = mCallList.get(mLastCall);
-            if (call->getCaller() != lastCall->getCaller()) {
-                std::cerr << "Caller doesn't match(" << call->getCaller() << "!=" << lastCall->getCaller() << ")" << std::endl;
-                throw GeneralException("Caller doesn't match");
-            }
-            lastCall->setNext(callIndex);
-            mLastCall = -1;
-        }
-
-        mStack.push_back(callIndex);
+        push(callIndex);
+        mLastCall = callIndex;
 
 #ifdef CLOCK_SOURCE_THREAD_CPU
         if (trace != nullptr) {
@@ -62,8 +52,7 @@ namespace Android {
     Call* ThreadData::exit(MethodData* method)
 #endif
 	{
-        mLastCall = top();
-        Call* call = mCallList.get(mLastCall);
+        Call* call = topCall();
 
 		if (call->getCaller() == -1) {
 			return nullptr;
@@ -78,7 +67,9 @@ namespace Android {
 			throw error;
 		}
 
-		mStack.pop_back();
+        call->setEnd(mLastCall);
+        mLastCall = call->getIndex();
+		pop();
 
 #ifdef CLOCK_SOURCE_THREAD_CPU
         if (trace != nullptr) {
@@ -90,21 +81,18 @@ namespace Android {
 			mStackMethods[method] = it->second - 1;
 		}
 
-		return call;
+        return call;
 	}
+
+    int ThreadData::invalidValue = -1;
 
 	Call* ThreadData::topCall()
 	{
-		if (mStack.size() == 0)
-			return NULL;
-		return mCallList.get(mStack.back());
-	}
-
-	int ThreadData::top()
-	{
-		if (mStack.size() == 0)
-			return -1;
-		return (int)mStack.back();
+        int topCallIndex = top();
+        if (topCallIndex == invalidValue) {
+            return nullptr;
+        }
+		return mCallList.get(topCallIndex);
 	}
 
 #ifdef CLOCK_SOURCE_THREAD_CPU
@@ -113,7 +101,7 @@ namespace Android {
     void ThreadData::endTrace()
 #endif
 	{
-		for (auto i = mStack.rbegin(); i != mStack.rend(); i++) {
+		for (auto i = rbegin(); i != rend(); i++) {
 			Call* call = mCallList.get(*i);
 			call->mGlobalEndTime = mGlobalEndTime;
 			call->mThreadEndTime = mThreadEndTime;
@@ -132,7 +120,7 @@ namespace Android {
             }
         }
         mCallList.freeExtra();
-        mStack.clear();
+        clear();
 		mStackMethods.clear();
 	}
 

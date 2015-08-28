@@ -9,13 +9,15 @@
 
 namespace Android {
 
-	typedef List<size_t> ThreadStack;
+	typedef Stack<int> CallStack;
 	typedef HashMap<MethodData*, int> MethodIntMap;
 #ifdef CLOCK_SOURCE_THREAD_CPU
     typedef List<TraceAction> TraceActionList;
 #endif
 
-	class ThreadData : public Object
+	class ThreadData
+        : public Object
+        , public CallStack
 	{
 	public:
 
@@ -25,7 +27,6 @@ namespace Android {
 		bool mIsEmpty;
 		int mRootCall;
         int mLastCall;
-        ThreadStack mStack;
 		MethodIntMap mStackMethods;
         CallList mCallList;
 
@@ -68,21 +69,6 @@ namespace Android {
 #endif
 
         Call* topCall();
-        int top();
-
-        void push(int index)
-        {
-            mStack.push_back(index);
-        }
-
-        void pop()
-        {
-            if (mStack.size() == 0) {
-                return;
-            }
-
-            mStack.pop_back();
-        }
 
         void updateRootCallTimeBounds()
 		{
@@ -157,7 +143,7 @@ namespace Android {
         {
             mRootCall = mCallList.addNull();
             mCallList.get(mRootCall)->init(this, topLevel, -1, mRootCall);
-            mStack.push_back(mRootCall);
+            push(mRootCall);
             mIsEmpty = false;
         }
 

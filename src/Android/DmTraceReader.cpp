@@ -690,7 +690,7 @@ namespace Android {
                         , call->getIndex()
                         , call->getThreadId()
                         , call->getCaller()
-                        , call->getNext()
+                        , call->getEnd()
                         , call->mThreadStartTime
                         , call->mThreadEndTime
                         , call->mGlobalStartTime

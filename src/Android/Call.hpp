@@ -19,7 +19,7 @@ namespace Android {
 		bool mIsRecursive;
 		int mIndex;
         int mCaller;
-        int mNext;
+        int mEnd;
 
 	public:
 		uint32_t mGlobalStartTime;
@@ -38,11 +38,11 @@ namespace Android {
         int getCaller() const {
             return mCaller;
         }
-        int getNext() const {
-            return mNext;
+        int getEnd() const {
+            return mEnd;
         }
-        void setNext(int next) {
-            mNext = next;
+        void setEnd(int end) {
+            mEnd = end;
         }
 
         double addWeight(int x, int y, double weight);
@@ -74,51 +74,51 @@ namespace Android {
     class CallList : public FastArray<Call>
     {
     public:
-        
-        // Get the sibling of this call. If no, return null
-        Call* getNextSiblings(Call* call) {
-            int callIndex = call->getNext();
-            if (callIndex == -1) {
-                return nullptr;
-            }
-            return get(callIndex);
-        }
+        //
+        //// Get the sibling of this call. If no, return null
+        //Call* getNextSiblings(Call* call) {
+        //    int callIndex = call->getNext();
+        //    if (callIndex == -1) {
+        //        return nullptr;
+        //    }
+        //    return get(callIndex);
+        //}
 
-        // Get the caller of this call. If it is root call, return null
-        Call* getCaller(Call* call) {
-            int callIndex = call->getCaller();
-            if (callIndex == -1) {
-                return nullptr;
-            }
-            return get(callIndex);
-        }
+        //// Get the caller of this call. If it is root call, return null
+        //Call* getCaller(Call* call) {
+        //    int callIndex = call->getCaller();
+        //    if (callIndex == -1) {
+        //        return nullptr;
+        //    }
+        //    return get(callIndex);
+        //}
 
-        // 1. Get the sibling of this call.
-        // 2. Try to return ancestors's siblings
-        // 3. If no, return null
-        Call* getNextCall(Call* call) {
-            while (call != nullptr) {
-                Call* sibling = getNextSiblings(call);
-                if (sibling != nullptr) {
-                    return sibling;
-                }
-                call = getCaller(call);
-            }
-            return nullptr;
-        }
+        //// 1. Get the sibling of this call.
+        //// 2. Try to return ancestors's siblings
+        //// 3. If no, return null
+        //Call* getNextCall(Call* call) {
+        //    while (call != nullptr) {
+        //        Call* sibling = getNextSiblings(call);
+        //        if (sibling != nullptr) {
+        //            return sibling;
+        //        }
+        //        call = getCaller(call);
+        //    }
+        //    return nullptr;
+        //}
 
-        // Get the first child of this call. If no child, return null
-        Call* getFirstChild(Call* call) {
-            int callIndex = call->getIndex() + 1;
-            if (callIndex >= size()) {
-                return nullptr;
-            }
-            if (callIndex == call->getNext()) {
-                return nullptr;
-            }
-            return get(callIndex);
-        }
-        
+        //// Get the first child of this call. If no child, return null
+        //Call* getFirstChild(Call* call) {
+        //    int callIndex = call->getIndex() + 1;
+        //    if (callIndex >= size()) {
+        //        return nullptr;
+        //    }
+        //    if (callIndex == call->getNext()) {
+        //        return nullptr;
+        //    }
+        //    return get(callIndex);
+        //}
+        //
     };
 #if 0
 	class RowData : public Object

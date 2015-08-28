@@ -11,7 +11,7 @@ namespace Android {
 		mMethodData = methodData;
 		mCaller = caller;
 		mIndex = index;
-        mNext = -1;
+        mEnd = -1;
 		mGlobalStartTime = 0;
 		mGlobalEndTime = 0;
 		mThreadStartTime = 0;

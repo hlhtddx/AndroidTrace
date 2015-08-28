@@ -25,6 +25,39 @@ namespace Android {
 	{
 	};
 
+    template<class _Ty> class Stack : public std::vector<_Ty>
+    {
+    public:
+
+        static _Ty invalidValue;
+
+        void push(const _Ty &value)
+        {
+            push_back(value);
+        }
+
+        void pop()
+        {
+            if (size() == 0) {
+                return;
+            }
+
+            pop_back();
+        }
+
+        const _Ty& top() const {
+            if (size() == 0)
+                return invalidValue;
+            return back();
+        }
+
+        _Ty& top() {
+            if (size() == 0)
+                return invalidValue;
+            return back();
+        }
+    };
+
 	template<class _Kty, class _Ty> class HashMap : public std::map<_Kty, _Ty>
 	{
 	public:
@@ -140,7 +173,7 @@ namespace Android {
 		}
 
 		_Ty* get(size_t index) {
-			if (index >= mSize) {
+			if (index >= mSize || index < 0) {
 				throw BoundaryException("Cannot access the element", index, mSize);
 			}
 			return &(mContents[index]);
