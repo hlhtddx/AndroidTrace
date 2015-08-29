@@ -29,32 +29,33 @@ namespace Android {
     {
     public:
 
+        typedef std::vector<_Ty> basetype;
         static _Ty invalidValue;
 
         void push(const _Ty &value)
         {
-            push_back(value);
+            std::vector<_Ty>::push_back(value);
         }
 
         void pop()
         {
-            if (size() == 0) {
+            if (basetype::size() == 0) {
                 return;
             }
 
-            pop_back();
+            basetype::pop_back();
         }
 
         const _Ty& top() const {
-            if (size() == 0)
+            if (basetype::size() == 0)
                 return invalidValue;
-            return back();
+            return basetype::back();
         }
 
         _Ty& top() {
-            if (size() == 0)
+            if (basetype::size() == 0)
                 return invalidValue;
-            return back();
+            return basetype::back();
         }
     };
 

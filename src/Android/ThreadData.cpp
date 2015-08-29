@@ -84,7 +84,7 @@ namespace Android {
         return call;
 	}
 
-    int ThreadData::invalidValue = -1;
+    template<> int CallStack::invalidValue = -1;
 
 	Call* ThreadData::topCall()
 	{
