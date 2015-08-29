@@ -105,12 +105,15 @@ namespace Android {
 			Call* call = mCallList.get(*i);
 			call->mGlobalEndTime = mGlobalEndTime;
 			call->mThreadEndTime = mThreadEndTime;
+            call->setEnd(mCallList.size() - 1);
 #ifdef CLOCK_SOURCE_THREAD_CPU
             if (trace) {
 				trace->push_back(TraceAction(ACTION_INCOMPLETE, call->getIndex()));
 			}
 #endif
-
+        }
+        mCallList.freeExtra();
+        if (mCallList.size() > 0) {
             for (auto i = mCallList.size() - 1; i >= 1; i--) {
                 Call* call = mCallList.get(i);
                 uint32_t realTime = call->mGlobalEndTime - call->mGlobalStartTime;
@@ -119,7 +122,7 @@ namespace Android {
                 call->finish(&mCallList);
             }
         }
-        mCallList.freeExtra();
+
         clear();
 		mStackMethods.clear();
 	}

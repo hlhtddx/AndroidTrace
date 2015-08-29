@@ -41,34 +41,39 @@ namespace Android {
         Range(int xStart, int width, int y, COLOR color);
     };
 
-    class Strip : public Object
+    struct Strip
     {
     public:
         int mX;
         int mY;
         int mWidth;
         int mHeight;
-        ThreadData* mThread;
-        Segment*    mSegment;
-        Call*       mCall;
         COLOR       mColor;
+        Call*       mCall;
 
     public:
-        Strip(int x, int y, int width, int height, ThreadData* thread, Segment* segment, COLOR color);
-        Strip(int x, int y, int width, int height, ThreadData* thread, Call* call, COLOR color);
+        void init(int x, int y, int width, int height, ThreadData* thread, Call* call, COLOR color)
+        {
+            mX = x;
+            mY = y;
+            mWidth = width;
+            mHeight = height;
+            mColor = color;
+            mCall = call;
+        }
     };
 
     class TickScaler : public Object
     {
     protected:
-        double mMinVal;
-        double mMaxVal;
-        double mRangeVal;
-        int mNumPixels;
-        int mPixelsPerTick;
-        double mPixelsPerRange;
-        double mTickIncrement;
-        double mMinMajorTick;
+        double mMinVal;         // Minimal value (in microsecond, timeline at the most left) of the visible range
+        double mMaxVal;         // Maximal value (in microsecond, timeline at the most right) of the visible range
+        double mRangeVal;       // Visible range (in microsecond), mRangeVal = mMaxVal- mMinVal
+        int mNumPixels;         // The number of pixels horizontal in visible range
+        int mPixelsPerTick;     // The number of pixels within one tick, in px/tick
+        double mPixelsPerRange; // The number of pixels within one microsecond, in px/us, mPixelsPerRange = mNumPixels / mRangeVal
+        double mTickIncrement;  // The scale unit, in us/tick. mTickIncrement = mRangeVal * mPixelsPerTick / mNumPixels
+        double mMinMajorTick;   // mMinMajorTick = mTickIncrement / 5.0
 
     public:
 
@@ -305,8 +310,10 @@ namespace Android {
         void drawHighlights(Point dim);
         bool drawingSelection();
         void computeStrips();
+        bool createStrip(uint32_t topStart, uint32_t topEnd, uint32_t recordStart, uint32_t recordEnd, Call* call, bool isContextSwitch, Pixel& pixel);
+        void popFrames(CallStack & stack, CallList * callList, Call * top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList);
         double computeWeight(double start, double end, bool isContextSwitch, int pixel);
-        void emitPixelStrip(ThreadData* thread, int y, Pixel* pixel);
+//        void emitPixelStrip(ThreadData* thread, int y, Pixel* pixel);
         virtual void mouseMove(Point& pt, int flags);
         virtual void mouseDown(Point& pt, int flags);
         virtual void mouseUp(Point& pt, int flags);
@@ -323,7 +330,7 @@ namespace Android {
         int mMouseMarkStartX;
         int mMouseMarkEndX;
         bool mDebug;
-        Vector<Strip*> mStripList;
+        FastArray<Strip> mStripList;
         Vector<Range> mHighlightExclusive;
         Vector<Range> mHighlightInclusive;
         int mMinStripHeight;
@@ -472,8 +479,6 @@ namespace Android {
         }
 
         void setData(DmTraceReader* reader);
-
-        Call* startBetween(id_type threadId, uint32_t timeLeft, uint32_t timeRight);
 
     protected:
         int computeVisibleRows(int ydim);

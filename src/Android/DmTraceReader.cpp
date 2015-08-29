@@ -552,13 +552,12 @@ namespace Android {
                         }
                     }
                 }
+            }
 
-                int top = thread->top();
-                if (top != -1)
-                {
-                    popFrames(thread, callList, callList->get(top), INT_MAX, &mSegments);
-                }
-
+            int top = thread->top();
+            if (top != -1)
+            {
+                popFrames(thread, callList, callList->get(top), INT_MAX, &mSegments);
             }
         }
 

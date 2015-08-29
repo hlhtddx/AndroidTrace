@@ -1,6 +1,7 @@
 ﻿#include "TimeLineView.hpp"
 #include "Selection.hpp"
 #include "TraceUnits.hpp"
+#include <assert.h>
 
 namespace Android {
     const double Pixel::qualifiedWeight = 0.5;
@@ -10,28 +11,6 @@ namespace Android {
         mXdim.x = xStart;
         mXdim.y = width;
         mY = y;
-        mColor = color;
-    }
-
-    Strip::Strip(int x, int y, int width, int height, ThreadData* thread, Segment* segment, COLOR color)
-    {
-        mX = x;
-        mY = y;
-        mWidth = width;
-        mHeight = height;
-        mThread = thread;
-        mSegment = segment;
-        mColor = color;
-    }
-
-    Strip::Strip(int x, int y, int width, int height, ThreadData* thread, Call* call, COLOR color)
-    {
-        mX = x;
-        mY = y;
-        mWidth = width;
-        mHeight = height;
-        mThread = thread;
-        mCall = call;
         mColor = color;
     }
 
@@ -240,13 +219,13 @@ namespace Android {
         }
 
         Call* selectBlock = nullptr;
-        for (auto it = mStripList.begin(); it != mStripList.end(); it++) {
-            Strip* strip = *it;
+        for (auto it = 0; it < mStripList.size(); it++) {
+            Strip* strip = mStripList.get(it);
             if (strip->mColor != 0) {
 
-                if (mParent->mMouseRow == strip->mThread->mRank) {
+                if (mParent->mMouseRow == strip->mCall->getThreadData()->mRank) {
                     if ((mMouse.x >= strip->mX) && (mMouse.x < strip->mX + strip->mWidth)) {
-                        Call* block = strip->mSegment->mBlock;
+                        Call* block = strip->mCall;
                         blockName = block->getName();
                         blockColor = strip->mColor;
 
@@ -271,7 +250,7 @@ namespace Android {
                         }
                     }
                     if ((mMouseSelect.x >= strip->mX) && (mMouseSelect.x < strip->mX + strip->mWidth)) {
-                        selectBlock = strip->mSegment->mBlock;
+                        selectBlock = strip->mCall;
                     }
                 }
             }
@@ -613,15 +592,9 @@ namespace Android {
 
             CallList* callList = thread->getCallList();
 
-            int mStart = -2;
-            double mStartFraction = mParent->getScaleInfo().pixelToValue(mStart);
-            double mPixelFraction = mParent->getScaleInfo().pixelToValue(mStart + 1);
-
             int y1 = thread->mRank * 32 + 6;
-            double mMaxWeight = 0.0;
-            Call* mCall = nullptr;
-            COLOR mColor = 0;
-            Strip currStrip(0, 0, 0, 0, nullptr, (Call*)nullptr, 0);
+            Pixel pix;
+            Strip currStrip;
 
             CallStack stack;
 
@@ -630,71 +603,138 @@ namespace Android {
                 COLOR color = call->getColor();
                 uint32_t blockStartTime = call->getStartTime();
                 uint32_t blockEndTime = call->getEndTime();
+                double mStartFraction = mParent->getScaleInfo().pixelToValue(pix.mStart);
+                double mPixelFraction = mParent->getScaleInfo().pixelToValue(pix.mStart + 1);
 
                 //Check if segment is out of visible range
-                if (blockEndTime <= minVal)
+                if (blockEndTime <= mStartFraction)
                 {
                     callIndex = call->getEnd();
                     continue;
                 }
+
                 if (blockStartTime >= maxVal)
                 {
                     break;
                 }
 
-                if (!call->isIgnoredBlock(callList)) {
-
-                    // Clip block to range of minVal~maxVal
-                    double recordStart = std::max(static_cast<double>(blockStartTime), minVal);
-                    double recordEnd = std::min(static_cast<double>(blockEndTime), maxVal);
-
-                    // if range of the Call is empty, skip to next call
-                    if (recordStart == recordEnd) {
-                        callIndex = call->getEnd();
-                        continue;
-                    }
-
-                    int pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
-                    int pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
-                    int width = pixelEnd - pixelStart;
-                    bool isContextSwitch = call->isContextSwitch();
-
-                    int top = stack.top();
-                    if (top == -1) {
-                        stack.push(call->getIndex());
-                    }
-                    else {
-                        Call* topCall = callList->get(top);
-                        uint32_t topStartTime = topCall->getStartTime();
-                        uint32_t topEndTime = topCall->getEndTime();
-
-                        // topEndTime > blockStartTime ==> current block is inside top block
-                        // topEndTime = blockStartTime ==> current block is behind top block
-                        // topEndTime < blockStartTime ==> current block is behind top block
-                        if (topEndTime >= blockStartTime) {
-                            if (topStartTime < blockStartTime) {
-                                Segment* segment = mSegments.addNull2();
-                                segment->init(thread, callList, topCall->getIndex(), topStartTime, blockStartTime);
-                            }
-                            if (topEndTime == blockStartTime)
-                                stack.pop();
-
-                            stack.push(call->getIndex());
-                        }
-                        else {
-                            popFrames(thread, callList, topCall, blockStartTime, &mSegments);
-                            stack.push(call->getIndex());
-                        }
-                    }
+                if (call->isIgnoredBlock(callList)) {
+                    continue;
                 }
+
+                // Clip block to range of minVal~maxVal
+                double recordStart = std::max(static_cast<double>(blockStartTime), minVal);
+                double recordEnd = std::min(static_cast<double>(blockEndTime), maxVal);
+
+                // if range of the Call is empty, skip to next call
+                if (recordStart == recordEnd) {
+                    callIndex = call->getEnd();
+                    continue;
+                }
+
+                int pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
+                int pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
+                int width = pixelEnd - pixelStart;
+                bool isContextSwitch = call->isContextSwitch();
 
                 int top = stack.top();
-                if (top != -1)
-                {
-                    popFrames(thread, callList, callList->get(top), INT_MAX, &mSegments);
+                if (top == -1) {
+                    stack.push(call->getIndex());
+                    continue;
                 }
+                Call* topCall = callList->get(top);
+                uint32_t topStartTime = topCall->getStartTime();
+                uint32_t topEndTime = topCall->getEndTime();
 
+                // topEndTime > blockStartTime ==> current block is inside top block
+                // topEndTime = blockStartTime ==> current block is just following the top block
+                // topEndTime < blockStartTime ==> current block is behind top block
+                if (topEndTime >= blockStartTime) {
+
+                    if (topStartTime < blockStartTime) {
+                        //Next call(child or siblings) belongs to the next pixel
+                        createStrip(topStartTime, topEndTime, recordStart, recordEnd, topCall, isContextSwitch, pix);
+                    }
+
+                    if (topEndTime == blockStartTime)
+                        stack.pop();
+
+                    stack.push(call->getIndex());
+                }
+                else {
+                    popFrames(stack, callList, topCall, blockStartTime, pix, &mStripList);
+                    stack.push(call->getIndex());
+                }
             }
+
+            int top = stack.top();
+            if (top != -1)
+            {
+                popFrames(stack, callList, callList->get(top), INT_MAX, pix, &mStripList);
+            }
+        }
+    }
+
+    bool Surface::createStrip(uint32_t topStart, uint32_t topEnd, uint32_t recordStart, uint32_t recordEnd, Call* call, bool isContextSwitch, Pixel& pixel)
+    {
+        double mStartFraction = mParent->getScaleInfo().pixelToValue(pixel.mStart);
+        double mPixelFraction = mParent->getScaleInfo().pixelToValue(pixel.mStart + 1);
+        double mValuePerPixel = mPixelFraction - mStartFraction;
+        int pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
+        int pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
+        int pixelWidth = pixelEnd - pixelStart;
+
+        assert(pixelStart >= pixel.mStart);
+        uint32_t width = recordEnd - recordStart;
+
+        bool skipChild = false;
+
+        if (pixelWidth == 0) {
+            //Emit a single pixel 
+            // Skip the block which is too short(shorted than 0.5 pixel)
+            if (width * 2 >= mValuePerPixel) {
+                Strip* strip = mStripList.addNull2();
+                strip->init(pixelStart, 100, 1, 20, nullptr, call, call->getColor());
+                pixel.mStart++;
+                skipChild = true;
+            }
+        }
+        else {
+            double remainder = recordEnd - mValuePerPixel * width;
+            if (remainder * 2.0 >= mValuePerPixel) {
+                pixelWidth++;
+                skipChild = true;
+            }
+            Strip* strip = mStripList.addNull2();
+            strip->init(pixelStart, 100, pixelWidth, 20, nullptr, call, call->getColor());
+            pixel.mStart += pixelWidth;
+        }
+        return skipChild;
+    }
+
+    //TODO
+    void Surface::popFrames(CallStack& stack, CallList* callList, Call* top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList)
+    {
+        uint32_t topEndTime = top->getEndTime();
+        uint32_t lastEndTime = top->getStartTime();
+
+        while (topEndTime <= startTime) {
+            if (topEndTime > lastEndTime) {
+                createStrip(0, lastEndTime, 0, topEndTime, top, top->isContextSwitch(), pixel);
+                lastEndTime = topEndTime;
+            }
+            stack.pop();
+
+            int topIndex = stack.top();
+            if (topIndex == -1)
+                return;
+            top = callList->get(topIndex);
+
+            topEndTime = top->getEndTime();
+        }
+
+        if (lastEndTime < startTime) {
+            createStrip(0, lastEndTime, 0, startTime, top, top->isContextSwitch(), pixel);
         }
     }
 
@@ -709,33 +749,6 @@ namespace Android {
         double rightEndPoint = std::min(pixelEndFraction, pixel + 0.5);
         double weight = rightEndPoint - leftEndPoint;
         return weight;
-    }
-
-    /* Create a strip which has only one plixel
-        1. The pixel should be splitted into 2 parts: upper for call,
-          and lower in background color
-        2. After emit the pixel, clear Pixel element for next pixel
-     */
-    void Surface::emitPixelStrip(ThreadData* thread, int y, Pixel* pixel)
-    {
-        if (pixel->mSegment == nullptr) {
-            return;
-        }
-        int x = pixel->mStart + 10;
-        int height = static_cast<int>((pixel->mMaxWeight * 20.0 * 0.75));
-        if (height < mMinStripHeight)
-            height = mMinStripHeight;
-
-        int remainder = 20 - height;
-        if (remainder > 0) {
-            Strip* strip = new Strip(x, y, 1, remainder, thread, pixel->mSegment, mFadeColors ? 0 : 1); // TODO
-            mStripList.push_back(strip);
-        }
-
-        Strip* strip = new Strip(x, y + remainder, 1, height, thread, pixel->mSegment, pixel->mColor);
-        mStripList.push_back(strip);
-        pixel->mSegment = nullptr;
-        pixel->mMaxWeight = 0.0;
     }
 
     void Surface::mouseMove(Point& pt, int flags)
@@ -1055,67 +1068,13 @@ namespace Android {
         mNumRows = reader->getThreads()->size();
         mScaleInfo.setMaxVal(maxVal);
         mScaleInfo.setMinVal(minVal);
+        mScaleInfo.setNumPixels(1000);
+        mScaleInfo.computeTicks(false);
         computeVisibleRows(10000);
 
         mSurface->setRange(minVal, maxVal);
         mSurface->setLimitRange(minVal, maxVal);
         mSurface->computeStrips();
-    }
-
-    Call* TimeLineView::startBetween(id_type threadId, uint32_t timeLeft, uint32_t timeRight)
-    {
-        CallList* callList = mTraceData->getCallList(threadId);
-
-        if (callList == nullptr || callList->size() == 0) {
-            return nullptr;
-        }
-
-        int callIndex = 0;
-        while (callIndex < callList->size()) {
-            Call* call = callList->get(callIndex);
-
-            uint32_t startTime = call->getStartTime();
-
-
-            // ---timeLeft--------timeRight-------startTime---
-            //        |                |               |
-            if (timeRight <= startTime) {
-                return nullptr;
-            }
-
-            // ---timeLeft--------startTime--------timeRight---
-            //        |                |               |
-            if (timeLeft <= startTime && startTime < timeRight) {
-                return call;
-            }
-
-            uint32_t endTime = call->getEndTime();
-
-            // -----startTime-------endTime------timeLeft-------timeRight---
-            //        |                |               |            |
-            // There is no intersect, proceed to next block
-            if (endTime < timeLeft) {
-                callIndex = call->getNext();
-                while (callIndex == -1) {
-                    int caller = call->getParentBlockIndex();
-                    if (caller == -1) {
-                        // Call List is over
-                        return nullptr;
-                    }
-                    callIndex = callList->get(caller)->getNext();
-                }
-                continue;
-            }
-
-            // -----startTime-------timeLeft-------endTime------timeRight---
-            //        |                |               |            |
-            //  or
-            // -----startTime-------timeLeft------timeRight------endTime---_
-            //        |                |               |            |
-            // There is intersect, proceed to first child
-            callIndex++;
-        }
-        return nullptr;
     }
 
     int TimeLineView::computeVisibleRows(int ydim)
