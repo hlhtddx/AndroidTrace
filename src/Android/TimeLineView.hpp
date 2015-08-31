@@ -1,4 +1,4 @@
-﻿// Generated from /Traceview/src/com/android/traceview/TimeLineView.java
+// Generated from /Traceview/src/com/android/traceview/TimeLineView.java
 
 #pragma once
 

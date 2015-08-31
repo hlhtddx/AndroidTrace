@@ -1,4 +1,4 @@
-﻿#include "TimeLineView.hpp"
+#include "TimeLineView.hpp"
 #include "Selection.hpp"
 #include "TraceUnits.hpp"
 #include <assert.h>

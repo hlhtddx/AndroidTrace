@@ -1,4 +1,4 @@
-﻿#include "Common.hpp"
+#include "Common.hpp"
 
 namespace Android {
 

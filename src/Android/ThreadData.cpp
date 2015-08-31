@@ -1,4 +1,4 @@
-﻿#include "ThreadData.hpp"
+#include "ThreadData.hpp"
 #include <iostream>
 
 namespace Android {
