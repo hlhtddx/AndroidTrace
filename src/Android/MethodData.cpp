@@ -1,4 +1,4 @@
-﻿
+
 #include "MethodData.hpp"
 #include "ProfileSelf.hpp"
 
