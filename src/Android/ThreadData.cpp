@@ -10,7 +10,6 @@ namespace Android {
 #endif
     {
 		if (mIsEmpty) {
-            addRoot(topLevel);
 #ifdef CLOCK_SOURCE_THREAD_CPU
             if (trace != nullptr) {
 				trace->push_back(TraceAction(ACTION_ENTER, mRootCall));

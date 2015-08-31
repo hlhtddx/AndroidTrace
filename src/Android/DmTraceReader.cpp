@@ -326,6 +326,10 @@ namespace Android {
                 threadData = mThreadMap[threadId];
             }
 
+            if (threadData->isEmpty()) {
+                threadData->addRoot(mTopLevel);
+            }
+            
             uint32_t elapsedGlobalTime = 0;
 
             if (haveGlobalClock) {

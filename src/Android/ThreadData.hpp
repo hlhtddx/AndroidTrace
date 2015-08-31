@@ -122,6 +122,7 @@ namespace Android {
         }
 
 		ThreadData(id_type id, const char* name)
+        : CallStack(name)
 		{
 			mId = id;
 			std::stringstream ss;

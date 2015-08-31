@@ -596,7 +596,7 @@ namespace Android {
             Pixel pix;
             Strip currStrip;
 
-            CallStack stack;
+            CallStack stack("computeStrip");
 
             for (int callIndex = 0; callIndex < callList->size(); callIndex++) {
                 Call* call = callList->get(callIndex);

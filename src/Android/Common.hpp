@@ -27,14 +27,28 @@ namespace Android {
 
     template<class _Ty> class Stack : public std::vector<_Ty>
     {
-    public:
+    private:
+        String mName;
 
+    public:
+        Stack(const char* name)
+        : mName(name)
+        {
+        }
         typedef std::vector<_Ty> basetype;
         static _Ty invalidValue;
 
         void push(const _Ty &value)
         {
             std::vector<_Ty>::push_back(value);
+//#define DUMP_STACK
+#ifdef DUMP_STACK
+            printf("Stack(%s) : ", mName.c_str());
+            for (auto it = basetype::begin(); it != basetype::end(); it++) {
+                printf(" %d", *it);
+            }
+            printf("\n");
+#endif
         }
 
         void pop()
