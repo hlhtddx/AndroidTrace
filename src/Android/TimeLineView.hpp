@@ -310,7 +310,7 @@ namespace Android {
         void drawHighlights(Point dim);
         bool drawingSelection();
         void computeStrips();
-        bool createStrip(uint32_t topStart, uint32_t topEnd, uint32_t recordStart, uint32_t recordEnd, Call* call, bool isContextSwitch, Pixel& pixel);
+        bool createStrip(uint32_t recordStart, uint32_t recordEnd, Call * call, bool isContextSwitch, Pixel & pixel);
         void popFrames(CallStack & stack, CallList * callList, Call * top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList);
         double computeWeight(double start, double end, bool isContextSwitch, int pixel);
 //        void emitPixelStrip(ThreadData* thread, int y, Pixel* pixel);
@@ -377,6 +377,7 @@ namespace Android {
         void animateHighlight();
         void clearHighlights();
         void animateZoom();
+        void dumpStrips();
 
     public:
         Surface(TimeLineView *parent);

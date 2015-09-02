@@ -1,6 +1,14 @@
 #include "TimeLineView.hpp"
 #include "TraceUnits.hpp"
 #include <assert.h>
+#include <iostream>
+
+#ifdef _MSC_VER
+#include <Windows.h>
+#undef min
+#undef max
+#else
+#endif
 
 namespace Android {
     const double Pixel::qualifiedWeight = 0.5;
@@ -421,161 +429,7 @@ namespace Android {
             COLOR color = callMethod->getColor();
             mHighlightInclusive.push_back(Range(callPixelStart + 10, callPixelEnd + 10, y1, color));
         }
-#if 0
-        for (auto ii = 0; ii < mParent->mSegments.size(); ii++) {
-            Segment* segment = mParent->mSegments.get(ii);
 
-            //Check if segment is out of visible range
-            if (segment->mEndTime <= minVal || segment->mStartTime >= maxVal)
-            {
-                continue;
-            }
-
-            Call* block = segment->mBlock;
-            COLOR color = block->getColor();
-            if (color == 0) {
-                continue;
-            }
-
-            // Clip block to range of minVal~maxVal
-            double recordStart = std::max(static_cast<double>(segment->mStartTime), minVal);
-            double recordEnd = std::min(static_cast<double>(segment->mEndTime), maxVal);
-
-            // if range is empty
-            if (recordStart == recordEnd) {
-                continue;
-            }
-
-            int pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
-            int pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
-            int width = pixelEnd - pixelStart;
-            bool isContextSwitch = segment->mIsContextSwitch;
-
-            ThreadData* thread = segment->mThreadData;
-
-            // if beyond the last row(thread), break the loop
-            if (thread->mRank > mParent->mEndRow) {
-                break;
-            }
-            int y1 = thread->mRank * 32 + 6;
-
-            MethodData* md = block->getMethodData();
-
-            if (mParent->mHighlightMethodData != nullptr) {
-                if (mParent->mHighlightMethodData == md) {
-                    if ((prevMethodStart != pixelStart) || (prevMethodEnd != pixelEnd)) {
-                        prevMethodStart = pixelStart;
-                        prevMethodEnd = pixelEnd;
-                        int rangeWidth = width;
-                        if (rangeWidth == 0)
-                            rangeWidth = 1;
-
-                        mHighlightExclusive.push_back(Range(pixelStart + 10, rangeWidth, y1, color));
-
-                        int callPixelStart = -1;
-                        callStart = block->getStartTime();
-                        if (callStart >= minVal)
-                            callPixelStart = mParent->getScaleInfo().valueToPixel(callStart);
-
-                        int callPixelEnd = -1;
-                        callEnd = block->getEndTime();
-                        if (callEnd <= maxVal)
-                            callPixelEnd = mParent->getScaleInfo().valueToPixel(callEnd);
-
-                        if ((prevCallStart != callPixelStart) || (prevCallEnd != callPixelEnd)) {
-                            prevCallStart = callPixelStart;
-                            prevCallEnd = callPixelEnd;
-                            mHighlightInclusive.push_back(Range(callPixelStart + 10, callPixelEnd + 10, y1, color));
-                        }
-                    }
-                }
-                else if (mFadeColors) {
-                    color = md->getFadedColor();
-                }
-            }
-            else if (mParent->mHighlightCall != nullptr) {
-                if ((segment->mStartTime >= callStart) && (segment->mEndTime <= callEnd) && (callMethod == md) && (callRowData == thread)) {
-                    if ((prevMethodStart != pixelStart) || (prevMethodEnd != pixelEnd)) {
-                        prevMethodStart = pixelStart;
-                        prevMethodEnd = pixelEnd;
-                        int rangeWidth = width;
-                        if (rangeWidth == 0)
-                            rangeWidth = 1;
-
-                        mHighlightExclusive.push_back(Range(pixelStart + 10, rangeWidth, y1, color));
-                    }
-                }
-                else if (mFadeColors) {
-                    color = md->getFadedColor();
-                }
-            }
-
-            Pixel* pix = &pixels[thread->mRank];
-
-            if (pix->mStart != pixelStart) {
-
-                // Compare the current segment to previous pixel. If pixel shifted, the previous pixel should be emitted.
-                if (pix->mSegment != nullptr) {
-
-                    // There is segment recorded for the pixel. Create a strip for it.
-                    emitPixelStrip(thread, y1, pix);
-                }
-                if (width == 0) {
-                    // If the segment is within one pixel, the Call with most weight will be displayed.
-                    // But at first, we record the pixel(with its weight and color) to Pixel* pix
-                    double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-                    weight = block->addWeight(pixelStart, thread->mRank, weight);
-                    if (weight > pix->mMaxWeight) {
-                        pix->setFields(pixelStart, weight, segment, color, thread);
-                    }
-                }
-                else {
-                    // if the segment larger than 1 pixel, create a multi-pixel strip
-                    int x1 = pixelStart + 10;
-                    Strip* strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, thread, segment, color);
-                    mStripList.push_back(strip);
-                }
-            }
-            else {
-
-                // Still start with same pixel, need to compute weight for the first pixel
-                double weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-                weight = block->addWeight(pixelStart, thread->mRank, weight);
-                if (weight > pix->mMaxWeight) {
-                    pix->setFields(pixelStart, weight, segment, color, thread);
-                }
-
-                if (width == 1) {
-                    // For one new pixel, finish current pixel and start a new pixel weighting
-                    emitPixelStrip(thread, y1, pix);
-                    pixelStart++;
-                    weight = computeWeight(recordStart, recordEnd, isContextSwitch, pixelStart);
-                    weight = block->addWeight(pixelStart, thread->mRank, weight);
-                    pix->setFields(pixelStart, weight, segment, color, thread);
-                }
-                else if (width > 1) {
-                    // Finish current pixel and create new multi-pixel strip
-                    emitPixelStrip(thread, y1, pix);
-                    pixelStart++;
-                    width--;
-                    int x1 = pixelStart + 10;
-                    Strip* strip = new Strip(x1, isContextSwitch ? y1 + 20 - 1 : y1, width, isContextSwitch ? 1 : 20, thread, segment, color);
-                    mStripList.push_back(strip);
-                }
-            }
-        }
-#endif
-
-#if 0
-        for (auto ii = 0; ii < mParent->mNumRows; ii++) {
-            Pixel* pix = &pixels[ii];
-            if (pix->mSegment != nullptr) {
-                ThreadData* thread = pix->mThread;
-                int y1 = thread->mRank * 32 + 6;
-                emitPixelStrip(thread, y1, pix);
-            }
-        }
-#endif
         ThreadPtrList* sortedThreads = mParent->mTraceData->getThreads();
 
         for (auto _ti = sortedThreads->begin(); _ti != sortedThreads->end(); _ti++) {
@@ -652,7 +506,7 @@ namespace Android {
 
                     if (topStartTime < blockStartTime) {
                         //Next call(child or siblings) belongs to the next pixel
-                        createStrip(topStartTime, topEndTime, recordStart, recordEnd, topCall, isContextSwitch, pix);
+                        createStrip(topStartTime, recordStart, topCall, isContextSwitch, pix);
                     }
 
                     if (topEndTime == blockStartTime)
@@ -672,18 +526,31 @@ namespace Android {
                 popFrames(stack, callList, callList->get(top), INT_MAX, pix, &mStripList);
             }
         }
+
+        dumpStrips();
     }
 
-    bool Surface::createStrip(uint32_t topStart, uint32_t topEnd, uint32_t recordStart, uint32_t recordEnd, Call* call, bool isContextSwitch, Pixel& pixel)
+    bool Surface::createStrip(uint32_t recordStart, uint32_t recordEnd, Call* call, bool isContextSwitch, Pixel& pixel)
     {
         double mStartFraction = mParent->getScaleInfo().pixelToValue(pixel.mStart);
         double mPixelFraction = mParent->getScaleInfo().pixelToValue(pixel.mStart + 1);
         double mValuePerPixel = mPixelFraction - mStartFraction;
-        int pixelStart = mParent->getScaleInfo().valueToPixel(recordStart);
+
+        int pixelStart = std::max(pixel.mStart, mParent->getScaleInfo().valueToPixel(recordStart));
         int pixelEnd = mParent->getScaleInfo().valueToPixel(recordEnd);
+
         int pixelWidth = pixelEnd - pixelStart;
 
-        assert(pixelStart >= pixel.mStart);
+        if (pixelWidth <= 0) {
+            return true;
+        }
+#if defined(_DEBUG) || defined(DEBUG)
+        printf("begin createStrip: thread=%d, mStart=%d\tstart=%d\tend=%d\tpixelStart=%d\tpixelEnd=%d\twidth=%d\n",
+            call->getThreadId(), pixel.mStart, recordStart, recordEnd, pixelStart, pixelEnd, pixelWidth);
+        fflush(stdout);
+#endif
+
+        //assert(pixelStart >= pixel.mStart);
         uint32_t width = recordEnd - recordStart;
 
         bool skipChild = false;
@@ -699,7 +566,7 @@ namespace Android {
             }
         }
         else {
-            double remainder = recordEnd - mValuePerPixel * width;
+            double remainder = width - mValuePerPixel * pixelWidth;
             if (remainder * 2.0 >= mValuePerPixel) {
                 pixelWidth++;
                 skipChild = true;
@@ -708,6 +575,8 @@ namespace Android {
             strip->init(pixelStart, 100, pixelWidth, 20, nullptr, call, call->getColor());
             pixel.mStart += pixelWidth;
         }
+//        printf("End createStrip: mStart=%d\tstart=%d\tend=%d\tpixelStart=%d\tpixelEnd=%d\twidth=%d\n\n", pixel.mStart, recordStart, recordEnd, pixelStart, pixelEnd, pixelWidth);
+
         return skipChild;
     }
 
@@ -719,7 +588,7 @@ namespace Android {
 
         while (topEndTime <= startTime) {
             if (topEndTime > lastEndTime) {
-                createStrip(0, lastEndTime, 0, topEndTime, top, top->isContextSwitch(), pixel);
+                createStrip(lastEndTime, topEndTime, top, top->isContextSwitch(), pixel);
                 lastEndTime = topEndTime;
             }
             stack.pop();
@@ -733,7 +602,7 @@ namespace Android {
         }
 
         if (lastEndTime < startTime) {
-            createStrip(0, lastEndTime, 0, startTime, top, top->isContextSwitch(), pixel);
+            createStrip(lastEndTime, startTime, top, top->isContextSwitch(), pixel);
         }
     }
 
@@ -748,6 +617,17 @@ namespace Android {
         double rightEndPoint = std::min(pixelEndFraction, pixel + 0.5);
         double weight = rightEndPoint - leftEndPoint;
         return weight;
+    }
+
+    void Surface::dumpStrips()
+    {
+        printf("Strip list\n");
+        printf("   Tid  \t  start \t  end  \tmethod\n");
+        for (auto i = 0; i < mStripList.size(); i++) {
+            Strip* strip = mStripList.get(i);
+            Call* call = strip->mCall;
+            printf("%8d\t%8d\t%8d\t%s\n", call->getThreadId(), strip->mX, strip->mX + strip->mWidth, call->getName());
+        }
     }
 
     void Surface::mouseMove(Point& pt, int flags)
@@ -1073,7 +953,26 @@ namespace Android {
 
         mSurface->setRange(minVal, maxVal);
         mSurface->setLimitRange(minVal, maxVal);
+
+#ifdef _DEBUG
+#ifdef _MSC_VER
+        DWORD s = GetTickCount();
+#else
+        uint32_t s = TickCount();
+#endif
+        std::cerr << "Begin to compute strips" << std::endl;
+#endif
+
         mSurface->computeStrips();
+
+#ifdef _DEBUG
+#ifdef _MSC_VER
+        DWORD t = GetTickCount() - s;
+#else
+        uint32_t t = TickCount() - s;
+#endif
+        std::cerr << "It took " << t << " to compute strips" << std::endl;
+#endif
     }
 
     int TimeLineView::computeVisibleRows(int ydim)

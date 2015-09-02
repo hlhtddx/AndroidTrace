@@ -682,7 +682,7 @@ namespace Android {
 	void DmTraceReader::dumpCallTimes()
 	{
 		printf("\nCall Times\n");
-		printf("   i\t  id\tcaller\tnext\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
+		printf("   i\t  id\tcaller\tend\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
         for (auto _i = mSortedThreads->begin(); _i != mSortedThreads->end(); _i++) {
             ThreadData* threadData = *_i;
             CallList* callList = threadData->getCallList();
