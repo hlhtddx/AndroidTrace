@@ -8,6 +8,7 @@
 #undef min
 #undef max
 #else
+#include <CoreServices/CoreServices.h>
 #endif
 
 namespace Android {
@@ -954,22 +955,22 @@ namespace Android {
         mSurface->setRange(minVal, maxVal);
         mSurface->setLimitRange(minVal, maxVal);
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 #ifdef _MSC_VER
         DWORD s = GetTickCount();
 #else
-        uint32_t s = TickCount();
+        long s = TickCount();
 #endif
         std::cerr << "Begin to compute strips" << std::endl;
 #endif
 
         mSurface->computeStrips();
 
-#ifdef _DEBUG
+#if defined(_DEBUG) || defined(DEBUG)
 #ifdef _MSC_VER
         DWORD t = GetTickCount() - s;
 #else
-        uint32_t t = TickCount() - s;
+        long t = TickCount() - s;
 #endif
         std::cerr << "It took " << t << " to compute strips" << std::endl;
 #endif
