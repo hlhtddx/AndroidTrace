@@ -71,7 +71,11 @@ namespace Android {
 		};
 
 	public:
-		void generateTrees() /* throws(IOException) */;
+        bool isRegression() const
+        {
+            return mRegression;
+        }
+		void generateTrees();
 		//ProfileProvider* getProfileProvider();
 
 	private:

@@ -527,8 +527,9 @@ namespace Android {
                 popFrames(stack, callList, callList->get(top), INT_MAX, pix, &mStripList);
             }
         }
-
-        dumpStrips();
+        if (mParent->mTraceData->isRegression()) {
+            dumpStrips();
+        }
     }
 
     bool Surface::createStrip(uint32_t recordStart, uint32_t recordEnd, Call* call, bool isContextSwitch, Pixel& pixel)
@@ -955,7 +956,7 @@ namespace Android {
         mSurface->setRange(minVal, maxVal);
         mSurface->setLimitRange(minVal, maxVal);
 
-#if defined(_DEBUG) || defined(DEBUG)
+#if 1//defined(_DEBUG) || defined(DEBUG)
 #ifdef _MSC_VER
         DWORD s = GetTickCount();
 #else
@@ -966,13 +967,13 @@ namespace Android {
 
         mSurface->computeStrips();
 
-#if defined(_DEBUG) || defined(DEBUG)
+#if 1//defined(_DEBUG) || defined(DEBUG)
 #ifdef _MSC_VER
         DWORD t = GetTickCount() - s;
 #else
         long t = TickCount() - s;
 #endif
-        std::cerr << "It took " << t << " to compute strips" << std::endl;
+        std::cerr << "It took " << t << " ticks to compute strips" << std::endl;
 #endif
     }
 
