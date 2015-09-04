@@ -104,7 +104,7 @@ namespace Android {
 			Call* call = mCallList.get(*i);
 			call->mGlobalEndTime = mGlobalEndTime;
 			call->mThreadEndTime = mThreadEndTime;
-            call->setEnd(mCallList.size() - 1);
+            call->setEnd((int)mCallList.size() - 1);
 #ifdef CLOCK_SOURCE_THREAD_CPU
             if (trace) {
 				trace->push_back(TraceAction(ACTION_INCOMPLETE, call->getIndex()));

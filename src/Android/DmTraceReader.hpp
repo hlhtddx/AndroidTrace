@@ -71,7 +71,11 @@ namespace Android {
 		};
 
 	public:
-		void generateTrees() /* throws(IOException) */;
+        bool isRegression() const
+        {
+            return mRegression;
+        }
+		void generateTrees();
 		//ProfileProvider* getProfileProvider();
 
 	private:
@@ -117,10 +121,7 @@ namespace Android {
 		TimeBase* getPreferredTimeBase();
 		const char* getClockSource();
 
-        bool isRegression() const {
-            return mRegression;
-        }
-		// Generated
+        // Generated
 		DmTraceReader(const char* traceFileName, bool regression);
 		~DmTraceReader();
 	};

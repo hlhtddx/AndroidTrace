@@ -20,6 +20,7 @@
 		0111B9AE1B86B3BB0005A657 /* TimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99E1B86B3BB0005A657 /* TimeBase.cpp */; };
 		0111B9AF1B86B3BB0005A657 /* TimeLineView.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9A01B86B3BB0005A657 /* TimeLineView.cpp */; };
 		0111B9B01B86B3BB0005A657 /* TraceUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */; };
+		0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0158D3E81B9746A6003ADCFB /* CoreServices.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +62,7 @@
 		0111B9A21B86B3BB0005A657 /* TraceAction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = TraceAction.hpp; sourceTree = "<group>"; usesTabs = 0; };
 		0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = TraceUnits.cpp; sourceTree = "<group>"; usesTabs = 0; };
 		0111B9A41B86B3BB0005A657 /* TraceUnits.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = TraceUnits.hpp; sourceTree = "<group>"; usesTabs = 0; };
+		0158D3E81B9746A6003ADCFB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -69,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +81,7 @@
 		01BA983C1B80C33500BA696A = {
 			isa = PBXGroup;
 			children = (
+				0158D3E81B9746A6003ADCFB /* CoreServices.framework */,
 				01BA98471B80C33500BA696A /* Android */,
 				01BA98461B80C33500BA696A /* Products */,
 			);
