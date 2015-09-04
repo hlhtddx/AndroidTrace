@@ -7,14 +7,14 @@
 	<key>IDESourceControlProjectIdentifier</key>
 	<string>03D03B35-EB42-4C79-BEC4-CFD4FBE4BDF2</string>
 	<key>IDESourceControlProjectName</key>
-	<string>project</string>
+	<string>AndroidTrace</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
 		<key>0B4BF25085C07B2353744D21D30AB42CB1732612</key>
 		<string>https://github.com/hlhtddx/AndroidTrace.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>mac/AndroidTrace.xcodeproj/project.xcworkspace</string>
+	<string>mac/AndroidTrace.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
 		<key>0B4BF25085C07B2353744D21D30AB42CB1732612</key>

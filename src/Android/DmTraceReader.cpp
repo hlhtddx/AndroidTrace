@@ -6,6 +6,7 @@
 #ifdef _MSC_VER
 #include <windows.h>
 #else
+#include <mach/mach_time.h>
 #endif
 
 namespace Android {
@@ -45,12 +46,14 @@ namespace Android {
 #ifdef _MSC_VER
         ULONGLONG s1 = GetTickCount64();
 #else
+        uint64_t s1 = mach_absolute_time();
 #endif
 		std::cerr << "Parse keys ...";
 		filepos offset = parseKeys();
 #ifdef _MSC_VER
         ULONGLONG s2 = GetTickCount64();
 #else
+        uint64_t s2 = mach_absolute_time();
 #endif
         std::cerr << s2 - s1 << "ms" << std::endl;
 
@@ -59,6 +62,7 @@ namespace Android {
 #ifdef _MSC_VER
         ULONGLONG s3 = GetTickCount64();
 #else
+        uint64_t s3 = mach_absolute_time();
 #endif
         std::cerr << s3 - s2 << "ms" << std::endl;
 
@@ -67,6 +71,7 @@ namespace Android {
 #ifdef _MSC_VER
         ULONGLONG s4 = GetTickCount64();
 #else
+        uint64_t s4 = mach_absolute_time();
 #endif
         std::cerr << s4 - s3 << "ms" << std::endl;
 
@@ -83,6 +88,7 @@ namespace Android {
 #ifdef _MSC_VER
         ULONGLONG s5 = GetTickCount64();
 #else
+        uint64_t s5 = mach_absolute_time();
 #endif
         std::cerr << s5 - s4 << "ms" << std::endl;
 

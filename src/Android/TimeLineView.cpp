@@ -8,7 +8,7 @@
 #undef min
 #undef max
 #else
-#include <CoreServices/CoreServices.h>
+#include <mach/mach_time.h>
 #endif
 
 namespace Android {
@@ -706,7 +706,7 @@ namespace Android {
 #ifdef _MSC_VER
         DWORD s = GetTickCount();
 #else
-        long s = TickCount();
+        uint64_t s = mach_absolute_time();
 #endif
         std::cerr << "Begin to compute strips" << std::endl;
 
@@ -715,7 +715,7 @@ namespace Android {
 #ifdef _MSC_VER
         DWORD t = GetTickCount() - s;
 #else
-        long t = TickCount() - s;
+        uint64_t t = mach_absolute_time() - s;
 #endif
         std::cerr << "It took " << t << " ticks to compute strips" << std::endl;
 
