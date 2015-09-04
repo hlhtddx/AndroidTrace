@@ -3,6 +3,11 @@
 #include <fstream>
 #include <iostream>
 
+#ifdef _MSC_VER
+#include <windows.h>
+#else
+#endif
+
 namespace Android {
 
 	DmTraceReader::DmTraceReader(const char* traceFileName, bool regression)
@@ -37,23 +42,51 @@ namespace Android {
 
 	void DmTraceReader::generateTrees()
 	{
-		std::cerr << "Parse keys" << std::endl;
+#ifdef _MSC_VER
+        ULONGLONG s1 = GetTickCount64();
+#else
+#endif
+		std::cerr << "Parse keys ...";
 		filepos offset = parseKeys();
-		std::cerr << "Parse data" << std::endl;
+#ifdef _MSC_VER
+        ULONGLONG s2 = GetTickCount64();
+#else
+#endif
+        std::cerr << s2 - s1 << "ms" << std::endl;
+
+        std::cerr << "Parse data ...";
 		parseData(offset);
-		std::cerr << "analyzeData" << std::endl;
+#ifdef _MSC_VER
+        ULONGLONG s3 = GetTickCount64();
+#else
+#endif
+        std::cerr << s3 - s2 << "ms" << std::endl;
+
+        std::cerr << "analyzeData ...";
 		analyzeData();
-        std::cerr << "generateSegments" << std::endl;
-        generateSegments();
+#ifdef _MSC_VER
+        ULONGLONG s4 = GetTickCount64();
+#else
+#endif
+        std::cerr << s4 - s3 << "ms" << std::endl;
+
         std::cerr << "done" << std::endl;
 		ColorController::assignMethodColors(mSortedMethods);
 
+        std::cerr << "Dumping data ...";
         if (mRegression) {
             printf("totalCpuTime %dus\n", mTotalCpuTime);
             printf("totalRealTime %dus\n", mTotalRealTime);
             dumpThreadTimes();
             dumpCallTimes();
         }
+#ifdef _MSC_VER
+        ULONGLONG s5 = GetTickCount64();
+#else
+#endif
+        std::cerr << s5 - s4 << "ms" << std::endl;
+
+        std::cerr << "done" << std::endl;
     }
 	//
 	//ProfileProvider* DmTraceReader::getProfileProvider()
