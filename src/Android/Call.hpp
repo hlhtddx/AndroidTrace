@@ -120,43 +120,4 @@ namespace Android {
         //}
         //
     };
-#if 0
-	class RowData
-	{
-	public:
-		String      mName;
-		int         mRank;
-		uint32_t    mElapsed;
-		Vector<int> mStack;
-		uint32_t    mEndTime;
-		
-	public:
-		void push(int index);
-		int top();
-		void pop();
-		
-	public:
-		RowData(ThreadData* row);
-		struct Less : public std::binary_function<RowData*, RowData*, bool> {
-			bool operator() (const RowData* _Left, const RowData* _Right) const {
-				return _Left->mElapsed < _Right->mElapsed;
-			}
-		};
-	};
-#endif
-	typedef struct Segment
-	{
-	public:
-        ThreadData* mThreadData;
-        Call*       mBlock;
-        uint32_t    mStartTime;
-		uint32_t    mEndTime;
-		bool mIsContextSwitch;
-		
-	public:
-		void init(ThreadData* rowData, CallList* callList, int callIndex, uint32_t startTime, uint32_t endTime);
-	} Segment;
-	
-	typedef FastArray<Segment> SegmentList;
-
 };

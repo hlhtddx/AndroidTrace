@@ -22,15 +22,6 @@ namespace Android {
         mColor = color;
     }
 
-    void Pixel::setFields(int start, double weight, Segment* segment, COLOR color, ThreadData* thread)
-    {
-        mStart = start;
-        mMaxWeight = weight;
-        mSegment = segment;
-        mColor = color;
-        mThread = thread;
-    }
-
     void Pixel::setFields(int start, double weight, Call* call, COLOR color, ThreadData* thread)
     {
         mStart = start;
@@ -161,10 +152,6 @@ namespace Android {
 
     void Surface::draw()
     {
-        if (mParent->mSegments.size() == 0) {
-            return;
-        }
-
         if (mGraphicsState == Scaling) {
             double diff = mMouse.x - mMouseMarkStartX;
             if (diff > 0.0) {

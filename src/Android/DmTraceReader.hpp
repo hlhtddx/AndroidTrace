@@ -51,7 +51,6 @@ namespace Android {
 		ThreadPtrList* mSortedThreads;
 		MethodPtrList* mSortedMethods;
 
-		SegmentList mSegments;
 		int mNumRows;
 
 		uint32_t mMinTime;
@@ -86,8 +85,6 @@ namespace Android {
 		void parseOption(const String &line);
 		void parseThread(const String &line);
 		void parseMethod(const String &line);
-		void generateSegments();
-		static void popFrames(ThreadData* thread, CallList* callList, Call* top, uint32_t startTime, SegmentList* segmentList);
 
 	private:
 		void constructPathname(String &className, String &pathname);

@@ -217,13 +217,11 @@ namespace Android {
             mStart = -2;
         }
 
-        void setFields(int start, double weight, Segment* segment, COLOR color, ThreadData* thread);
         void setFields(int start, double weight, Call* call, COLOR color, ThreadData* thread);
 
     public:
         int mStart;
         double mMaxWeight;
-        Segment* mSegment;
         Call* mCall;
         COLOR mColor;
         ThreadData* mThread;
@@ -397,7 +395,6 @@ namespace Android {
     class TimeLineView
     {
     protected:
-        SegmentList mSegments;
         Timescale mTimescale;
         Surface mSurface;
         RowLabels mLabels;
