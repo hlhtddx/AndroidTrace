@@ -1,4 +1,4 @@
-// Generated from /Traceview/src/com/android/traceview/TimeLineView.java
+// Generated from /Traceview/src/com/android/traceview/DmTraceControl.java
 
 #pragma once
 
@@ -6,7 +6,7 @@
 #include "Call.hpp"
 #include "MethodData.hpp"
 #include "ThreadData.hpp"
-#include "DmTraceReader.hpp"
+#include "DmTraceData.hpp"
 #include <math.h>
 
 namespace Android {
@@ -227,10 +227,10 @@ namespace Android {
         ThreadData* mThread;
 
     protected:
-        friend class TimeLineView;
+        friend class DmTraceControl;
     };
 
-    class TimeLineView;
+    class DmTraceControl;
 
     class Canvas
     {
@@ -348,11 +348,11 @@ namespace Android {
         void animateZoom();
 
     public:
-        Surface(TimeLineView *parent);
-        TimeLineView *mParent;
+        Surface(DmTraceControl *parent);
+        DmTraceControl *mParent;
 
     public:
-        friend class TimeLineView;
+        friend class DmTraceControl;
     };
 
     class Timescale : public Canvas
@@ -369,10 +369,10 @@ namespace Android {
         const int METHOD_BLOCK_MARGIN = 10;
 
     protected:
-        TimeLineView *mParent;
+        DmTraceControl *mParent;
 
     public:
-        Timescale(TimeLineView *parent);
+        Timescale(DmTraceControl *parent);
     };
 
     class RowLabels : public Canvas
@@ -385,14 +385,14 @@ namespace Android {
         void draw();
 
     public:
-        RowLabels(TimeLineView *parent);
-        TimeLineView *mParent;
+        RowLabels(DmTraceControl *parent);
+        DmTraceControl *mParent;
 
     protected:
-        friend class TimeLineView;
+        friend class DmTraceControl;
     };
 
-    class TimeLineView
+    class DmTraceControl
     {
     protected:
         Timescale mTimescale;
@@ -418,7 +418,7 @@ namespace Android {
 
         const int MinInclusiveRange = 3;
 
-        DmTraceReader* mTraceData;
+        DmTraceData* mTraceData;
         TickScaler mScaleInfo;
 
         int mMouseRow;
@@ -448,7 +448,7 @@ namespace Android {
             return mScaleInfo;
         }
 
-        void setData(DmTraceReader* reader);
+        void setData(DmTraceData* reader);
         void computeStrips();
         int computeVisibleRows(int ydim);
 
@@ -460,7 +460,7 @@ namespace Android {
         void dumpStrips();
 
     public:
-        TimeLineView(DmTraceReader* reader);
+        DmTraceControl(DmTraceData* reader);
 
         friend class Surface;
         friend class Timescale;

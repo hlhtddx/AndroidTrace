@@ -30,9 +30,6 @@
     <ClCompile Include="..\..\src\Android\Common.cpp">
       <Filter>Android</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Android\DmTraceReader.cpp">
-      <Filter>Android</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\Android\MethodData.cpp">
       <Filter>Android</Filter>
     </ClCompile>
@@ -51,10 +48,13 @@
     <ClCompile Include="..\..\src\Android\TimeBase.cpp">
       <Filter>Android</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Android\TimeLineView.cpp">
+    <ClCompile Include="..\..\src\Android\TraceUnits.cpp">
       <Filter>Android</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Android\TraceUnits.cpp">
+    <ClCompile Include="..\..\src\Android\DmTraceControl.cpp">
+      <Filter>Android</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Android\DmTraceData.cpp">
       <Filter>Android</Filter>
     </ClCompile>
   </ItemGroup>
@@ -66,9 +66,6 @@
       <Filter>Android</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Android\Common.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\src\Android\DmTraceReader.hpp">
       <Filter>Android</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Android\MethodData.hpp">
@@ -89,13 +86,16 @@
     <ClInclude Include="..\..\src\Android\TimeBase.hpp">
       <Filter>Android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Android\TimeLineView.hpp">
-      <Filter>Android</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\src\Android\TraceAction.hpp">
       <Filter>Android</Filter>
     </ClInclude>
     <ClInclude Include="..\..\src\Android\TraceUnits.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Android\DmTraceControl.hpp">
+      <Filter>Android</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Android\DmTraceData.hpp">
       <Filter>Android</Filter>
     </ClInclude>
   </ItemGroup>

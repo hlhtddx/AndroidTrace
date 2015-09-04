@@ -7,8 +7,8 @@
 //
 
 #include <iostream>
-#include "DmTraceReader.hpp"
-#include "TimeLineView.hpp"
+#include "DmTraceData.hpp"
+#include "DmTraceControl.hpp"
 
 int main(int argc, const char * argv[]) {
 	if(argc < 2) {
@@ -22,13 +22,13 @@ int main(int argc, const char * argv[]) {
         regression = true;
     }
 
-    Android::DmTraceReader *reader = nullptr;
-    Android::TimeLineView *view = nullptr;
+    Android::DmTraceData *reader = nullptr;
+    Android::DmTraceControl *view = nullptr;
 	
 	const char* fileName = argv[1];
     try {
-        reader = new Android::DmTraceReader(fileName, regression);
-        view = new Android::TimeLineView(reader);
+        reader = new Android::DmTraceData(fileName, regression);
+        view = new Android::DmTraceControl(reader);
     } catch (Android::GeneralException &e) {
         printf("Catch a generic exception: %s\n", e.getDescription());
     }

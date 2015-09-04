@@ -27,7 +27,7 @@ namespace Android {
 		THREAD_CPU, WALL, DUAL, UNKNOWN,
 	} ClockSource;
 
-	class DmTraceReader
+	class DmTraceData
 	{
 	public:
 
@@ -119,7 +119,7 @@ namespace Android {
 		const char* getClockSource();
 
         // Generated
-		DmTraceReader(const char* traceFileName, bool regression);
-		~DmTraceReader();
+		DmTraceData(const char* traceFileName, bool regression);
+		~DmTraceData();
 	};
 };

@@ -1,4 +1,4 @@
-#include "TimeLineView.hpp"
+#include "DmTraceControl.hpp"
 #include "TraceUnits.hpp"
 #include <assert.h>
 #include <iostream>
@@ -58,7 +58,7 @@ namespace Android {
 
     int Surface::highlightHeights[] = { 0, 2, 4, 5, 6, 5, 4, 2, 4, 5, 6 };
 
-    Surface::Surface(TimeLineView *parent)
+    Surface::Surface(DmTraceControl *parent)
         : mParent(parent)
     {
         mGraphicsState = Normal;
@@ -262,7 +262,7 @@ namespace Android {
             auto mouseX = mMouse.x - 10;
             auto mouseXval = mParent->getScaleInfo().pixelToValue(mouseX);
             //selections.push_back(Selection::highlight("Time", reinterpret_cast<Object*>(mouseXval)));
-            //mParent->mSelectionController->change(selections, "TimeLineView");
+            //mParent->mSelectionController->change(selections, "DmTraceControl");
             mParent->mHighlightMethodData = nullptr;
             mParent->mHighlightCall = selectBlock;
             mParent->startHighlighting();
@@ -632,12 +632,12 @@ namespace Android {
         redraw();
     }
 
-    Timescale::Timescale(TimeLineView *parent)
+    Timescale::Timescale(DmTraceControl *parent)
         : mParent(parent)
     {
     }
 
-    RowLabels::RowLabels(TimeLineView *parent)
+    RowLabels::RowLabels(DmTraceControl *parent)
         : mParent(parent)
     {
     }
@@ -652,7 +652,7 @@ namespace Android {
         }
     }
 
-    TimeLineView::TimeLineView(DmTraceReader* reader)
+    DmTraceControl::DmTraceControl(DmTraceData* reader)
         : mScaleInfo(0.0, 0.0, 0, 50)
         , mMouseRow(-1)
         , mStartRow(0)
@@ -677,7 +677,7 @@ namespace Android {
         }
     }
 
-    void TimeLineView::setData(DmTraceReader* reader)
+    void DmTraceControl::setData(DmTraceData* reader)
     {
         double maxVal = reader->getMaxTime();
         double minVal = reader->getMinTime();
@@ -708,7 +708,7 @@ namespace Android {
 
     }
 
-    int TimeLineView::computeVisibleRows(int ydim)
+    int DmTraceControl::computeVisibleRows(int ydim)
     {
         int offsetY = mScrollOffsetY;
         int spaceNeeded = mNumRows * rowYSpace;
@@ -726,14 +726,14 @@ namespace Android {
         return offsetY;
     }
 
-    void TimeLineView::startHighlighting()
+    void DmTraceControl::startHighlighting()
     {
         mSurface.mHighlightStep = 0;
         mSurface.mFadeColors = true;
         mSurface.mCachedEndRow = -1;
     }
 
-    void TimeLineView::computeStrips()
+    void DmTraceControl::computeStrips()
     {
         double minVal = mScaleInfo.getMinVal();
         double maxVal = mScaleInfo.getMaxVal();
@@ -893,7 +893,7 @@ namespace Android {
         dumpStrips();
     }
 
-    void TimeLineView::createStrip(uint32_t recordStart, uint32_t recordEnd, uint32_t baseline, Call* call, bool isContextSwitch, Pixel& pixel)
+    void DmTraceControl::createStrip(uint32_t recordStart, uint32_t recordEnd, uint32_t baseline, Call* call, bool isContextSwitch, Pixel& pixel)
     {
         assert(call != nullptr);
         StripList& stripList = call->getThreadData()->getStripList();
@@ -950,7 +950,7 @@ namespace Android {
     }
 
     //TODO
-    void TimeLineView::popFrames(CallStack& stack, CallList* callList, Call* top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList)
+    void DmTraceControl::popFrames(CallStack& stack, CallList* callList, Call* top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList)
     {
         uint32_t topEndTime = top->getEndTime();
         uint32_t lastEndTime = top->getStartTime();
@@ -976,7 +976,7 @@ namespace Android {
         }
     }
 
-    double TimeLineView::computeWeight(double start, double end, bool isContextSwitch, int pixel)
+    double DmTraceControl::computeWeight(double start, double end, bool isContextSwitch, int pixel)
     {
         //        if (isContextSwitch) {
         //            return 0.0;
@@ -989,7 +989,7 @@ namespace Android {
         return weight;
     }
 
-    void TimeLineView::dumpStrips()
+    void DmTraceControl::dumpStrips()
     {
         printf("Strip list\n");
         printf("   Tid  \t   x   \t  width \t   y   \t height \t color  \tmethod\n");
