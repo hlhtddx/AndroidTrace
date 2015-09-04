@@ -670,7 +670,7 @@ namespace Android {
         mClockSource = reader->getClockSource();
         mHaveCpuTime = reader->haveCpuTime();
         mHaveRealTime = reader->haveRealTime();
-        mNumRows = reader->getThreads()->size();
+        mNumRows = (int)reader->getThreads()->size();
 
         if (reader->isRegression()) {
             setData(reader);
@@ -746,10 +746,6 @@ namespace Android {
 
         uint32_t callStart = 0;
         uint32_t callEnd = UINT32_MAX;
-        uint32_t prevMethodStart = UINT32_MAX;
-        uint32_t prevMethodEnd = UINT32_MAX;
-        uint32_t prevCallStart = UINT32_MAX;
-        uint32_t prevCallEnd = UINT32_MAX;
 
         // if a Call in timeline view is selected, it will be highlighted
         if (mHighlightCall != nullptr) {
@@ -807,7 +803,6 @@ namespace Android {
                 uint32_t blockStartTime = call->getStartTime();
                 uint32_t blockEndTime = call->getEndTime();
                 double mStartFraction = mScaleInfo.pixelToValue(pix.mStart);
-                double mPixelFraction = mScaleInfo.pixelToValue(pix.mStart + 1);
 
                 //Check if segment is out of visible range
                 if (blockEndTime <= mStartFraction)
@@ -843,9 +838,6 @@ namespace Android {
                     continue;
                 }
 
-                int pixelStart = mScaleInfo.valueToPixel(recordStart);
-                int pixelEnd = mScaleInfo.valueToPixel(recordEnd);
-                int width = pixelEnd - pixelStart;
                 bool isContextSwitch = call->isContextSwitch();
 
                 int top = stack.top();
