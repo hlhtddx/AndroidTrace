@@ -64,7 +64,9 @@ void CDmTraceViewerView::OnDraw(CDC* pDC)
 //	CClientDC dc(this);
 	CRect rcInvalid;
 	GetUpdateRect(rcInvalid);
+    pDC->LPtoDP(&rcInvalid);
 	pDC->FillSolidRect(&rcInvalid, RGB(0xF0, 0xF0, 0xF0));
+    CPoint ptScroll = GetScrollPosition();
 
     if (pDoc == nullptr || pDoc->m_pTimeLineView == nullptr) {
         return;
@@ -94,16 +96,16 @@ void CDmTraceViewerView::OnInitialUpdate()
         int nRows = pReader->getThreads()->size();
         int nHeight = nRows * 32;
 
-        TickScaler& scale = pTimeLineview->getScaleInfo();
-        scale.setMinVal(pReader->getMinTime());
-        scale.setMaxVal(pReader->getMaxTime());
-        scale.setNumPixels(rcClient.Width());
-        scale.computeTicks(false);
+        TickScaler& scaleInfo = pTimeLineview->getScaleInfo();
+        scaleInfo.setMinVal(pReader->getMinTime());
+        scaleInfo.setMaxVal(pReader->getMaxTime());
+        scaleInfo.setNumPixels(rcClient.Width());
+        scaleInfo.computeTicks(false);
         pTimeLineview->computeVisibleRows(rcClient.Height());
 
-        int nWidth = scale.getMaxVal() - scale.getMinVal();
+        int nWidth = scaleInfo.getMaxVal() - scaleInfo.getMinVal();
 
-        sizeTotal.cx = nLabelWidth + nGridMargin * 2 + nWidth;
+        sizeTotal.cx = rcClient.Width();//nLabelWidth + nGridMargin * 2 + nWidth;
 		sizeTotal.cy = nLabelHeight + nGridMargin * 2 + nHeight;
 		SetScrollSizes(MM_TEXT, sizeTotal);
     }
@@ -210,11 +212,11 @@ void CDmTraceViewerView::OnSize(UINT nType, int cx, int cy)
     int nRows = pReader->getThreads()->size();
     int nHeight = nRows * 32;
 
-    TickScaler& scale = pTimeLineview->getScaleInfo();
-    scale.setMinVal(pReader->getMinTime());
-    scale.setMaxVal(pReader->getMaxTime());
-    scale.setNumPixels(cx - nLabelWidth);
-    scale.computeTicks(false);
+    TickScaler& scaleInfo = pTimeLineview->getScaleInfo();
+    scaleInfo.setMinVal(pReader->getMinTime());
+    scaleInfo.setMaxVal(pReader->getMaxTime());
+    scaleInfo.setNumPixels(cx - nLabelWidth);
+    scaleInfo.computeTicks(true);
     pTimeLineview->computeVisibleRows(cy - nLabelHeight);
     pTimeLineview->computeStrips();
 }

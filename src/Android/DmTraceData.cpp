@@ -5,6 +5,8 @@
 
 #ifdef _MSC_VER
 #include <windows.h>
+#undef min
+#undef max
 #else
 #include <mach/mach_time.h>
 #endif
@@ -555,9 +557,6 @@ namespace Android {
 	{
 		TimeBase* timeBase = getPreferredTimeBase();
 
-		mSortedThreads = mThreadMap.value_vector();
-		std::sort(mSortedThreads->begin(), mSortedThreads->end(), ThreadData::Greater(timeBase));
-
 		mSortedMethods = mMethodMap.value_vector();
 		std::sort(mSortedMethods->begin(), mSortedMethods->end(), MethodData::Greater(timeBase));
 
@@ -577,6 +576,30 @@ namespace Android {
 			MethodData* md = *(it);
 			md->analyzeData(timeBase);
 		}
+
+        mMinTime = UINT_MAX;
+        mMaxTime = 0;
+
+        mSortedThreads = mThreadMap.value_vector();
+        std::sort(mSortedThreads->begin(), mSortedThreads->end(), ThreadData::GreaterElapse());
+
+        int index = 0;
+        for (auto ii = mSortedThreads->begin(); ii < mSortedThreads->end(); ii++) {
+            ThreadData* thread = (*ii);
+            if (!thread->isEmpty()) {
+                mMinTime = std::min(thread->mGlobalStartTime, mMinTime);
+                mMaxTime = std::max(thread->mGlobalEndTime, mMaxTime);
+            }
+            thread->mRank = index++;
+        }
+
+        mNumRows = 0;
+        for (auto ii = mSortedThreads->begin(); ii < mSortedThreads->end(); ii++) {
+            if ((*ii)->getElapseTime() == 0LL)
+                break;
+
+            mNumRows += 1;
+        }
 
 		if (mRegression) {
 			dumpMethodStats();
