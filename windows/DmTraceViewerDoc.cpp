@@ -126,8 +126,8 @@ BOOL CDmTraceViewerDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	CT2A fileName(lpszPathName);
 
     try {
-        m_pTraceReader = new Android::DmTraceReader(fileName, false);
-        m_pTimeLineView = new Android::TimeLineView(m_pTraceReader);
+        m_pTraceReader = new Android::DmTraceData(fileName, false);
+        m_pTimeLineView = new Android::DmTraceControl(m_pTraceReader);
     }
     catch (GeneralException& e) {
         TRACE("Got a exception(%s)\n", e.getDescription());

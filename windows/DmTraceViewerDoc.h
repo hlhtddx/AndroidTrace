@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "DmTraceReader.hpp"
-#include "TimeLineView.hpp"
+#include "DmTraceData.hpp"
+#include "DmTraceControl.hpp"
 using namespace Android;
 
 class CDmTraceViewerDoc : public CDocument
@@ -51,6 +51,6 @@ public:
 	void OnCloseDocument();
 	BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	void DeleteContents();
-	DmTraceReader* m_pTraceReader;
-	TimeLineView* m_pTimeLineView;
+	DmTraceData* m_pTraceReader;
+	DmTraceControl* m_pTimeLineView;
 };

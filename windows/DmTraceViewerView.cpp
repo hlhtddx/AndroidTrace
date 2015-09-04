@@ -70,8 +70,8 @@ void CDmTraceViewerView::OnDraw(CDC* pDC)
         return;
     }
 
-    DmTraceReader* pReader = GetDocument()->m_pTraceReader;
-    TimeLineView* pTimeLineview = GetDocument()->m_pTimeLineView;
+    DmTraceData* pReader = GetDocument()->m_pTraceReader;
+    DmTraceControl* pTimeLineview = GetDocument()->m_pTimeLineView;
 
     int nRows = pReader->getThreads()->size();
     int nHeight = nRows * 32;
@@ -85,8 +85,8 @@ void CDmTraceViewerView::OnInitialUpdate()
 	CSize sizeTotal;
 
 	if (GetDocument() && GetDocument()->m_pTimeLineView) {
-        DmTraceReader* pReader = GetDocument()->m_pTraceReader;
-        TimeLineView* pTimeLineview = GetDocument()->m_pTimeLineView;
+        DmTraceData* pReader = GetDocument()->m_pTraceReader;
+        DmTraceControl* pTimeLineview = GetDocument()->m_pTimeLineView;
 
         CRect rcClient;
         GetClientRect(rcClient);
@@ -147,7 +147,7 @@ CDmTraceViewerDoc* CDmTraceViewerView::GetDocument() const // non-debug version 
 }
 #endif //_DEBUG
 
-void CDmTraceViewerView::DrawGrid(CDC* pDC, DmTraceReader* pReader, TimeLineView* pTimeLineview)
+void CDmTraceViewerView::DrawGrid(CDC* pDC, DmTraceData* pReader, DmTraceControl* pTimeLineview)
 {
 	int nThreads = pReader->getThreads()->size();
 
@@ -204,8 +204,8 @@ void CDmTraceViewerView::OnSize(UINT nType, int cx, int cy)
         return;
     }
 
-    DmTraceReader* pReader = GetDocument()->m_pTraceReader;
-    TimeLineView* pTimeLineview = GetDocument()->m_pTimeLineView;
+    DmTraceData* pReader = GetDocument()->m_pTraceReader;
+    DmTraceControl* pTimeLineview = GetDocument()->m_pTimeLineView;
 
     int nRows = pReader->getThreads()->size();
     int nHeight = nRows * 32;
