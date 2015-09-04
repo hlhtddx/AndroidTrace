@@ -6,6 +6,7 @@
 
 #include "DmTraceReader.hpp"
 #include "TimeLineView.hpp"
+using namespace Android;
 
 class CDmTraceViewerDoc : public CDocument
 {
@@ -50,6 +51,6 @@ public:
 	void OnCloseDocument();
 	BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	void DeleteContents();
-	Android::DmTraceReader* m_pTraceReader;
-	Android::TimeLineView* m_pTimeLineView;
+	DmTraceReader* m_pTraceReader;
+	TimeLineView* m_pTimeLineView;
 };

@@ -69,7 +69,7 @@ namespace Android {
 	{
 		int magic = buffer->getInt();
 		if (magic != TRACE_MAGIC) {
-			throw magic;
+			throw GeneralException("Invalid magic");
 		}
 		int version = buffer->getShort();
 		if (version != mVersionNumber) {
@@ -188,6 +188,9 @@ namespace Android {
 				}
 			}
 		}
+        else {
+            throw GeneralException("Invalid Option, maybe invalid file format");
+        }
 	}
 
 	void DmTraceReader::parseThread(const String &line)

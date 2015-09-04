@@ -30,7 +30,7 @@ namespace Android {
         int cy;
     };
 
-    class Range : public Object
+    class Range
     {
     public:
         Point mXdim;
@@ -41,29 +41,7 @@ namespace Android {
         Range(int xStart, int width, int y, COLOR color);
     };
 
-    struct Strip
-    {
-    public:
-        int mX;
-        int mY;
-        int mWidth;
-        int mHeight;
-        COLOR       mColor;
-        Call*       mCall;
-
-    public:
-        void init(int x, int y, int width, int height, ThreadData* thread, Call* call, COLOR color)
-        {
-            mX = x;
-            mY = y;
-            mWidth = width;
-            mHeight = height;
-            mColor = color;
-            mCall = call;
-        }
-    };
-
-    class TickScaler : public Object
+    class TickScaler
     {
     protected:
         double mMinVal;         // Minimal value (in microsecond, timeline at the most left) of the visible range
@@ -229,7 +207,7 @@ namespace Android {
         }
     };
 
-    class Pixel : public Object
+    class Pixel
     {
     public:
         
@@ -256,7 +234,7 @@ namespace Android {
 
     class TimeLineView;
 
-    class Canvas : public Object
+    class Canvas
     {
     public:
         Canvas() {
@@ -309,10 +287,6 @@ namespace Android {
         void draw();
         void drawHighlights(Point dim);
         bool drawingSelection();
-        void computeStrips();
-        bool createStrip(uint32_t recordStart, uint32_t recordEnd, Call * call, bool isContextSwitch, Pixel & pixel);
-        void popFrames(CallStack & stack, CallList * callList, Call * top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList);
-        double computeWeight(double start, double end, bool isContextSwitch, int pixel);
 //        void emitPixelStrip(ThreadData* thread, int y, Pixel* pixel);
         virtual void mouseMove(Point& pt, int flags);
         virtual void mouseDown(Point& pt, int flags);
@@ -330,9 +304,6 @@ namespace Android {
         int mMouseMarkStartX;
         int mMouseMarkEndX;
         bool mDebug;
-        FastArray<Strip> mStripList;
-        Vector<Range> mHighlightExclusive;
-        Vector<Range> mHighlightInclusive;
         int mMinStripHeight;
         double mCachedMinVal;
         double mCachedMaxVal;
@@ -377,7 +348,6 @@ namespace Android {
         void animateHighlight();
         void clearHighlights();
         void animateZoom();
-        void dumpStrips();
 
     public:
         Surface(TimeLineView *parent);
@@ -424,13 +394,13 @@ namespace Android {
         friend class TimeLineView;
     };
 
-    class TimeLineView : public Object
+    class TimeLineView
     {
     protected:
         SegmentList mSegments;
-        Timescale* mTimescale;
-        Surface* mSurface;
-        RowLabels* mLabels;
+        Timescale mTimescale;
+        Surface mSurface;
+        RowLabels mLabels;
         int mScrollOffsetY;
 
     public:
@@ -461,6 +431,8 @@ namespace Android {
 
         TraceUnits* mUnits;
         String mClockSource;
+        Vector<Range> mHighlightExclusive;
+        Vector<Range> mHighlightInclusive;
 
         bool mHaveCpuTime;
         bool mHaveRealTime;
@@ -480,10 +452,15 @@ namespace Android {
         }
 
         void setData(DmTraceReader* reader);
+        void computeStrips();
+        int computeVisibleRows(int ydim);
 
     protected:
-        int computeVisibleRows(int ydim);
         void startHighlighting();
+        void createStrip(uint32_t recordStart, uint32_t recordEnd, uint32_t baseline, Call * call, bool isContextSwitch, Pixel & pixel);
+        void popFrames(CallStack & stack, CallList * callList, Call * top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList);
+        double computeWeight(double start, double end, bool isContextSwitch, int pixel);
+        void dumpStrips();
 
     public:
         TimeLineView(DmTraceReader* reader);

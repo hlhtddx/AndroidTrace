@@ -121,7 +121,7 @@ namespace Android {
         //
     };
 #if 0
-	class RowData : public Object
+	class RowData
 	{
 	public:
 		String      mName;

@@ -118,7 +118,7 @@ namespace Android {
                 uint32_t realTime = call->mGlobalEndTime - call->mGlobalStartTime;
                 call->mExclusiveRealTime = std::max<uint32_t>(realTime - call->mInclusiveRealTime, 0);
                 call->mInclusiveRealTime = realTime;
-                call->finish(&mCallList);
+//                call->finish(&mCallList);
             }
         }
 

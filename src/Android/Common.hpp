@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <set>
-#include <map>
 #include <list>
 #include <vector>
 #include <string>
@@ -11,6 +10,14 @@
 #include <functional>
 #include <utility>
 #include <iomanip>
+
+#ifdef _MSC_VER
+#include <unordered_map>
+#define Map unordered_map
+#else
+#include <map>
+#define Map map
+#endif
 
 namespace Android {
 	typedef std::string String;
@@ -73,12 +80,12 @@ namespace Android {
         }
     };
 
-	template<class _Kty, class _Ty> class HashMap : public std::map<_Kty, _Ty>
-	{
+    template<class _Kty, class _Ty> class HashMap : public std::Map<_Kty, _Ty>
+    {
 	public:
-		typedef std::map<_Kty, _Ty> basetype;
+        typedef std::Map<_Kty, _Ty> basetype;
 
-		void add(_Kty key, _Ty value) {
+        void add(_Kty key, _Ty value) {
 			basetype::insert(std::make_pair(key, value));
 		}
 
@@ -283,15 +290,8 @@ namespace Android {
 		}
 	};
 
-	class Object {
-	public:
-		Object() {
-		}
-		virtual ~Object() {
-		}
-	};
-
-	class ByteBuffer {
+	class ByteBuffer
+    {
 	private:
 		char* mData;
 		size_t mSize;

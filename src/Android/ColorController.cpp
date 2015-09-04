@@ -43,6 +43,10 @@ namespace Android {
 		int nextColorIndex = 0;
 		for (auto it = methods->begin(); it != methods->end(); it++) {
 			MethodData* md = *it;
+            if (md->getId() == 0) {
+                md->setColor(RGB(255, 255, 255));
+                continue;
+            }
 			COLOR rgb = rgbColors[nextColorIndex];
 			nextColorIndex++;
 			if (nextColorIndex == sizeof(rgbColors) / sizeof(rgbColors[0]))

@@ -17,7 +17,7 @@
 #endif
 
 int nGridWidth		= 1000;
-int nGridHeight		= 40;
+int nGridHeight		= 32;
 int nGridMargin		= 5;
 int nLabelWidth		= 200;
 int nLabelHeight	= 100;
@@ -29,6 +29,7 @@ IMPLEMENT_DYNCREATE(CDmTraceViewerView, CScrollView)
 BEGIN_MESSAGE_MAP(CDmTraceViewerView, CScrollView)
 	ON_WM_CONTEXTMENU()
 	ON_WM_RBUTTONUP()
+    ON_WM_SIZE()
 END_MESSAGE_MAP()
 
 // CDmTraceViewerView construction/destruction
@@ -60,13 +61,21 @@ void CDmTraceViewerView::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
-//	SetScrollSizes(MM_HIMETRIC, CSize(1000, 100 + 100 * GetDocument()->m_pTraceFile->m_dataKeys->numThreads));
-
 //	CClientDC dc(this);
 	CRect rcInvalid;
 	GetUpdateRect(rcInvalid);
 	pDC->FillSolidRect(&rcInvalid, RGB(0xF0, 0xF0, 0xF0));
-	//DrawGrid(pDC);
+
+    if (pDoc == nullptr || pDoc->m_pTimeLineView == nullptr) {
+        return;
+    }
+
+    DmTraceReader* pReader = GetDocument()->m_pTraceReader;
+    TimeLineView* pTimeLineview = GetDocument()->m_pTimeLineView;
+
+    int nRows = pReader->getThreads()->size();
+    int nHeight = nRows * 32;
+    DrawGrid(pDC, pReader, pTimeLineview);
 }
 
 void CDmTraceViewerView::OnInitialUpdate()
@@ -76,10 +85,28 @@ void CDmTraceViewerView::OnInitialUpdate()
 	CSize sizeTotal;
 
 	if (GetDocument() && GetDocument()->m_pTimeLineView) {
-		sizeTotal.cx = nLabelWidth + nGridMargin * 2 + nGridWidth;
-		sizeTotal.cy = nLabelHeight + nGridMargin * 2 + nGridHeight * 2;
+        DmTraceReader* pReader = GetDocument()->m_pTraceReader;
+        TimeLineView* pTimeLineview = GetDocument()->m_pTimeLineView;
+
+        CRect rcClient;
+        GetClientRect(rcClient);
+
+        int nRows = pReader->getThreads()->size();
+        int nHeight = nRows * 32;
+
+        TickScaler& scale = pTimeLineview->getScaleInfo();
+        scale.setMinVal(pReader->getMinTime());
+        scale.setMaxVal(pReader->getMaxTime());
+        scale.setNumPixels(rcClient.Width());
+        scale.computeTicks(false);
+        pTimeLineview->computeVisibleRows(rcClient.Height());
+
+        int nWidth = scale.getMaxVal() - scale.getMinVal();
+
+        sizeTotal.cx = nLabelWidth + nGridMargin * 2 + nWidth;
+		sizeTotal.cy = nLabelHeight + nGridMargin * 2 + nHeight;
 		SetScrollSizes(MM_TEXT, sizeTotal);
-	}
+    }
 	else {
 		sizeTotal.cx = sizeTotal.cy = 1;
 		SetScrollSizes(MM_TEXT, sizeTotal);
@@ -120,94 +147,74 @@ CDmTraceViewerDoc* CDmTraceViewerView::GetDocument() const // non-debug version 
 }
 #endif //_DEBUG
 
+void CDmTraceViewerView::DrawGrid(CDC* pDC, DmTraceReader* pReader, TimeLineView* pTimeLineview)
+{
+	int nThreads = pReader->getThreads()->size();
 
-// CDmTraceViewerView message handlers
-//
-//void CDmTraceViewerView::DrawGrid(CDC* pDC)
-//{
-//	if (!GetDocument() || !GetDocument()->m_pTraceFile) {
-//		TRACE("Document is not opened!\n");
-//		return;
-//	}
-//	Android::TraceFile* pTraceFile = GetDocument()->m_pTraceFile;
-//	int nThreads = pTraceFile->m_dataKeys->numThreads;
-//
-//	CBrush brDark(RGB(0xd0, 0xd0, 0xff));
-//	pDC->SetBkMode(TRANSPARENT);
-//
-//	int cx = nLabelWidth + nGridMargin * 2 + nGridWidth;
-//	CRect rcThread = CRect(0, nLabelHeight + nGridMargin,
-//		cx, nLabelHeight + nGridMargin + nGridHeight);
-//
-//	for (int nThread = 0; nThread < nThreads; nThread++) {
-//		if ((nThread & 0x1) == 0) {
-//			pDC->FillRect(rcThread, &brDark);
-//		}
-//		rcThread.top += nGridHeight;
-//		rcThread.bottom += nGridHeight;
-//
-//		DrawThread(pDC, pTraceFile, nThread);
-//	}
-//
-//	uint64_t nTicks = pTraceFile->m_lastTime - pTraceFile->m_startTime;
-//	uint64_t nTicksPerPixel = nTicks / nGridWidth;
-//	uint64_t nCurrentPixel = 0;
-//	uint64_t nCurrentTick = 0;
-//	uint64_t nNextPixel = 1;
-//	uint64_t nNextTick = nTicksPerPixel;
-//	COLORREF colors[] = { RGB(90, 90, 255),
-//		RGB(0, 240, 0), RGB(255, 0, 0), RGB(0, 255, 255),
-//		RGB(255, 80, 255), RGB(200, 200, 0), RGB(40, 0, 200),
-//		RGB(150, 255, 150), RGB(150, 0, 0), RGB(30, 150, 150),
-//		RGB(200, 200, 255), RGB(0, 120, 0), RGB(255, 150, 150),
-//		RGB(140, 80, 140), RGB(150, 100, 50), RGB(70, 70, 70) };
-//
-//	int nColorIndex = 0;
-//	for (Android::CallEntryList::const_iterator ci = pTraceFile->m_callEntries.begin(); ci != pTraceFile->m_callEntries.end(); ci++) {
-//		//if current method is enough to fill a pixel, draw current method
-//		const Android::CallEntry* callEntry = *(ci);
-//		Android::ThreadEntry* thread = callEntry->thread;
-//		int top = nLabelHeight + nGridMargin + thread->index * nGridHeight + nGridMargin;
-//		int cy = nGridHeight - nGridMargin * 2;
-//		int left = nLabelWidth + nGridMargin;
-//
-//		if (callEntry->startTime - pTraceFile->m_startTime < nCurrentTick) {
-//			continue;
-//		}
-//		else if (!callEntry->hasChildren) {
-//			if ((callEntry->endTime - pTraceFile->m_startTime) >= nNextTick) {
-//				nNextPixel = (callEntry->endTime - pTraceFile->m_startTime) / nTicksPerPixel;
-//				nNextTick = nNextPixel * nTicksPerPixel;
-//
-//				nColorIndex = (++nColorIndex) % 16;
-//				pDC->FillSolidRect(left + nCurrentPixel, top, nNextPixel - nCurrentPixel, cy, colors[nColorIndex]);
-//				nCurrentPixel = nNextPixel;
-//				nNextPixel = nCurrentPixel + 1;
-//				nCurrentTick = nNextTick;
-//				nNextTick = nCurrentTick + nTicksPerPixel;
-//			}
-//		}
-//		else if ((callEntry->endTime - pTraceFile->m_startTime) <= nNextTick) {
-//			nColorIndex = (++nColorIndex) % 16;
-//			pDC->FillSolidRect(left + nCurrentPixel, top, nNextPixel - nCurrentPixel, cy, colors[nColorIndex]);
-//			nCurrentPixel = nNextPixel;
-//			nNextPixel = nCurrentPixel + 1;
-//			nCurrentTick = nNextTick;
-//			nNextTick = nCurrentTick + nTicksPerPixel;
-//		}
-//	}
-//
-//	pDC->MoveTo(nLabelWidth, 0);
-//	pDC->LineTo(nLabelWidth, nLabelHeight + nGridMargin * 2 + nGridHeight * nThreads);
-//
-//}
-//
-//void CDmTraceViewerView::DrawThread(CDC* pDC, Android::TraceFile* pTraceFile, int nThread)
-//{
-//	Android::ThreadEntry& threadEntry = pTraceFile->m_dataKeys->threads[nThread];
-//	pDC->SetTextAlign(TA_RIGHT | TA_BOTTOM);
-//	CString strThreadLabel;
-//	CA2T szThreadName(threadEntry.threadName);
-//	strThreadLabel.Format(_T("[%d] %s"), threadEntry.threadId, szThreadName.m_psz);
-//	pDC->TextOutW(nLabelWidth - nGridMargin, nLabelHeight + nGridMargin + (nThread + 1) * nGridHeight - 12, strThreadLabel);
-//}
+	CBrush brDark(RGB(0xd0, 0xd0, 0xff));
+	pDC->SetBkMode(TRANSPARENT);
+
+	int cx = nLabelWidth + nGridMargin * 2 + nGridWidth;
+	CRect rcThread = CRect(0, nLabelHeight + nGridMargin,
+		cx, nLabelHeight + nGridMargin + nGridHeight);
+
+	for (int nThread = 0; nThread < nThreads; nThread++) {
+		if ((nThread & 0x1) == 0) {
+			pDC->FillRect(rcThread, &brDark);
+		}
+		rcThread.top += nGridHeight;
+		rcThread.bottom += nGridHeight;
+
+        ThreadData* thread = (*pReader->getThreads())[nThread];
+		DrawThread(pDC, thread, nThread * nGridHeight);
+	}
+
+    TickScaler& scaler = pTimeLineview->getScaleInfo();
+	uint64_t nTicks = scaler.getPixelsPerTick();
+	uint64_t nTicksPerPixel = nTicks / nGridWidth;
+	uint64_t nCurrentPixel = 0;
+	uint64_t nCurrentTick = 0;
+	uint64_t nNextPixel = 1;
+	uint64_t nNextTick = nTicksPerPixel;
+
+	pDC->MoveTo(nLabelWidth, 0);
+	pDC->LineTo(nLabelWidth, nLabelHeight + nGridMargin * 2 + nGridHeight * nThreads);
+
+}
+
+void CDmTraceViewerView::DrawThread(CDC* pDC, ThreadData* thread, int nBaseLine)
+{
+	pDC->SetTextAlign(TA_RIGHT | TA_BOTTOM);
+	CString strThreadLabel;
+	CA2T szThreadName(thread->getName());
+	pDC->TextOutW(nLabelWidth - nGridMargin, nLabelHeight + nGridMargin + nBaseLine - 12, szThreadName.m_psz);
+    StripList& stripList = thread->getStripList();
+    for (auto _si = 0; _si < stripList.size(); _si++) {
+        Strip* strip = stripList.get(_si);
+        pDC->FillSolidRect(strip->mX + nLabelWidth, strip->mY + nLabelHeight, strip->mWidth, strip->mHeight, strip->mColor);
+    }
+}
+
+
+void CDmTraceViewerView::OnSize(UINT nType, int cx, int cy)
+{
+    CScrollView::OnSize(nType, cx, cy);
+
+    if (GetDocument() == nullptr || GetDocument()->m_pTimeLineView == nullptr) {
+        return;
+    }
+
+    DmTraceReader* pReader = GetDocument()->m_pTraceReader;
+    TimeLineView* pTimeLineview = GetDocument()->m_pTimeLineView;
+
+    int nRows = pReader->getThreads()->size();
+    int nHeight = nRows * 32;
+
+    TickScaler& scale = pTimeLineview->getScaleInfo();
+    scale.setMinVal(pReader->getMinTime());
+    scale.setMaxVal(pReader->getMaxTime());
+    scale.setNumPixels(cx - nLabelWidth);
+    scale.computeTicks(false);
+    pTimeLineview->computeVisibleRows(cy - nLabelHeight);
+    pTimeLineview->computeStrips();
+}

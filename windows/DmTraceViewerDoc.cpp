@@ -125,8 +125,15 @@ BOOL CDmTraceViewerDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	DeleteContents();
 	CT2A fileName(lpszPathName);
 
-	m_pTraceReader = new Android::DmTraceReader(fileName, false);
-	m_pTimeLineView = new Android::TimeLineView(m_pTraceReader);
+    try {
+        m_pTraceReader = new Android::DmTraceReader(fileName, false);
+        m_pTimeLineView = new Android::TimeLineView(m_pTraceReader);
+    }
+    catch (GeneralException& e) {
+        TRACE("Got a exception(%s)\n", e.getDescription());
+        DeleteContents();
+        return FALSE;
+    }
 
 	return TRUE;
 }

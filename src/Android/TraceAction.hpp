@@ -11,7 +11,7 @@ namespace Android {
 		ACTION_INCOMPLETE = 2,
 	} ActionType;
 
-	class TraceAction final : public Object
+	class TraceAction final
 	{
 	public:
 		int mAction;

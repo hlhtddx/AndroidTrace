@@ -9,7 +9,7 @@ namespace Android {
 
 	typedef Vector<ProfileData*> PDataPtrList;
 
-	class ProfileNode : public Object
+	class ProfileNode
 	{
 	private:
 		String mLabel;

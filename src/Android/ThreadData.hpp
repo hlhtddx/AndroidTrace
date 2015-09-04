@@ -15,12 +15,31 @@ namespace Android {
     typedef List<TraceAction> TraceActionList;
 #endif
 
-	class ThreadData
-        : public Object
-        , public CallStack
-	{
-	public:
+    struct Strip
+    {
+    public:
+        int mX;
+        int mY;
+        int mWidth;
+        int mHeight;
+        COLOR       mColor;
+        Call*       mCall;
 
+    public:
+        void init(int x, int y, int width, int height, ThreadData* thread, Call* call, COLOR color)
+        {
+            mX = x;
+            mY = y;
+            mWidth = width;
+            mHeight = height;
+            mColor = color;
+            mCall = call;
+        }
+    };
+
+    typedef FastArray<Strip> StripList;
+	class ThreadData : public CallStack
+	{
 	private:
 		id_type mId;
 		String mName;
@@ -29,6 +48,7 @@ namespace Android {
         int mLastCall;
 		MethodIntMap mStackMethods;
         CallList mCallList;
+        StripList mStripList;
 
 	public:
         int mRank;
@@ -113,6 +133,11 @@ namespace Android {
                 return -1;
             }
             return mGlobalEndTime - mGlobalStartTime;
+        }
+
+        StripList& getStripList()
+        {
+            return mStripList;
         }
 
 	public:

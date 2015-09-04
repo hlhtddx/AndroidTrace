@@ -10,7 +10,7 @@ namespace Android {
 	class MethodData;
 	class ProfileData;
 
-	class TimeBase : public Object
+	class TimeBase
 	{
 	public:
 		static TimeBase* CPU_TIME;

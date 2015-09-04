@@ -8,7 +8,7 @@
 
 namespace Android {
 
-	class MethodData : public Object
+	class MethodData
 	{
 	private:
 		id_type mId;

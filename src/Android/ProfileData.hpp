@@ -7,7 +7,7 @@ namespace Android {
 	class MethodData;
 	class TimeBase;
 
-	class ProfileData : public Object
+	class ProfileData
 	{
 	public: /* protected */
 		MethodData* mElement;

@@ -41,9 +41,10 @@ protected:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	DECLARE_MESSAGE_MAP()
-	//void DrawGrid(CDC* pDC);
+    void DrawGrid(CDC* pDC, DmTraceReader* pReader, TimeLineView* pTimeLineview);
+    void DrawThread(CDC* pDC, ThreadData* pThread, int nBaseLine);
 public:
-//	void DrawThread(CDC* pDC, Android::TraceFile* pTraceFile, int nThread);
+    afx_msg void OnSize(UINT nType, int cx, int cy);
 };
 
 #ifndef _DEBUG  // debug version in DmTraceViewerView.cpp

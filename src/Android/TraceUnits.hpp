@@ -8,7 +8,7 @@ namespace Android {
 		Seconds, MilliSeconds, MicroSeconds
 	} TimeScale;
 
-	class TraceUnits : public Object
+	class TraceUnits
 	{
 	private:
 		TimeScale mTimeScale;
