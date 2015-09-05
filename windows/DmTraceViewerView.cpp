@@ -171,14 +171,6 @@ void CDmTraceViewerView::DrawGrid(CDC* pDC, DmTraceData* pReader, DmTraceControl
 		DrawThread(pDC, thread, nThread * nGridHeight);
 	}
 
-    TickScaler& scaler = pTimeLineview->getScaleInfo();
-	uint64_t nTicks = scaler.getPixelsPerTick();
-	uint64_t nTicksPerPixel = nTicks / nGridWidth;
-	uint64_t nCurrentPixel = 0;
-	uint64_t nCurrentTick = 0;
-	uint64_t nNextPixel = 1;
-	uint64_t nNextTick = nTicksPerPixel;
-
 	pDC->MoveTo(nLabelWidth, 0);
 	pDC->LineTo(nLabelWidth, nLabelHeight + nGridMargin * 2 + nGridHeight * nThreads);
 
