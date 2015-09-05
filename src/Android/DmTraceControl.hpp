@@ -264,7 +264,7 @@ namespace Android {
         Size mSize;
     };
 
-    class Surface : public Canvas
+    class TimeLineView : public Canvas
     {
     protected:
         const int TotalXMargin = 70;
@@ -348,14 +348,14 @@ namespace Android {
         void animateZoom();
 
     public:
-        Surface(DmTraceControl *parent);
+        TimeLineView(DmTraceControl *parent);
         DmTraceControl *mParent;
 
     public:
         friend class DmTraceControl;
     };
 
-    class Timescale : public Canvas
+    class TimescaleView : public Canvas
     {
     protected:
         Point mMouse;
@@ -372,10 +372,10 @@ namespace Android {
         DmTraceControl *mParent;
 
     public:
-        Timescale(DmTraceControl *parent);
+        TimescaleView(DmTraceControl *parent);
     };
 
-    class RowLabels : public Canvas
+    class ThreadLabelView : public Canvas
     {
     protected:
         const int labelMarginX = 2;
@@ -385,7 +385,7 @@ namespace Android {
         void draw();
 
     public:
-        RowLabels(DmTraceControl *parent);
+        ThreadLabelView(DmTraceControl *parent);
         DmTraceControl *mParent;
 
     protected:
@@ -395,9 +395,9 @@ namespace Android {
     class DmTraceControl
     {
     protected:
-        Timescale mTimescale;
-        Surface mSurface;
-        RowLabels mLabels;
+        TimescaleView mTimescale;
+        TimeLineView mTimeLine;
+        ThreadLabelView mThreadLabel;
         int mScrollOffsetY;
 
     public:
@@ -418,7 +418,7 @@ namespace Android {
 
         const int MinInclusiveRange = 3;
 
-        DmTraceData* mTraceData;
+        DmTraceData* mDmTraceData;
         TickScaler mScaleInfo;
 
         int mMouseRow;
@@ -462,9 +462,9 @@ namespace Android {
     public:
         DmTraceControl(DmTraceData* reader);
 
-        friend class Surface;
-        friend class Timescale;
-        friend class RowLabels;
+        friend class TimeLineView;
+        friend class TimescaleView;
+        friend class ThreadLabelView;
     };
 
 };

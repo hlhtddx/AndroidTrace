@@ -56,9 +56,9 @@ namespace Android {
 
     }
 
-    int Surface::highlightHeights[] = { 0, 2, 4, 5, 6, 5, 4, 2, 4, 5, 6 };
+    int TimeLineView::highlightHeights[] = { 0, 2, 4, 5, 6, 5, 4, 2, 4, 5, 6 };
 
-    Surface::Surface(DmTraceControl *parent)
+    TimeLineView::TimeLineView(DmTraceControl *parent)
         : mParent(parent)
     {
         mGraphicsState = Normal;
@@ -72,7 +72,7 @@ namespace Android {
         initZoomFractionsWithExp();
     }
 
-    void Surface::initZoomFractionsWithExp()
+    void TimeLineView::initZoomFractionsWithExp()
     {
         int next = 0;
         for (auto ii = 0; ii < 4; next++) {
@@ -85,7 +85,7 @@ namespace Android {
         }
     }
 
-    void Surface::initZoomFractionsWithSinWave()
+    void TimeLineView::initZoomFractionsWithSinWave()
     {
         for (auto ii = 0; ii < 8; ii++) {
             double offset = 3.141592653589793 * ii / 8.0;
@@ -93,7 +93,7 @@ namespace Android {
         }
     }
 
-    void Surface::setRange(double minVal, double maxVal)
+    void TimeLineView::setRange(double minVal, double maxVal)
     {
         mMinDataVal = minVal;
         mMaxDataVal = maxVal;
@@ -101,19 +101,19 @@ namespace Android {
         mParent->getScaleInfo().setMaxVal(maxVal);
     }
 
-    void Surface::setLimitRange(double minVal, double maxVal)
+    void TimeLineView::setLimitRange(double minVal, double maxVal)
     {
         mLimitMinVal = minVal;
         mLimitMaxVal = maxVal;
     }
 
-    void Surface::resetScale()
+    void TimeLineView::resetScale()
     {
         mParent->getScaleInfo().setMinVal(mLimitMinVal);
         mParent->getScaleInfo().setMaxVal(mLimitMaxVal);
     }
 
-    void Surface::setScaleFromHorizontalScrollBar(int selection)
+    void TimeLineView::setScaleFromHorizontalScrollBar(int selection)
     {
         double minVal = mParent->getScaleInfo().getMinVal();
         double maxVal = mParent->getScaleInfo().getMaxVal();
@@ -130,7 +130,7 @@ namespace Android {
     }
 
     /*
-        void Surface::updateHorizontalScrollBar()
+        void TimeLineView::updateHorizontalScrollBar()
         {
             double minVal = mParent->getScaleInfo().getMinVal();
             double maxVal = mParent->getScaleInfo().getMaxVal();
@@ -150,7 +150,7 @@ namespace Android {
         }
      */
 
-    void Surface::draw()
+    void TimeLineView::draw()
     {
         if (mGraphicsState == Scaling) {
             double diff = mMouse.x - mMouseMarkStartX;
@@ -305,7 +305,7 @@ namespace Android {
         //gcImage->dispose();
     }
 
-    void Surface::drawHighlights(Point dim)
+    void TimeLineView::drawHighlights(Point dim)
     {
         auto height = mHighlightHeight;
         if (height <= 0)
@@ -363,12 +363,12 @@ namespace Android {
 */
     }
 
-    bool Surface::drawingSelection()
+    bool TimeLineView::drawingSelection()
     {
         return (mGraphicsState == Marking) || (mGraphicsState == Animating);
     }
 
-    void Surface::mouseMove(Point& pt, int flags)
+    void TimeLineView::mouseMove(Point& pt, int flags)
     {
         Size dim = getSize();
         int x = pt.x;
@@ -385,14 +385,14 @@ namespace Android {
             //mParent->mTimescale->setMarkEnd(x);
         }
         if (mGraphicsState == Normal) {
-            //mParent->mSurface->setCursor(mNormalCursor);
+            //mParent->mTimeLine->setCursor(mNormalCursor);
         }
         else if (mGraphicsState == Marking) {
             if (mMouse.x >= mMouseMarkStartX) {
-                //mParent->mSurface->setCursor(mIncreasingCursor);
+                //mParent->mTimeLine->setCursor(mIncreasingCursor);
             }
             else {
-                //mParent->mSurface->setCursor(mDecreasingCursor);
+                //mParent->mTimeLine->setCursor(mDecreasingCursor);
             }
         }
         int rownum = (mMouse.y + mParent->mScrollOffsetY) / 32;
@@ -401,12 +401,12 @@ namespace Android {
         }
         if (mParent->mMouseRow != rownum) {
             mParent->mMouseRow = rownum;
-            //mParent->mLabels->redraw();
+            //mParent->mThreadLabel->redraw();
         }
         //redraw();
     }
 
-    void Surface::mouseDown(Point& pt, int flags)
+    void TimeLineView::mouseDown(Point& pt, int flags)
     {
         Size dim = getSize();
         int x = pt.x;
@@ -423,7 +423,7 @@ namespace Android {
         redraw();
     }
 
-    void Surface::mouseUp(Point& pt, int flags)
+    void TimeLineView::mouseUp(Point& pt, int flags)
     {
         if (mGraphicsState != Marking) {
             mGraphicsState = Normal;
@@ -501,7 +501,7 @@ namespace Android {
         redraw();
     }
 
-    void Surface::mouseScrolled(Point& pt, int flags)
+    void TimeLineView::mouseScrolled(Point& pt, int flags)
     {
         mGraphicsState = Scrolling;
         double tMin = mParent->getScaleInfo().getMinVal();
@@ -542,11 +542,11 @@ namespace Android {
         redraw();
     }
 
-    void Surface::mouseDoubleClick(Point& pt, int flags)
+    void TimeLineView::mouseDoubleClick(Point& pt, int flags)
     {
     }
 
-    void Surface::startScaling(int mouseX)
+    void TimeLineView::startScaling(int mouseX)
     {
         Size dim = getSize();
         int x = mouseX;
@@ -563,12 +563,12 @@ namespace Android {
         mScaleMaxVal = mParent->getScaleInfo().getMaxVal();
     }
 
-    void Surface::stopScaling(int mouseX)
+    void TimeLineView::stopScaling(int mouseX)
     {
         mGraphicsState = Normal;
     }
 
-    void Surface::animateHighlight()
+    void TimeLineView::animateHighlight()
     {
         mHighlightStep += 1;
         if (mHighlightStep >= HIGHLIGHT_STEPS) {
@@ -584,7 +584,7 @@ namespace Android {
         redraw();
     }
 
-    void Surface::clearHighlights()
+    void TimeLineView::clearHighlights()
     {
         mShowHighlightName = false;
         mHighlightHeight = 0;
@@ -596,7 +596,7 @@ namespace Android {
         redraw();
     }
 
-    void Surface::animateZoom()
+    void TimeLineView::animateZoom()
     {
         mZoomStep += 1;
         if (mZoomStep > 8) {
@@ -632,17 +632,17 @@ namespace Android {
         redraw();
     }
 
-    Timescale::Timescale(DmTraceControl *parent)
+    TimescaleView::TimescaleView(DmTraceControl *parent)
         : mParent(parent)
     {
     }
 
-    RowLabels::RowLabels(DmTraceControl *parent)
+    ThreadLabelView::ThreadLabelView(DmTraceControl *parent)
         : mParent(parent)
     {
     }
 
-    void RowLabels::mouseMove(Point& pt, int flags)
+    void ThreadLabelView::mouseMove(Point& pt, int flags)
     {
         int rownum = (pt.y + mParent->mScrollOffsetY) / 32;
         if (mParent->mMouseRow != rownum) {
@@ -660,10 +660,10 @@ namespace Android {
         , mNumRows(0)
         , mScrollOffsetY(0)
         , mTimescale(this)
-        , mSurface(this)
-        , mLabels(this)
+        , mTimeLine(this)
+        , mThreadLabel(this)
     {
-        mTraceData = reader;
+        mDmTraceData = reader;
         mHighlightMethodData = nullptr;
         mHighlightCall = nullptr;
         //mUnits = reader->getTraceUnits();
@@ -687,8 +687,8 @@ namespace Android {
         mScaleInfo.computeTicks(false);
         computeVisibleRows(10000);
 
-        mSurface.setRange(minVal, maxVal);
-        mSurface.setLimitRange(minVal, maxVal);
+        mTimeLine.setRange(minVal, maxVal);
+        mTimeLine.setLimitRange(minVal, maxVal);
 
 #ifdef _MSC_VER
         DWORD s = GetTickCount();
@@ -728,9 +728,9 @@ namespace Android {
 
     void DmTraceControl::startHighlighting()
     {
-        mSurface.mHighlightStep = 0;
-        mSurface.mFadeColors = true;
-        mSurface.mCachedEndRow = -1;
+        mTimeLine.mHighlightStep = 0;
+        mTimeLine.mFadeColors = true;
+        mTimeLine.mCachedEndRow = -1;
     }
 
     void DmTraceControl::computeStrips()
@@ -767,7 +767,7 @@ namespace Android {
 
             //Compute the Y axis by (thread->row)
             id_type threadId = highlightCall->getThreadId();
-            callRowData = mTraceData->getThreadData(threadId);
+            callRowData = mDmTraceData->getThreadData(threadId);
             int y1 = callRowData->mRank * 32 + 32 - 6;
 
             //Get color from method data
@@ -776,7 +776,7 @@ namespace Android {
             mHighlightInclusive.push_back(Range(callPixelStart + 10, callPixelEnd + 10, y1, color));
         }
 
-        ThreadPtrList* sortedThreads = mTraceData->getThreads();
+        ThreadPtrList* sortedThreads = mDmTraceData->getThreads();
 
         for (auto _ti = sortedThreads->begin(); _ti != sortedThreads->end(); _ti++) {
             ThreadData* thread = *_ti;
@@ -908,12 +908,11 @@ namespace Android {
             stripHeight = 1;
         }
 
-        if (mTraceData->isRegression()) {
+        if (mDmTraceData->isRegression()) {
             printf("begin createStrip: thread=%d, mStart=%d\tstart=%d\tend=%d\tpixelStart=%d\tpixelEnd=%d\tpixelWidth=%d\n",
                 call->getThreadId(), pixel.mStart, recordStart, recordEnd, pixelStart, pixelEnd, pixelWidth);
         }
 
-        //assert(pixelStart >= pixel.mStart);
         uint32_t width = recordEnd - recordStart;
 
         if (pixelWidth == 0) {
@@ -935,13 +934,12 @@ namespace Android {
             strip->init(pixelStart, baseline - stripHeight, pixelWidth, stripHeight, nullptr, call, call->getColor());
             pixel.mStart += pixelWidth;
         }
-        if (mTraceData->isRegression()) {
+        if (mDmTraceData->isRegression()) {
             printf("End createStrip: mStart=%d, pixelWidth=%d\n\n", pixel.mStart, pixelWidth);
             fflush(stdout);
         }
     }
 
-    //TODO
     void DmTraceControl::popFrames(CallStack& stack, CallList* callList, Call* top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList)
     {
         uint32_t topEndTime = top->getEndTime();
@@ -970,9 +968,6 @@ namespace Android {
 
     double DmTraceControl::computeWeight(double start, double end, bool isContextSwitch, int pixel)
     {
-        //        if (isContextSwitch) {
-        //            return 0.0;
-        //        }
         double pixelStartFraction = mScaleInfo.valueToPixelFraction(start);
         double pixelEndFraction = mScaleInfo.valueToPixelFraction(end);
         double leftEndPoint = std::max(pixelStartFraction, pixel - 0.5);
@@ -985,7 +980,7 @@ namespace Android {
     {
         printf("Strip list\n");
         printf("   Tid  \t   x   \t  width \t   y   \t height \t color  \tmethod\n");
-        ThreadPtrList* sortedThreads = mTraceData->getThreads();
+        ThreadPtrList* sortedThreads = mDmTraceData->getThreads();
 
         for (auto _ti = sortedThreads->begin(); _ti != sortedThreads->end(); _ti++) {
             ThreadData* threadData = *_ti;
