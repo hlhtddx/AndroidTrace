@@ -36,12 +36,16 @@ END_MESSAGE_MAP()
 
 CDmTraceViewerView::CDmTraceViewerView()
 {
-	// TODO: add construction code here
-
+    mTimescale = new CDmTimescaleView(this);
+    mTimeLine = new CDmTimeLineView(this);
+    mThreadLabel = new CDmThreadLabelView(this);
 }
 
 CDmTraceViewerView::~CDmTraceViewerView()
 {
+    delete mTimescale;
+    delete mTimeLine;
+    delete mThreadLabel;
 }
 
 BOOL CDmTraceViewerView::PreCreateWindow(CREATESTRUCT& cs)
@@ -54,6 +58,11 @@ BOOL CDmTraceViewerView::PreCreateWindow(CREATESTRUCT& cs)
 
 // CDmTraceViewerView drawing
 
+void CDmTraceViewerView::OnPrepareDC(CDC* pDC, CPrintInfo* pInfo)
+{
+    CView::OnPrepareDC(pDC, pInfo);
+}
+
 void CDmTraceViewerView::OnDraw(CDC* pDC)
 {
 	CDmTraceViewerDoc* pDoc = GetDocument();
@@ -61,23 +70,13 @@ void CDmTraceViewerView::OnDraw(CDC* pDC)
 	if (!pDoc)
 		return;
 
-//	CClientDC dc(this);
-	CRect rcInvalid;
-	GetUpdateRect(rcInvalid);
-    pDC->LPtoDP(&rcInvalid);
-	pDC->FillSolidRect(&rcInvalid, RGB(0xF0, 0xF0, 0xF0));
-    CPoint ptScroll = GetScrollPosition();
-
-    if (pDoc == nullptr || pDoc->m_pTimeLineView == nullptr) {
-        return;
+	CPaintDC* paintDC = reinterpret_cast<CPaintDC*>(pDC);
+    if (paintDC != nullptr) {
+        CRect rcInvalid = paintDC->m_ps.rcPaint;
+        pDC->FillSolidRect(&rcInvalid, RGB(0xF0, 0xF0, 0xF0));
+        CPoint ptScroll = GetScrollPosition();
+        draw(pDC);
     }
-
-    DmTraceData* pReader = GetDocument()->m_pTraceReader;
-    DmTraceControl* pTimeLineview = GetDocument()->m_pTimeLineView;
-
-    int nRows = pReader->getThreads()->size();
-    int nHeight = nRows * 32;
-    DrawGrid(pDC, pReader, pTimeLineview);
 }
 
 void CDmTraceViewerView::OnInitialUpdate()
@@ -86,33 +85,28 @@ void CDmTraceViewerView::OnInitialUpdate()
 
 	CSize sizeTotal;
 
-	if (GetDocument() && GetDocument()->m_pTimeLineView) {
-        DmTraceData* pReader = GetDocument()->m_pTraceReader;
-        DmTraceControl* pTimeLineview = GetDocument()->m_pTimeLineView;
+    CDmTraceViewerDoc* pReader = GetDocument();
 
-        CRect rcClient;
-        GetClientRect(rcClient);
+    setData(pReader);
 
-        int nRows = pReader->getThreads()->size();
-        int nHeight = nRows * 32;
+    CRect rcClient;
+    GetClientRect(rcClient);
 
-        TickScaler& scaleInfo = pTimeLineview->getScaleInfo();
-        scaleInfo.setMinVal(pReader->getMinTime());
-        scaleInfo.setMaxVal(pReader->getMaxTime());
-        scaleInfo.setNumPixels(rcClient.Width());
-        scaleInfo.computeTicks(false);
-        pTimeLineview->computeVisibleRows(rcClient.Height());
+    int nRows = pReader->getThreads()->size();
+    int nHeight = nRows * 32;
 
-        int nWidth = scaleInfo.getMaxVal() - scaleInfo.getMinVal();
+    TickScaler& scaleInfo = getScaleInfo();
+    scaleInfo.setMinVal(pReader->getMinTime());
+    scaleInfo.setMaxVal(pReader->getMaxTime());
+    scaleInfo.setNumPixels(rcClient.Width());
+    scaleInfo.computeTicks(false);
+    computeVisibleRows(rcClient.Height());
 
-        sizeTotal.cx = rcClient.Width();//nLabelWidth + nGridMargin * 2 + nWidth;
-		sizeTotal.cy = nLabelHeight + nGridMargin * 2 + nHeight;
-		SetScrollSizes(MM_TEXT, sizeTotal);
-    }
-	else {
-		sizeTotal.cx = sizeTotal.cy = 1;
-		SetScrollSizes(MM_TEXT, sizeTotal);
-	}
+    int nWidth = scaleInfo.getMaxVal() - scaleInfo.getMinVal();
+
+    sizeTotal.cx = rcClient.Width();//nLabelWidth + nGridMargin * 2 + nWidth;
+	sizeTotal.cy = nLabelHeight + nGridMargin * 2 + nHeight;
+	SetScrollSizes(MM_TEXT, sizeTotal);
 }
 
 void CDmTraceViewerView::OnRButtonUp(UINT /* nFlags */, CPoint point)
@@ -151,37 +145,10 @@ CDmTraceViewerDoc* CDmTraceViewerView::GetDocument() const // non-debug version 
 
 void CDmTraceViewerView::DrawGrid(CDC* pDC, DmTraceData* pReader, DmTraceControl* pTimeLineview)
 {
-	int nThreads = pReader->getThreads()->size();
-
-	CBrush brDark(RGB(0xd0, 0xd0, 0xff));
-	pDC->SetBkMode(TRANSPARENT);
-
-	int cx = nLabelWidth + nGridMargin * 2 + nGridWidth;
-	CRect rcThread = CRect(0, nLabelHeight + nGridMargin,
-		cx, nLabelHeight + nGridMargin + nGridHeight);
-
-	for (int nThread = 0; nThread < nThreads; nThread++) {
-		if ((nThread & 0x1) == 0) {
-			pDC->FillRect(rcThread, &brDark);
-		}
-		rcThread.top += nGridHeight;
-		rcThread.bottom += nGridHeight;
-
-        ThreadData* thread = (*pReader->getThreads())[nThread];
-		DrawThread(pDC, thread, nThread * nGridHeight);
-	}
-
-	pDC->MoveTo(nLabelWidth, 0);
-	pDC->LineTo(nLabelWidth, nLabelHeight + nGridMargin * 2 + nGridHeight * nThreads);
-
 }
 
 void CDmTraceViewerView::DrawThread(CDC* pDC, ThreadData* thread, int nBaseLine)
 {
-	pDC->SetTextAlign(TA_RIGHT | TA_BOTTOM);
-	CString strThreadLabel;
-	CA2T szThreadName(thread->getName());
-	pDC->TextOutW(nLabelWidth - nGridMargin, nLabelHeight + nGridMargin + nBaseLine - 12, szThreadName.m_psz);
     StripList& stripList = thread->getStripList();
     for (auto _si = 0; _si < stripList.size(); _si++) {
         Strip* strip = stripList.get(_si);
@@ -189,26 +156,137 @@ void CDmTraceViewerView::DrawThread(CDC* pDC, ThreadData* thread, int nBaseLine)
     }
 }
 
-
 void CDmTraceViewerView::OnSize(UINT nType, int cx, int cy)
 {
     CScrollView::OnSize(nType, cx, cy);
+    Android::Rectangle rcClient(0, 0, cx, cy);
+    setBoundary(&rcClient);
+}
 
-    if (GetDocument() == nullptr || GetDocument()->m_pTimeLineView == nullptr) {
+void CDmTraceViewerView::draw(void* context)
+{
+    if (mDmTraceData == nullptr) {
         return;
     }
 
-    DmTraceData* pReader = GetDocument()->m_pTraceReader;
-    DmTraceControl* pTimeLineview = GetDocument()->m_pTimeLineView;
+    CDC* pDC = reinterpret_cast<CDC*>(context);
+    CPaintDC* paintDC = dynamic_cast<CPaintDC*>(pDC);
 
-    int nRows = pReader->getThreads()->size();
-    int nHeight = nRows * 32;
+    if (paintDC != nullptr) {
+        CRect rcUpdate = paintDC->m_ps.rcPaint;
+        paintDC->FillSolidRect(&rcUpdate, RGB(0xF0, 0xF0, 0xF0));
+        CPoint ptScroll = GetScrollPosition();
 
-    TickScaler& scaleInfo = pTimeLineview->getScaleInfo();
-    scaleInfo.setMinVal(pReader->getMinTime());
-    scaleInfo.setMaxVal(pReader->getMaxTime());
-    scaleInfo.setNumPixels(cx - nLabelWidth);
-    scaleInfo.computeTicks(true);
-    pTimeLineview->computeVisibleRows(cy - nLabelHeight);
-    pTimeLineview->computeStrips();
+        Android::Rectangle rcTimeLine, rcTimeScale, rcThreadLabel;
+        mTimeLine->getBoundary(&rcTimeLine);
+        mTimescale->getBoundary(&rcTimeScale);
+        mThreadLabel->getBoundary(&rcThreadLabel);
+
+        if (doesRectIntersect(&rcUpdate, rcTimeLine)) {
+            mTimeLine->draw(context);
+        }
+
+        if (doesRectIntersect(&rcUpdate, rcTimeScale)) {
+            mTimescale->draw(context);
+        }
+
+        if (doesRectIntersect(&rcUpdate, rcThreadLabel)) {
+            mThreadLabel->draw(context);
+        }
+    }
 }
+
+void CDmTraceViewerView::CDmTimeLineView::draw(void* context)
+{
+    CDC* pDC = reinterpret_cast<CDC*>(context);
+    CBrush brDark(RGB(0xd0, 0xd0, 0xff));
+
+    int cx = mBoundRect.size.cx;
+    CRect rcThread = CRect(mBoundRect.topleft.x, mBoundRect.topleft.y,
+        mBoundRect.topleft.x + mBoundRect.size.cx, mBoundRect.topleft.y + mParent->rowYSpace);
+
+    ThreadPtrList* sortedThreads = mParent->getThreads();
+    for (int nThread = mParent->mStartRow; nThread < mParent->mEndRow; nThread++) {
+        if ((nThread & 0x1) == 0) {
+            pDC->FillRect(rcThread, &brDark);
+        }
+        rcThread.top += mParent->rowYSpace;
+        rcThread.bottom += mParent->rowYSpace;
+
+        ThreadData* thread = sortedThreads->at(nThread);
+        StripList& stripList = thread->getStripList();
+
+        for (auto _si = 0; _si < stripList.size(); _si++) {
+            Strip* strip = stripList.get(_si);
+            pDC->FillSolidRect(strip->mX + mBoundRect.topleft.x, strip->mY + mBoundRect.topleft.y, strip->mWidth, strip->mHeight, strip->mColor);
+        }
+    }
+}
+
+void CDmTraceViewerView::CDmTimescaleView::draw(void* context)
+{
+
+}
+
+void CDmTraceViewerView::CDmThreadLabelView::draw(void* context)
+{
+    CDC* pDC = reinterpret_cast<CDC*>(context);
+    CBrush brDark(RGB(0xd0, 0xd0, 0xff));
+    pDC->SetBkMode(TRANSPARENT);
+    pDC->SetTextAlign(TA_RIGHT | TA_TOP);
+
+    int cx = mBoundRect.size.cx - labelMarginX;
+    CRect rcThread = CRect(mBoundRect.topleft.x, mBoundRect.topleft.y,
+        mBoundRect.topleft.x + mBoundRect.size.cx, mBoundRect.topleft.y + mParent->rowYSpace);
+
+    ThreadPtrList* sortedThreads = mParent->getThreads();
+    for (int nThread = mParent->mStartRow; nThread < mParent->mEndRow; nThread++) {
+        if ((nThread & 0x1) == 0) {
+            pDC->FillRect(rcThread, &brDark);
+        }
+
+        ThreadData* thread = sortedThreads->at(nThread);
+        CString strThreadLabel;
+        CA2T szThreadName(thread->getName());
+        pDC->TextOutW(cx, rcThread.top + mParent->rowYMarginHalf, szThreadName.m_psz);
+
+        rcThread.top += mParent->rowYSpace;
+        rcThread.bottom += mParent->rowYSpace;
+    }
+}
+
+void CDmTraceViewerView::redraw()
+{
+    Invalidate(NULL);
+}
+
+void CDmTraceViewerView::CDmTimeLineView::redraw()
+{
+    Android::Rectangle rcBound;
+    getBoundary(&rcBound);
+
+    CRect rcToRedraw(rcBound.topleft.x, rcBound.topleft.y, rcBound.topleft.x + rcBound.size.cx, rcBound.topleft.y + rcBound.size.cy);
+    CDmTraceViewerView* pView = reinterpret_cast<CDmTraceViewerView*>(mParent);
+    pView->InvalidateRect(&rcToRedraw, FALSE);
+}
+
+void CDmTraceViewerView::CDmTimescaleView::redraw()
+{
+    Android::Rectangle rcBound;
+    getBoundary(&rcBound);
+
+    CRect rcToRedraw(rcBound.topleft.x, rcBound.topleft.y, rcBound.topleft.x + rcBound.size.cx, rcBound.topleft.y + rcBound.size.cy);
+    CDmTraceViewerView* pView = reinterpret_cast<CDmTraceViewerView*>(mParent);
+    pView->InvalidateRect(&rcToRedraw, FALSE);
+}
+
+void CDmTraceViewerView::CDmThreadLabelView::redraw()
+{
+    Android::Rectangle rcBound;
+    getBoundary(&rcBound);
+
+    CRect rcToRedraw(rcBound.topleft.x, rcBound.topleft.y, rcBound.topleft.x + rcBound.size.cx, rcBound.topleft.y + rcBound.size.cy);
+    CDmTraceViewerView* pView = reinterpret_cast<CDmTraceViewerView*>(mParent);
+    pView->InvalidateRect(&rcToRedraw, FALSE);
+}
+

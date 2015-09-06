@@ -8,7 +8,9 @@
 #include "DmTraceControl.hpp"
 using namespace Android;
 
-class CDmTraceViewerDoc : public CDocument
+class CDmTraceViewerDoc
+    : public CDocument
+    , public DmTraceData
 {
 protected: // create from serialization only
 	CDmTraceViewerDoc();
@@ -51,6 +53,4 @@ public:
 	void OnCloseDocument();
 	BOOL OnOpenDocument(LPCTSTR lpszPathName);
 	void DeleteContents();
-	DmTraceData* m_pTraceReader;
-	DmTraceControl* m_pTimeLineView;
 };

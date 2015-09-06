@@ -13,10 +13,9 @@
 
 namespace Android {
 
-	DmTraceData::DmTraceData(const char* traceFileName, bool regression)
-		: mTraceFileName(traceFileName)
+	DmTraceData::DmTraceData()
 	{
-		mRegression = regression;
+		mRegression = false;
 		mTopLevel = new MethodData(0, "(toplevel)");
 		mMethodMap.add(0, mTopLevel);
 		mContextSwitch = new MethodData(-1, "(context switch)");
@@ -24,7 +23,6 @@ namespace Android {
 		mSortedThreads = nullptr;
 		mSortedMethods = nullptr;
 		mClockSource = UNKNOWN;
-		generateTrees();
 	}
 
 	DmTraceData::~DmTraceData()
@@ -42,6 +40,13 @@ namespace Android {
 			delete it->second;
 		}
 	}
+
+    void DmTraceData::open(const char* traceFileName, bool regression)
+    {
+        mRegression = regression;
+        mTraceFileName = traceFileName;
+        generateTrees();
+    }
 
 	void DmTraceData::generateTrees()
 	{

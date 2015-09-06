@@ -31,31 +31,6 @@ namespace Android {
         mThread = thread;
     }
 
-    void Canvas::mouseMove(Point& pt, int flags)
-    {
-
-    }
-
-    void Canvas::mouseDown(Point& pt, int flags)
-    {
-
-    }
-
-    void Canvas::mouseUp(Point& pt, int flags)
-    {
-
-    }
-
-    void Canvas::mouseScrolled(Point& pt, int flags)
-    {
-
-    }
-
-    void Canvas::mouseDoubleClick(Point& pt, int flags)
-    {
-
-    }
-
     int TimeLineView::highlightHeights[] = { 0, 2, 4, 5, 6, 5, 4, 2, 4, 5, 6 };
 
     TimeLineView::TimeLineView(DmTraceControl *parent)
@@ -150,7 +125,7 @@ namespace Android {
         }
      */
 
-    void TimeLineView::draw()
+    void TimeLineView::draw(void* context)
     {
         if (mGraphicsState == Scaling) {
             double diff = mMouse.x - mMouseMarkStartX;
@@ -632,7 +607,7 @@ namespace Android {
         redraw();
     }
 
-    TimescaleView::TimescaleView(DmTraceControl *parent)
+    TimeScaleView::TimeScaleView(DmTraceControl *parent)
         : mParent(parent)
     {
     }
@@ -640,6 +615,7 @@ namespace Android {
     ThreadLabelView::ThreadLabelView(DmTraceControl *parent)
         : mParent(parent)
     {
+        mBoundRect.size.cx = 250;
     }
 
     void ThreadLabelView::mouseMove(Point& pt, int flags)
@@ -652,60 +628,62 @@ namespace Android {
         }
     }
 
-    DmTraceControl::DmTraceControl(DmTraceData* reader)
+    DmTraceControl::DmTraceControl()
         : mScaleInfo(0.0, 0.0, 0, 50)
         , mMouseRow(-1)
         , mStartRow(0)
         , mEndRow(0)
         , mNumRows(0)
         , mScrollOffsetY(0)
-        , mTimescale(this)
-        , mTimeLine(this)
-        , mThreadLabel(this)
+        , mTimescale(nullptr)
+        , mTimeLine(nullptr)
+        , mThreadLabel(nullptr)
     {
-        mDmTraceData = reader;
+        mDmTraceData = nullptr;
         mHighlightMethodData = nullptr;
         mHighlightCall = nullptr;
         //mUnits = reader->getTraceUnits();
-        mClockSource = reader->getClockSource();
-        mHaveCpuTime = reader->haveCpuTime();
-        mHaveRealTime = reader->haveRealTime();
-        mNumRows = (int)reader->getThreads()->size();
-
-        if (reader->isRegression()) {
-            setData(reader);
-        }
     }
 
-    void DmTraceControl::setData(DmTraceData* reader)
+    void DmTraceControl::setData(DmTraceData* traceData)
     {
-        double maxVal = reader->getMaxTime();
-        double minVal = reader->getMinTime();
-        mScaleInfo.setMaxVal(maxVal);
-        mScaleInfo.setMinVal(minVal);
-        mScaleInfo.setNumPixels(1000);
-        mScaleInfo.computeTicks(false);
-        computeVisibleRows(10000);
+        mDmTraceData = traceData;
+        mHighlightMethodData = nullptr;
+        mHighlightCall = nullptr;
+        //mUnits = reader->getTraceUnits();
+        mClockSource = traceData->getClockSource();
+        mHaveCpuTime = traceData->haveCpuTime();
+        mHaveRealTime = traceData->haveRealTime();
+        mNumRows = (int)traceData->getThreads()->size();
 
-        mTimeLine.setRange(minVal, maxVal);
-        mTimeLine.setLimitRange(minVal, maxVal);
+        if (traceData->isRegression()) {
+            double maxVal = traceData->getMaxTime();
+            double minVal = traceData->getMinTime();
+            mScaleInfo.setMaxVal(maxVal);
+            mScaleInfo.setMinVal(minVal);
+            mScaleInfo.setNumPixels(1000);
+            mScaleInfo.computeTicks(false);
+            computeVisibleRows(10000);
+
+            mTimeLine->setRange(minVal, maxVal);
+            mTimeLine->setLimitRange(minVal, maxVal);
 
 #ifdef _MSC_VER
-        DWORD s = GetTickCount();
+            DWORD s = GetTickCount();
 #else
-        uint64_t s = mach_absolute_time();
+            uint64_t s = mach_absolute_time();
 #endif
-        std::cerr << "Begin to compute strips" << std::endl;
+            std::cerr << "Begin to compute strips" << std::endl;
 
-        computeStrips();
+            computeStrips();
 
 #ifdef _MSC_VER
-        DWORD t = GetTickCount() - s;
+            DWORD t = GetTickCount() - s;
 #else
-        uint64_t t = mach_absolute_time() - s;
+            uint64_t t = mach_absolute_time() - s;
 #endif
-        std::cerr << "It took " << t << " ticks to compute strips" << std::endl;
-
+            std::cerr << "It took " << t << " ticks to compute strips" << std::endl;
+        }
     }
 
     int DmTraceControl::computeVisibleRows(int ydim)
@@ -728,9 +706,9 @@ namespace Android {
 
     void DmTraceControl::startHighlighting()
     {
-        mTimeLine.mHighlightStep = 0;
-        mTimeLine.mFadeColors = true;
-        mTimeLine.mCachedEndRow = -1;
+        mTimeLine->mHighlightStep = 0;
+        mTimeLine->mFadeColors = true;
+        mTimeLine->mCachedEndRow = -1;
     }
 
     void DmTraceControl::computeStrips()
@@ -994,4 +972,55 @@ namespace Android {
         }
     }
 
+    void DmTraceControl::setBoundary(Rectangle* rcBound)
+    {
+        Canvas::setBoundary(rcBound);
+
+        Rectangle rcThreadLabel;
+        Rectangle rcTimescale;
+        Rectangle rcTimeLine;
+
+        rcThreadLabel.topleft.x = rcBound->topleft.x;
+        rcThreadLabel.topleft.y = rcBound->topleft.y + topMargin;
+        rcThreadLabel.size.cx = 250;  //No changed unless user change it manually
+        rcThreadLabel.size.cy = std::max(rcBound->size.cy - topMargin, 0);
+
+        rcTimescale.topleft.x = rcBound->topleft.x + rcThreadLabel.size.cx;
+        rcTimescale.topleft.y = 0;
+        rcTimescale.size.cx = std::max(0, rcBound->size.cx - rcThreadLabel.size.cx);
+        rcTimescale.size.cy = topMargin;
+
+        rcTimeLine.topleft.x = rcTimescale.topleft.x;
+        rcTimeLine.topleft.y = rcBound->topleft.y + topMargin;
+        rcTimeLine.size.cx = std::max(0, rcBound->size.cx - rcThreadLabel.size.cx);
+        rcTimeLine.size.cy = std::max(rcBound->size.cy - topMargin, 0);
+
+        if (mDmTraceData == nullptr) {
+            return;
+        }
+
+        mThreadLabel->setBoundary(&rcThreadLabel);
+        mTimescale->setBoundary(&rcTimescale);
+        mTimeLine->setBoundary(&rcTimeLine);
+    }
+
+    void TimeLineView::setBoundary(Rectangle* rcBound)
+    {
+        Canvas::setBoundary(rcBound);
+        TickScaler& scaleInfo = mParent->getScaleInfo();
+        scaleInfo.setNumPixels(rcBound->size.cx);
+        scaleInfo.computeTicks(true);
+        mParent->computeVisibleRows(rcBound->size.cy);
+        mParent->computeStrips();
+    }
+
+    void TimeScaleView::setBoundary(Rectangle* rcBound)
+    {
+        Canvas::setBoundary(rcBound);
+    }
+
+    void ThreadLabelView::setBoundary(Rectangle* rcBound)
+    {
+        Canvas::setBoundary(rcBound);
+    }
 };

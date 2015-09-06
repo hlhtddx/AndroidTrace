@@ -22,22 +22,49 @@ namespace Android {
     {
         int x;
         int y;
+        Point()
+        {
+            x = y = 0;
+        }
+        Point(int px, int py)
+        {
+            x = px;
+            y = py;
+        }
     };
 
     struct Size
     {
         int cx;
         int cy;
+        Size()
+        {
+            cx = cy = 0;
+        }
+        Size(int width, int height)
+        {
+            cx = width;
+            cy = height;
+        }
     };
 
-    class Range
+    struct Rectangle
     {
-    public:
+        Point topleft;
+        Size size;
+        Rectangle() {};
+        Rectangle(int x, int y, int width, int height)
+            : topleft(x, y)
+            , size(width, height)
+        {
+        }
+    };
+
+    struct Range
+    {
         Point mXdim;
         int mY;
         COLOR mColor;
-
-        // Generated
         Range(int xStart, int width, int y, COLOR color);
     };
 
@@ -236,32 +263,42 @@ namespace Android {
     {
     public:
         Canvas() {
-            mSize.cx = mSize.cy = 0;
+            mBoundRect.topleft.x = mBoundRect.topleft.y = 0;
+            mBoundRect.size.cx = mBoundRect.size.cy = 0;
         }
 
         Canvas(Size& size)
-            : mSize(size)
         {
-        }
-
-        virtual void mouseMove(Point& pt, int flags);
-        virtual void mouseDown(Point& pt, int flags);
-        virtual void mouseUp(Point& pt, int flags);
-        virtual void mouseScrolled(Point& pt, int flags);
-        virtual void mouseDoubleClick(Point& pt, int flags);
-
-        void setSize(Size size)
-        {
-            mSize = size;
+            mBoundRect.topleft.x = mBoundRect.topleft.y = 0;
+            mBoundRect.size.cx = size.cx;
+            mBoundRect.size.cy = size.cy;
         }
 
         Size getSize() const {
-            return mSize;
+            return mBoundRect.size;
         }
 
-        virtual void redraw() { /* Do nothing by default */ }
+        void getBoundary(Rectangle* rcBound) const
+        {
+            *rcBound = mBoundRect;
+        }
+
+    public:  //overrides
+        virtual void draw(void* context) = 0;
+        virtual void redraw() = 0;
+
+        virtual void mouseMove(Point& pt, int flags) {};
+        virtual void mouseDown(Point& pt, int flags) {};
+        virtual void mouseUp(Point& pt, int flags) {};
+        virtual void mouseScrolled(Point& pt, int flags) {};
+        virtual void mouseDoubleClick(Point& pt, int flags) {};
+        virtual void setBoundary(Rectangle* rcBound)
+        {
+            mBoundRect = *rcBound;
+        }
+
     protected:
-        Size mSize;
+        Rectangle mBoundRect;
     };
 
     class TimeLineView : public Canvas
@@ -270,31 +307,6 @@ namespace Android {
         const int TotalXMargin = 70;
         const int yMargin = 1;
         const int MinZoomPixelMargin = 10;
-
-    protected:
-        void initZoomFractionsWithExp();
-        void initZoomFractionsWithSinWave();
-
-    public:
-        void setRange(double minVal, double maxVal);
-        void setLimitRange(double minVal, double maxVal);
-        void resetScale();
-        void setScaleFromHorizontalScrollBar(int selection);
-
-    protected:
-        void draw();
-        void drawHighlights(Point dim);
-        bool drawingSelection();
-//        void emitPixelStrip(ThreadData* thread, int y, Pixel* pixel);
-        virtual void mouseMove(Point& pt, int flags);
-        virtual void mouseDown(Point& pt, int flags);
-        virtual void mouseUp(Point& pt, int flags);
-        virtual void mouseScrolled(Point& pt, int flags);
-        virtual void mouseDoubleClick(Point& pt, int flags);
-
-    public:
-        void startScaling(int mouseX);
-        void stopScaling(int mouseX);
 
     protected:
         GraphicsState mGraphicsState;
@@ -342,6 +354,33 @@ namespace Android {
         double mZoomMax;
         int mHighlightStep;
 
+    protected:
+        void initZoomFractionsWithExp();
+        void initZoomFractionsWithSinWave();
+
+    public:
+        void setRange(double minVal, double maxVal);
+        void setLimitRange(double minVal, double maxVal);
+        void resetScale();
+        void setScaleFromHorizontalScrollBar(int selection);
+
+    protected:
+        void drawHighlights(Point dim);
+        bool drawingSelection();
+
+    public:  //overrides
+        virtual void draw(void* context);
+        virtual void mouseMove(Point& pt, int flags);
+        virtual void mouseDown(Point& pt, int flags);
+        virtual void mouseUp(Point& pt, int flags);
+        virtual void mouseScrolled(Point& pt, int flags);
+        virtual void mouseDoubleClick(Point& pt, int flags);
+        virtual void setBoundary(Rectangle* rcBound);
+
+    public:
+        void startScaling(int mouseX);
+        void stopScaling(int mouseX);
+
     protected:		//Callbacks
         void animateHighlight();
         void clearHighlights();
@@ -355,7 +394,7 @@ namespace Android {
         friend class DmTraceControl;
     };
 
-    class TimescaleView : public Canvas
+    class TimeScaleView : public Canvas
     {
     protected:
         Point mMouse;
@@ -368,11 +407,18 @@ namespace Android {
         int mMarkEndX;
         const int METHOD_BLOCK_MARGIN = 10;
 
+    public:  //overrides
+        virtual void draw(void* context) = 0;
+        virtual void setBoundary(Rectangle* rcBound);
+
     protected:
         DmTraceControl *mParent;
 
     public:
-        TimescaleView(DmTraceControl *parent);
+        TimeScaleView(DmTraceControl *parent);
+
+    public:
+        friend class DmTraceControl;
     };
 
     class ThreadLabelView : public Canvas
@@ -380,30 +426,29 @@ namespace Android {
     protected:
         const int labelMarginX = 2;
 
-    protected:
+    public:
+        virtual void draw(void* context) = 0;
+        virtual void setBoundary(Rectangle* rcBound);
         void mouseMove(Point& pt, int flags);
-        void draw();
 
     public:
         ThreadLabelView(DmTraceControl *parent);
         DmTraceControl *mParent;
 
-    protected:
+    public:
         friend class DmTraceControl;
     };
 
-    class DmTraceControl
+    class DmTraceControl : public Canvas
     {
     protected:
-        TimescaleView mTimescale;
-        TimeLineView mTimeLine;
-        ThreadLabelView mThreadLabel;
+        TimeScaleView* mTimescale;
+        TimeLineView* mTimeLine;
+        ThreadLabelView* mThreadLabel;
         int mScrollOffsetY;
 
     public:
         const int PixelsPerTick = 50;
-
-    protected:
         const int LeftMargin = 10;
         const int RightMargin = 60;
         const int rowHeight = 20;
@@ -436,21 +481,23 @@ namespace Android {
 
         MethodData* mHighlightMethodData;
         Call* mHighlightCall;
-        Size mSize;
 
     public:
-
-        Size getSize() const {
-            return mSize;
-        }
 
         TickScaler& getScaleInfo() {
             return mScaleInfo;
         }
 
-        void setData(DmTraceData* reader);
         void computeStrips();
         int computeVisibleRows(int ydim);
+
+        ThreadPtrList* getThreads() {
+            return mDmTraceData->getThreads();
+        }
+
+    public: //overrides
+        virtual void draw(void* context) {};
+        virtual void setBoundary(Rectangle* rcBound);
 
     protected:
         void startHighlighting();
@@ -460,10 +507,11 @@ namespace Android {
         void dumpStrips();
 
     public:
-        DmTraceControl(DmTraceData* reader);
+        DmTraceControl();
+        void setData(DmTraceData* traceData);
 
         friend class TimeLineView;
-        friend class TimescaleView;
+        friend class TimeScaleView;
         friend class ThreadLabelView;
     };
 

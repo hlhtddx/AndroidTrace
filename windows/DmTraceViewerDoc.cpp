@@ -27,8 +27,6 @@ END_MESSAGE_MAP()
 // CDmTraceViewerDoc construction/destruction
 
 CDmTraceViewerDoc::CDmTraceViewerDoc()
-	: m_pTraceReader(NULL)
-	, m_pTimeLineView(NULL)
 {
 }
 
@@ -126,8 +124,7 @@ BOOL CDmTraceViewerDoc::OnOpenDocument(LPCTSTR lpszPathName)
 	CT2A fileName(lpszPathName);
 
     try {
-        m_pTraceReader = new Android::DmTraceData(fileName, false);
-        m_pTimeLineView = new Android::DmTraceControl(m_pTraceReader);
+        open(fileName, false);
     }
     catch (GeneralException& e) {
         TRACE("Got a exception(%s)\n", e.getDescription());
@@ -140,17 +137,5 @@ BOOL CDmTraceViewerDoc::OnOpenDocument(LPCTSTR lpszPathName)
 
 void CDmTraceViewerDoc::DeleteContents()
 {
-	if (m_pTimeLineView)
-	{
-		delete m_pTimeLineView;
-		m_pTimeLineView = NULL;
-	}
-
-	if (m_pTraceReader)
-	{
-		delete m_pTraceReader;
-		m_pTraceReader = NULL;
-	}
-
 	CDocument::DeleteContents();
 }

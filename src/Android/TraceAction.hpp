@@ -5,7 +5,8 @@
 
 namespace Android {
 
-	typedef enum ActionType {
+#ifdef CLOCK_SOURCE_THREAD_CPU
+    typedef enum ActionType {
 		ACTION_ENTER = 0,
 		ACTION_EXIT = 1,
 		ACTION_INCOMPLETE = 2,
@@ -24,4 +25,5 @@ namespace Android {
 			mCall = call;
 		}
 	};
+#endif
 };

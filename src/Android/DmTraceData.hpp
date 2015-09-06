@@ -70,12 +70,13 @@ namespace Android {
 		};
 
 	public:
+        void open(const char* traceFileName, bool regression);
+		void generateTrees();
         bool isRegression() const
         {
             return mRegression;
         }
-		void generateTrees();
-		//ProfileProvider* getProfileProvider();
+        //ProfileProvider* getProfileProvider();
 
 	private:
 		ByteBuffer* mapFile(const char* filename, filepos offset);
@@ -119,7 +120,7 @@ namespace Android {
 		const char* getClockSource();
 
         // Generated
-		DmTraceData(const char* traceFileName, bool regression);
+		DmTraceData();
 		~DmTraceData();
 	};
 };
