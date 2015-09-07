@@ -7,34 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		010355211B9DD90100D2B01D /* Call.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98C1B86B3BB0005A657 /* Call.cpp */; };
+		010355221B9DD90100D2B01D /* ColorController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98E1B86B3BB0005A657 /* ColorController.cpp */; };
+		010355231B9DD90100D2B01D /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9901B86B3BB0005A657 /* Common.cpp */; };
+		010355241B9DD90100D2B01D /* DmTraceControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 014D1E8A1B99B9AF00193D46 /* DmTraceControl.cpp */; };
+		010355251B9DD90100D2B01D /* DmTraceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 014D1E8C1B99B9AF00193D46 /* DmTraceData.cpp */; };
+		010355261B9DD90100D2B01D /* MethodData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9941B86B3BB0005A657 /* MethodData.cpp */; };
+		010355271B9DD90100D2B01D /* ProfileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9961B86B3BB0005A657 /* ProfileData.cpp */; };
+		010355281B9DD90100D2B01D /* ProfileNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9981B86B3BB0005A657 /* ProfileNode.cpp */; };
+		010355291B9DD90100D2B01D /* ProfileSelf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99A1B86B3BB0005A657 /* ProfileSelf.cpp */; };
+		0103552A1B9DD90100D2B01D /* ThreadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99C1B86B3BB0005A657 /* ThreadData.cpp */; };
+		0103552B1B9DD90100D2B01D /* TimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99E1B86B3BB0005A657 /* TimeBase.cpp */; };
+		0103552C1B9DD90100D2B01D /* TraceUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */; };
+		0103552F1B9DD9F700D2B01D /* libAndroidTraceModel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */; };
+		0103553A1B9DDA4900D2B01D /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 010355391B9DDA4900D2B01D /* AppDelegate.mm */; };
+		0103553C1B9DDA4900D2B01D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0103553B1B9DDA4900D2B01D /* main.m */; };
+		0103553F1B9DDA4900D2B01D /* Document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0103553E1B9DDA4900D2B01D /* Document.mm */; };
+		010355421B9DDA4900D2B01D /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 010355401B9DDA4900D2B01D /* Document.xib */; };
+		010355441B9DDA4900D2B01D /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 010355431B9DDA4900D2B01D /* Images.xcassets */; };
+		010355471B9DDA4900D2B01D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 010355451B9DDA4900D2B01D /* MainMenu.xib */; };
+		010355531B9DDA4900D2B01D /* DmTraceViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 010355521B9DDA4900D2B01D /* DmTraceViewerTests.m */; };
 		0111B98B1B86B2EB0005A657 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98A1B86B2EB0005A657 /* main.cpp */; };
-		0111B9A51B86B3BB0005A657 /* Call.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98C1B86B3BB0005A657 /* Call.cpp */; };
-		0111B9A61B86B3BB0005A657 /* ColorController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98E1B86B3BB0005A657 /* ColorController.cpp */; };
-		0111B9A71B86B3BB0005A657 /* Common.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9901B86B3BB0005A657 /* Common.cpp */; };
-		0111B9A91B86B3BB0005A657 /* MethodData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9941B86B3BB0005A657 /* MethodData.cpp */; };
-		0111B9AA1B86B3BB0005A657 /* ProfileData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9961B86B3BB0005A657 /* ProfileData.cpp */; };
-		0111B9AB1B86B3BB0005A657 /* ProfileNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9981B86B3BB0005A657 /* ProfileNode.cpp */; };
-		0111B9AC1B86B3BB0005A657 /* ProfileSelf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99A1B86B3BB0005A657 /* ProfileSelf.cpp */; };
-		0111B9AD1B86B3BB0005A657 /* ThreadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99C1B86B3BB0005A657 /* ThreadData.cpp */; };
-		0111B9AE1B86B3BB0005A657 /* TimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99E1B86B3BB0005A657 /* TimeBase.cpp */; };
-		0111B9B01B86B3BB0005A657 /* TraceUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */; };
-		014D1E8E1B99B9AF00193D46 /* DmTraceControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 014D1E8A1B99B9AF00193D46 /* DmTraceControl.cpp */; };
-		014D1E8F1B99B9AF00193D46 /* DmTraceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 014D1E8C1B99B9AF00193D46 /* DmTraceData.cpp */; };
 		0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0158D3E81B9746A6003ADCFB /* CoreServices.framework */; };
-		01B22C6B1B9D2F1D005AE588 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B22C6A1B9D2F1D005AE588 /* AppDelegate.swift */; };
-		01B22C6D1B9D2F1D005AE588 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B22C6C1B9D2F1D005AE588 /* Document.swift */; };
-		01B22C701B9D2F1D005AE588 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01B22C6E1B9D2F1D005AE588 /* Document.xib */; };
-		01B22C721B9D2F1D005AE588 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01B22C711B9D2F1D005AE588 /* Images.xcassets */; };
-		01B22C751B9D2F1D005AE588 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01B22C731B9D2F1D005AE588 /* MainMenu.xib */; };
-		01B22C811B9D2F1E005AE588 /* DmTraceViewerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B22C801B9D2F1E005AE588 /* DmTraceViewerTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		01B22C7B1B9D2F1E005AE588 /* PBXContainerItemProxy */ = {
+		0103552D1B9DD9F000D2B01D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 01BA983D1B80C33500BA696A /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 01B22C651B9D2F1D005AE588;
+			remoteGlobalIDString = 0103551C1B9DD8F000D2B01D;
+			remoteInfo = AndroidTraceModel;
+		};
+		0103554D1B9DDA4900D2B01D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 01BA983D1B80C33500BA696A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 010355331B9DDA4900D2B01D;
 			remoteInfo = DmTraceViewer;
 		};
 /* End PBXContainerItemProxy section */
@@ -52,6 +61,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAndroidTraceModel.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		010355341B9DDA4900D2B01D /* DmTraceViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DmTraceViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		010355371B9DDA4900D2B01D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		010355381B9DDA4900D2B01D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		010355391B9DDA4900D2B01D /* AppDelegate.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegate.mm; sourceTree = "<group>"; };
+		0103553B1B9DDA4900D2B01D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		0103553D1B9DDA4900D2B01D /* Document.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Document.h; sourceTree = "<group>"; };
+		0103553E1B9DDA4900D2B01D /* Document.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Document.mm; sourceTree = "<group>"; };
+		010355411B9DDA4900D2B01D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Document.xib; sourceTree = "<group>"; };
+		010355431B9DDA4900D2B01D /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		010355461B9DDA4900D2B01D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		0103554C1B9DDA4900D2B01D /* DmTraceViewerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DmTraceViewerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		010355511B9DDA4900D2B01D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		010355521B9DDA4900D2B01D /* DmTraceViewerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DmTraceViewerTests.m; sourceTree = "<group>"; };
 		0111B98A1B86B2EB0005A657 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; name = main.cpp; path = ../main.cpp; sourceTree = "<group>"; usesTabs = 0; };
 		0111B98C1B86B3BB0005A657 /* Call.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = Call.cpp; sourceTree = "<group>"; usesTabs = 0; };
 		0111B98D1B86B3BB0005A657 /* Call.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; lineEnding = 0; path = Call.hpp; sourceTree = "<group>"; usesTabs = 0; };
@@ -79,28 +102,25 @@
 		014D1E8C1B99B9AF00193D46 /* DmTraceData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DmTraceData.cpp; sourceTree = "<group>"; };
 		014D1E8D1B99B9AF00193D46 /* DmTraceData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DmTraceData.hpp; sourceTree = "<group>"; };
 		0158D3E81B9746A6003ADCFB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
-		01B22C661B9D2F1D005AE588 /* DmTraceViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DmTraceViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		01B22C691B9D2F1D005AE588 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		01B22C6A1B9D2F1D005AE588 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		01B22C6C1B9D2F1D005AE588 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
-		01B22C6F1B9D2F1D005AE588 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Document.xib; sourceTree = "<group>"; };
-		01B22C711B9D2F1D005AE588 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		01B22C741B9D2F1D005AE588 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		01B22C7A1B9D2F1E005AE588 /* DmTraceViewerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DmTraceViewerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		01B22C7F1B9D2F1E005AE588 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		01B22C801B9D2F1E005AE588 /* DmTraceViewerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DmTraceViewerTests.swift; sourceTree = "<group>"; };
 		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		01B22C631B9D2F1D005AE588 /* Frameworks */ = {
+		0103551A1B9DD8F000D2B01D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		01B22C771B9D2F1E005AE588 /* Frameworks */ = {
+		010355311B9DDA4900D2B01D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		010355491B9DDA4900D2B01D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -111,6 +131,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0103552F1B9DD9F700D2B01D /* libAndroidTraceModel.a in Frameworks */,
 				0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -118,40 +139,43 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		01B22C671B9D2F1D005AE588 /* DmTraceViewer */ = {
+		010355351B9DDA4900D2B01D /* DmTraceViewer */ = {
 			isa = PBXGroup;
 			children = (
-				01B22C6A1B9D2F1D005AE588 /* AppDelegate.swift */,
-				01B22C6C1B9D2F1D005AE588 /* Document.swift */,
-				01B22C6E1B9D2F1D005AE588 /* Document.xib */,
-				01B22C711B9D2F1D005AE588 /* Images.xcassets */,
-				01B22C731B9D2F1D005AE588 /* MainMenu.xib */,
-				01B22C681B9D2F1D005AE588 /* Supporting Files */,
+				010355381B9DDA4900D2B01D /* AppDelegate.h */,
+				010355391B9DDA4900D2B01D /* AppDelegate.mm */,
+				0103553D1B9DDA4900D2B01D /* Document.h */,
+				0103553E1B9DDA4900D2B01D /* Document.mm */,
+				010355401B9DDA4900D2B01D /* Document.xib */,
+				010355431B9DDA4900D2B01D /* Images.xcassets */,
+				010355451B9DDA4900D2B01D /* MainMenu.xib */,
+				010355361B9DDA4900D2B01D /* Supporting Files */,
 			);
 			path = DmTraceViewer;
 			sourceTree = "<group>";
 		};
-		01B22C681B9D2F1D005AE588 /* Supporting Files */ = {
+		010355361B9DDA4900D2B01D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				01B22C691B9D2F1D005AE588 /* Info.plist */,
+				010355371B9DDA4900D2B01D /* Info.plist */,
+				0103553B1B9DDA4900D2B01D /* main.m */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		01B22C7D1B9D2F1E005AE588 /* DmTraceViewerTests */ = {
+		0103554F1B9DDA4900D2B01D /* DmTraceViewerTests */ = {
 			isa = PBXGroup;
 			children = (
-				01B22C801B9D2F1E005AE588 /* DmTraceViewerTests.swift */,
-				01B22C7E1B9D2F1E005AE588 /* Supporting Files */,
+				010355521B9DDA4900D2B01D /* DmTraceViewerTests.m */,
+				010355501B9DDA4900D2B01D /* Supporting Files */,
 			);
 			path = DmTraceViewerTests;
 			sourceTree = "<group>";
 		};
-		01B22C7E1B9D2F1E005AE588 /* Supporting Files */ = {
+		010355501B9DDA4900D2B01D /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				01B22C7F1B9D2F1E005AE588 /* Info.plist */,
+				010355511B9DDA4900D2B01D /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -161,8 +185,8 @@
 			children = (
 				0158D3E81B9746A6003ADCFB /* CoreServices.framework */,
 				01BA98471B80C33500BA696A /* Android */,
-				01B22C671B9D2F1D005AE588 /* DmTraceViewer */,
-				01B22C7D1B9D2F1E005AE588 /* DmTraceViewerTests */,
+				010355351B9DDA4900D2B01D /* DmTraceViewer */,
+				0103554F1B9DDA4900D2B01D /* DmTraceViewerTests */,
 				01BA98461B80C33500BA696A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -171,8 +195,9 @@
 			isa = PBXGroup;
 			children = (
 				01BA98451B80C33500BA696A /* AndroidTrace */,
-				01B22C661B9D2F1D005AE588 /* DmTraceViewer.app */,
-				01B22C7A1B9D2F1E005AE588 /* DmTraceViewerTests.xctest */,
+				0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */,
+				010355341B9DDA4900D2B01D /* DmTraceViewer.app */,
+				0103554C1B9DDA4900D2B01D /* DmTraceViewerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -213,14 +238,41 @@
 		};
 /* End PBXGroup section */
 
+/* Begin PBXHeadersBuildPhase section */
+		0103551B1B9DD8F000D2B01D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
 /* Begin PBXNativeTarget section */
-		01B22C651B9D2F1D005AE588 /* DmTraceViewer */ = {
+		0103551C1B9DD8F000D2B01D /* AndroidTraceModel */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 01B22C861B9D2F1E005AE588 /* Build configuration list for PBXNativeTarget "DmTraceViewer" */;
+			buildConfigurationList = 0103551E1B9DD8F000D2B01D /* Build configuration list for PBXNativeTarget "AndroidTraceModel" */;
 			buildPhases = (
-				01B22C621B9D2F1D005AE588 /* Sources */,
-				01B22C631B9D2F1D005AE588 /* Frameworks */,
-				01B22C641B9D2F1D005AE588 /* Resources */,
+				010355191B9DD8F000D2B01D /* Sources */,
+				0103551A1B9DD8F000D2B01D /* Frameworks */,
+				0103551B1B9DD8F000D2B01D /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AndroidTraceModel;
+			productName = AndroidTraceModel;
+			productReference = 0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		010355331B9DDA4900D2B01D /* DmTraceViewer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 010355541B9DDA4900D2B01D /* Build configuration list for PBXNativeTarget "DmTraceViewer" */;
+			buildPhases = (
+				010355301B9DDA4900D2B01D /* Sources */,
+				010355311B9DDA4900D2B01D /* Frameworks */,
+				010355321B9DDA4900D2B01D /* Resources */,
 			);
 			buildRules = (
 			);
@@ -228,25 +280,25 @@
 			);
 			name = DmTraceViewer;
 			productName = DmTraceViewer;
-			productReference = 01B22C661B9D2F1D005AE588 /* DmTraceViewer.app */;
+			productReference = 010355341B9DDA4900D2B01D /* DmTraceViewer.app */;
 			productType = "com.apple.product-type.application";
 		};
-		01B22C791B9D2F1E005AE588 /* DmTraceViewerTests */ = {
+		0103554B1B9DDA4900D2B01D /* DmTraceViewerTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 01B22C871B9D2F1E005AE588 /* Build configuration list for PBXNativeTarget "DmTraceViewerTests" */;
+			buildConfigurationList = 010355571B9DDA4900D2B01D /* Build configuration list for PBXNativeTarget "DmTraceViewerTests" */;
 			buildPhases = (
-				01B22C761B9D2F1E005AE588 /* Sources */,
-				01B22C771B9D2F1E005AE588 /* Frameworks */,
-				01B22C781B9D2F1E005AE588 /* Resources */,
+				010355481B9DDA4900D2B01D /* Sources */,
+				010355491B9DDA4900D2B01D /* Frameworks */,
+				0103554A1B9DDA4900D2B01D /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				01B22C7C1B9D2F1E005AE588 /* PBXTargetDependency */,
+				0103554E1B9DDA4900D2B01D /* PBXTargetDependency */,
 			);
 			name = DmTraceViewerTests;
 			productName = DmTraceViewerTests;
-			productReference = 01B22C7A1B9D2F1E005AE588 /* DmTraceViewerTests.xctest */;
+			productReference = 0103554C1B9DDA4900D2B01D /* DmTraceViewerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		01BA98441B80C33500BA696A /* AndroidTrace */ = {
@@ -260,6 +312,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				0103552E1B9DD9F000D2B01D /* PBXTargetDependency */,
 			);
 			name = AndroidTrace;
 			productName = AndroidTrace;
@@ -275,12 +328,15 @@
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Frank Zhang";
 				TargetAttributes = {
-					01B22C651B9D2F1D005AE588 = {
+					0103551C1B9DD8F000D2B01D = {
 						CreatedOnToolsVersion = 6.4;
 					};
-					01B22C791B9D2F1E005AE588 = {
+					010355331B9DDA4900D2B01D = {
 						CreatedOnToolsVersion = 6.4;
-						TestTargetID = 01B22C651B9D2F1D005AE588;
+					};
+					0103554B1B9DDA4900D2B01D = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = 010355331B9DDA4900D2B01D;
 					};
 					01BA98441B80C33500BA696A = {
 						CreatedOnToolsVersion = 6.4;
@@ -301,24 +357,25 @@
 			projectRoot = "";
 			targets = (
 				01BA98441B80C33500BA696A /* AndroidTrace */,
-				01B22C651B9D2F1D005AE588 /* DmTraceViewer */,
-				01B22C791B9D2F1E005AE588 /* DmTraceViewerTests */,
+				0103551C1B9DD8F000D2B01D /* AndroidTraceModel */,
+				010355331B9DDA4900D2B01D /* DmTraceViewer */,
+				0103554B1B9DDA4900D2B01D /* DmTraceViewerTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		01B22C641B9D2F1D005AE588 /* Resources */ = {
+		010355321B9DDA4900D2B01D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				01B22C701B9D2F1D005AE588 /* Document.xib in Resources */,
-				01B22C721B9D2F1D005AE588 /* Images.xcassets in Resources */,
-				01B22C751B9D2F1D005AE588 /* MainMenu.xib in Resources */,
+				010355421B9DDA4900D2B01D /* Document.xib in Resources */,
+				010355441B9DDA4900D2B01D /* Images.xcassets in Resources */,
+				010355471B9DDA4900D2B01D /* MainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		01B22C781B9D2F1E005AE588 /* Resources */ = {
+		0103554A1B9DDA4900D2B01D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -328,20 +385,40 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		01B22C621B9D2F1D005AE588 /* Sources */ = {
+		010355191B9DD8F000D2B01D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				01B22C6D1B9D2F1D005AE588 /* Document.swift in Sources */,
-				01B22C6B1B9D2F1D005AE588 /* AppDelegate.swift in Sources */,
+				010355241B9DD90100D2B01D /* DmTraceControl.cpp in Sources */,
+				0103552A1B9DD90100D2B01D /* ThreadData.cpp in Sources */,
+				010355211B9DD90100D2B01D /* Call.cpp in Sources */,
+				010355261B9DD90100D2B01D /* MethodData.cpp in Sources */,
+				0103552B1B9DD90100D2B01D /* TimeBase.cpp in Sources */,
+				010355271B9DD90100D2B01D /* ProfileData.cpp in Sources */,
+				010355221B9DD90100D2B01D /* ColorController.cpp in Sources */,
+				010355231B9DD90100D2B01D /* Common.cpp in Sources */,
+				010355251B9DD90100D2B01D /* DmTraceData.cpp in Sources */,
+				0103552C1B9DD90100D2B01D /* TraceUnits.cpp in Sources */,
+				010355291B9DD90100D2B01D /* ProfileSelf.cpp in Sources */,
+				010355281B9DD90100D2B01D /* ProfileNode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		01B22C761B9D2F1E005AE588 /* Sources */ = {
+		010355301B9DDA4900D2B01D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				01B22C811B9D2F1E005AE588 /* DmTraceViewerTests.swift in Sources */,
+				0103553F1B9DDA4900D2B01D /* Document.mm in Sources */,
+				0103553C1B9DDA4900D2B01D /* main.m in Sources */,
+				0103553A1B9DDA4900D2B01D /* AppDelegate.mm in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		010355481B9DDA4900D2B01D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				010355531B9DDA4900D2B01D /* DmTraceViewerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -349,45 +426,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0111B9A71B86B3BB0005A657 /* Common.cpp in Sources */,
-				0111B9AD1B86B3BB0005A657 /* ThreadData.cpp in Sources */,
-				0111B9A61B86B3BB0005A657 /* ColorController.cpp in Sources */,
-				0111B9A91B86B3BB0005A657 /* MethodData.cpp in Sources */,
-				014D1E8E1B99B9AF00193D46 /* DmTraceControl.cpp in Sources */,
-				0111B9AE1B86B3BB0005A657 /* TimeBase.cpp in Sources */,
-				0111B9AA1B86B3BB0005A657 /* ProfileData.cpp in Sources */,
-				0111B9B01B86B3BB0005A657 /* TraceUnits.cpp in Sources */,
-				014D1E8F1B99B9AF00193D46 /* DmTraceData.cpp in Sources */,
 				0111B98B1B86B2EB0005A657 /* main.cpp in Sources */,
-				0111B9A51B86B3BB0005A657 /* Call.cpp in Sources */,
-				0111B9AC1B86B3BB0005A657 /* ProfileSelf.cpp in Sources */,
-				0111B9AB1B86B3BB0005A657 /* ProfileNode.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		01B22C7C1B9D2F1E005AE588 /* PBXTargetDependency */ = {
+		0103552E1B9DD9F000D2B01D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 01B22C651B9D2F1D005AE588 /* DmTraceViewer */;
-			targetProxy = 01B22C7B1B9D2F1E005AE588 /* PBXContainerItemProxy */;
+			target = 0103551C1B9DD8F000D2B01D /* AndroidTraceModel */;
+			targetProxy = 0103552D1B9DD9F000D2B01D /* PBXContainerItemProxy */;
+		};
+		0103554E1B9DDA4900D2B01D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 010355331B9DDA4900D2B01D /* DmTraceViewer */;
+			targetProxy = 0103554D1B9DDA4900D2B01D /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		01B22C6E1B9D2F1D005AE588 /* Document.xib */ = {
+		010355401B9DDA4900D2B01D /* Document.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				01B22C6F1B9D2F1D005AE588 /* Base */,
+				010355411B9DDA4900D2B01D /* Base */,
 			);
 			name = Document.xib;
 			sourceTree = "<group>";
 		};
-		01B22C731B9D2F1D005AE588 /* MainMenu.xib */ = {
+		010355451B9DDA4900D2B01D /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				01B22C741B9D2F1D005AE588 /* Base */,
+				010355461B9DDA4900D2B01D /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -395,7 +465,27 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		01B22C821B9D2F1E005AE588 /* Debug */ = {
+		0103551F1B9DD8F000D2B01D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		010355201B9DD8F000D2B01D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EXECUTABLE_PREFIX = lib;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		010355551B9DDA4900D2B01D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -408,11 +498,10 @@
 				INFOPLIST_FILE = DmTraceViewer/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
-		01B22C831B9D2F1E005AE588 /* Release */ = {
+		010355561B9DDA4900D2B01D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -424,7 +513,7 @@
 			};
 			name = Release;
 		};
-		01B22C841B9D2F1E005AE588 /* Debug */ = {
+		010355581B9DDA4900D2B01D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -444,7 +533,7 @@
 			};
 			name = Debug;
 		};
-		01B22C851B9D2F1E005AE588 /* Release */ = {
+		010355591B9DDA4900D2B01D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -495,6 +584,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Users/frank/Source/Workspace/AndroidTrace/src,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -531,6 +625,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Users/frank/Source/Workspace/AndroidTrace/src,
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = macosx;
@@ -540,6 +639,7 @@
 		01BA984D1B80C33500BA696A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -547,6 +647,7 @@
 		01BA984E1B80C33500BA696A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				PRELINK_LIBS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -554,19 +655,27 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		01B22C861B9D2F1E005AE588 /* Build configuration list for PBXNativeTarget "DmTraceViewer" */ = {
+		0103551E1B9DD8F000D2B01D /* Build configuration list for PBXNativeTarget "AndroidTraceModel" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				01B22C821B9D2F1E005AE588 /* Debug */,
-				01B22C831B9D2F1E005AE588 /* Release */,
+				0103551F1B9DD8F000D2B01D /* Debug */,
+				010355201B9DD8F000D2B01D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
-		01B22C871B9D2F1E005AE588 /* Build configuration list for PBXNativeTarget "DmTraceViewerTests" */ = {
+		010355541B9DDA4900D2B01D /* Build configuration list for PBXNativeTarget "DmTraceViewer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				01B22C841B9D2F1E005AE588 /* Debug */,
-				01B22C851B9D2F1E005AE588 /* Release */,
+				010355551B9DDA4900D2B01D /* Debug */,
+				010355561B9DDA4900D2B01D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		010355571B9DDA4900D2B01D /* Build configuration list for PBXNativeTarget "DmTraceViewerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				010355581B9DDA4900D2B01D /* Debug */,
+				010355591B9DDA4900D2B01D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 		};
