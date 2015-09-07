@@ -21,7 +21,23 @@
 		014D1E8E1B99B9AF00193D46 /* DmTraceControl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 014D1E8A1B99B9AF00193D46 /* DmTraceControl.cpp */; };
 		014D1E8F1B99B9AF00193D46 /* DmTraceData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 014D1E8C1B99B9AF00193D46 /* DmTraceData.cpp */; };
 		0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0158D3E81B9746A6003ADCFB /* CoreServices.framework */; };
+		01B22C6B1B9D2F1D005AE588 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B22C6A1B9D2F1D005AE588 /* AppDelegate.swift */; };
+		01B22C6D1B9D2F1D005AE588 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B22C6C1B9D2F1D005AE588 /* Document.swift */; };
+		01B22C701B9D2F1D005AE588 /* Document.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01B22C6E1B9D2F1D005AE588 /* Document.xib */; };
+		01B22C721B9D2F1D005AE588 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01B22C711B9D2F1D005AE588 /* Images.xcassets */; };
+		01B22C751B9D2F1D005AE588 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 01B22C731B9D2F1D005AE588 /* MainMenu.xib */; };
+		01B22C811B9D2F1E005AE588 /* DmTraceViewerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B22C801B9D2F1E005AE588 /* DmTraceViewerTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		01B22C7B1B9D2F1E005AE588 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 01BA983D1B80C33500BA696A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 01B22C651B9D2F1D005AE588;
+			remoteInfo = DmTraceViewer;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
 		01BA98431B80C33500BA696A /* CopyFiles */ = {
@@ -63,10 +79,34 @@
 		014D1E8C1B99B9AF00193D46 /* DmTraceData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DmTraceData.cpp; sourceTree = "<group>"; };
 		014D1E8D1B99B9AF00193D46 /* DmTraceData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = DmTraceData.hpp; sourceTree = "<group>"; };
 		0158D3E81B9746A6003ADCFB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		01B22C661B9D2F1D005AE588 /* DmTraceViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DmTraceViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		01B22C691B9D2F1D005AE588 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		01B22C6A1B9D2F1D005AE588 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		01B22C6C1B9D2F1D005AE588 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
+		01B22C6F1B9D2F1D005AE588 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/Document.xib; sourceTree = "<group>"; };
+		01B22C711B9D2F1D005AE588 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		01B22C741B9D2F1D005AE588 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		01B22C7A1B9D2F1E005AE588 /* DmTraceViewerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DmTraceViewerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		01B22C7F1B9D2F1E005AE588 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		01B22C801B9D2F1E005AE588 /* DmTraceViewerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DmTraceViewerTests.swift; sourceTree = "<group>"; };
 		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		01B22C631B9D2F1D005AE588 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01B22C771B9D2F1E005AE588 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		01BA98421B80C33500BA696A /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -78,11 +118,51 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		01B22C671B9D2F1D005AE588 /* DmTraceViewer */ = {
+			isa = PBXGroup;
+			children = (
+				01B22C6A1B9D2F1D005AE588 /* AppDelegate.swift */,
+				01B22C6C1B9D2F1D005AE588 /* Document.swift */,
+				01B22C6E1B9D2F1D005AE588 /* Document.xib */,
+				01B22C711B9D2F1D005AE588 /* Images.xcassets */,
+				01B22C731B9D2F1D005AE588 /* MainMenu.xib */,
+				01B22C681B9D2F1D005AE588 /* Supporting Files */,
+			);
+			path = DmTraceViewer;
+			sourceTree = "<group>";
+		};
+		01B22C681B9D2F1D005AE588 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				01B22C691B9D2F1D005AE588 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		01B22C7D1B9D2F1E005AE588 /* DmTraceViewerTests */ = {
+			isa = PBXGroup;
+			children = (
+				01B22C801B9D2F1E005AE588 /* DmTraceViewerTests.swift */,
+				01B22C7E1B9D2F1E005AE588 /* Supporting Files */,
+			);
+			path = DmTraceViewerTests;
+			sourceTree = "<group>";
+		};
+		01B22C7E1B9D2F1E005AE588 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				01B22C7F1B9D2F1E005AE588 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		01BA983C1B80C33500BA696A = {
 			isa = PBXGroup;
 			children = (
 				0158D3E81B9746A6003ADCFB /* CoreServices.framework */,
 				01BA98471B80C33500BA696A /* Android */,
+				01B22C671B9D2F1D005AE588 /* DmTraceViewer */,
+				01B22C7D1B9D2F1E005AE588 /* DmTraceViewerTests */,
 				01BA98461B80C33500BA696A /* Products */,
 			);
 			sourceTree = "<group>";
@@ -91,6 +171,8 @@
 			isa = PBXGroup;
 			children = (
 				01BA98451B80C33500BA696A /* AndroidTrace */,
+				01B22C661B9D2F1D005AE588 /* DmTraceViewer.app */,
+				01B22C7A1B9D2F1E005AE588 /* DmTraceViewerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -132,6 +214,41 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		01B22C651B9D2F1D005AE588 /* DmTraceViewer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01B22C861B9D2F1E005AE588 /* Build configuration list for PBXNativeTarget "DmTraceViewer" */;
+			buildPhases = (
+				01B22C621B9D2F1D005AE588 /* Sources */,
+				01B22C631B9D2F1D005AE588 /* Frameworks */,
+				01B22C641B9D2F1D005AE588 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DmTraceViewer;
+			productName = DmTraceViewer;
+			productReference = 01B22C661B9D2F1D005AE588 /* DmTraceViewer.app */;
+			productType = "com.apple.product-type.application";
+		};
+		01B22C791B9D2F1E005AE588 /* DmTraceViewerTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01B22C871B9D2F1E005AE588 /* Build configuration list for PBXNativeTarget "DmTraceViewerTests" */;
+			buildPhases = (
+				01B22C761B9D2F1E005AE588 /* Sources */,
+				01B22C771B9D2F1E005AE588 /* Frameworks */,
+				01B22C781B9D2F1E005AE588 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				01B22C7C1B9D2F1E005AE588 /* PBXTargetDependency */,
+			);
+			name = DmTraceViewerTests;
+			productName = DmTraceViewerTests;
+			productReference = 01B22C7A1B9D2F1E005AE588 /* DmTraceViewerTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		01BA98441B80C33500BA696A /* AndroidTrace */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 01BA984C1B80C33500BA696A /* Build configuration list for PBXNativeTarget "AndroidTrace" */;
@@ -158,6 +275,13 @@
 				LastUpgradeCheck = 0640;
 				ORGANIZATIONNAME = "Frank Zhang";
 				TargetAttributes = {
+					01B22C651B9D2F1D005AE588 = {
+						CreatedOnToolsVersion = 6.4;
+					};
+					01B22C791B9D2F1E005AE588 = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = 01B22C651B9D2F1D005AE588;
+					};
 					01BA98441B80C33500BA696A = {
 						CreatedOnToolsVersion = 6.4;
 					};
@@ -169,6 +293,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 01BA983C1B80C33500BA696A;
 			productRefGroup = 01BA98461B80C33500BA696A /* Products */;
@@ -176,11 +301,50 @@
 			projectRoot = "";
 			targets = (
 				01BA98441B80C33500BA696A /* AndroidTrace */,
+				01B22C651B9D2F1D005AE588 /* DmTraceViewer */,
+				01B22C791B9D2F1E005AE588 /* DmTraceViewerTests */,
 			);
 		};
 /* End PBXProject section */
 
+/* Begin PBXResourcesBuildPhase section */
+		01B22C641B9D2F1D005AE588 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01B22C701B9D2F1D005AE588 /* Document.xib in Resources */,
+				01B22C721B9D2F1D005AE588 /* Images.xcassets in Resources */,
+				01B22C751B9D2F1D005AE588 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01B22C781B9D2F1E005AE588 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		01B22C621B9D2F1D005AE588 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01B22C6D1B9D2F1D005AE588 /* Document.swift in Sources */,
+				01B22C6B1B9D2F1D005AE588 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01B22C761B9D2F1E005AE588 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01B22C811B9D2F1E005AE588 /* DmTraceViewerTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		01BA98411B80C33500BA696A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -203,7 +367,99 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		01B22C7C1B9D2F1E005AE588 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 01B22C651B9D2F1D005AE588 /* DmTraceViewer */;
+			targetProxy = 01B22C7B1B9D2F1E005AE588 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		01B22C6E1B9D2F1D005AE588 /* Document.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				01B22C6F1B9D2F1D005AE588 /* Base */,
+			);
+			name = Document.xib;
+			sourceTree = "<group>";
+		};
+		01B22C731B9D2F1D005AE588 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				01B22C741B9D2F1D005AE588 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		01B22C821B9D2F1E005AE588 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = DmTraceViewer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		01B22C831B9D2F1E005AE588 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = DmTraceViewer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		01B22C841B9D2F1E005AE588 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = DmTraceViewerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DmTraceViewer.app/Contents/MacOS/DmTraceViewer";
+			};
+			name = Debug;
+		};
+		01B22C851B9D2F1E005AE588 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				COMBINE_HIDPI_IMAGES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = DmTraceViewerTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DmTraceViewer.app/Contents/MacOS/DmTraceViewer";
+			};
+			name = Release;
+		};
 		01BA984A1B80C33500BA696A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -298,6 +554,22 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		01B22C861B9D2F1E005AE588 /* Build configuration list for PBXNativeTarget "DmTraceViewer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01B22C821B9D2F1E005AE588 /* Debug */,
+				01B22C831B9D2F1E005AE588 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		01B22C871B9D2F1E005AE588 /* Build configuration list for PBXNativeTarget "DmTraceViewerTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01B22C841B9D2F1E005AE588 /* Debug */,
+				01B22C851B9D2F1E005AE588 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		01BA98401B80C33500BA696A /* Build configuration list for PBXProject "AndroidTrace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
