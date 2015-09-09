@@ -30,6 +30,7 @@
 		0111B98B1B86B2EB0005A657 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98A1B86B2EB0005A657 /* main.cpp */; };
 		01200C041B9EB68A00166547 /* libAndroidTraceModel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */; };
 		0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0158D3E81B9746A6003ADCFB /* CoreServices.framework */; };
+		01D706791BA00F6B0069B124 /* TimeLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D706781BA00F6B0069B124 /* TimeLineView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -111,6 +112,8 @@
 		014D1E8D1B99B9AF00193D46 /* DmTraceData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DmTraceData.hpp; path = ../src/Android/DmTraceData.hpp; sourceTree = "<group>"; };
 		0158D3E81B9746A6003ADCFB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
+		01D706771BA00F6B0069B124 /* TimeLineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLineView.h; sourceTree = "<group>"; };
+		01D706781BA00F6B0069B124 /* TimeLineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLineView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,6 +162,8 @@
 				010355431B9DDA4900D2B01D /* Images.xcassets */,
 				010355451B9DDA4900D2B01D /* MainMenu.xib */,
 				010355361B9DDA4900D2B01D /* Supporting Files */,
+				01D706771BA00F6B0069B124 /* TimeLineView.h */,
+				01D706781BA00F6B0069B124 /* TimeLineView.m */,
 			);
 			path = DmTraceViewer;
 			sourceTree = "<group>";
@@ -429,6 +434,7 @@
 				0103553F1B9DDA4900D2B01D /* Document.mm in Sources */,
 				0103553C1B9DDA4900D2B01D /* main.m in Sources */,
 				0103553A1B9DDA4900D2B01D /* AppDelegate.mm in Sources */,
+				01D706791BA00F6B0069B124 /* TimeLineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
