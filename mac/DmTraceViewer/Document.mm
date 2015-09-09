@@ -7,7 +7,8 @@
 //
 
 #import "Document.h"
-#include "Android/DmTraceData.hpp"
+#include <Android/DmTraceData.hpp>
+
 using namespace Android;
 
 @interface Document ()
@@ -55,6 +56,13 @@ using namespace Android;
 }
 
 - (BOOL)readFromURL:(NSURL *)absoluteURL ofType:(NSString *)typeName error:(NSError **)outError {
+    const char* fileName = [absoluteURL fileSystemRepresentation];
+    DmTraceData traceData;
+    try {
+        traceData.open(fileName, false);
+    } catch (GeneralException &e) {
+        return NO;
+    }
     return YES;
 }
 @end
