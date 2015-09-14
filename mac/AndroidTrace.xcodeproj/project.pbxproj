@@ -30,7 +30,8 @@
 		0111B98B1B86B2EB0005A657 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98A1B86B2EB0005A657 /* main.cpp */; };
 		01200C041B9EB68A00166547 /* libAndroidTraceModel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */; };
 		0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0158D3E81B9746A6003ADCFB /* CoreServices.framework */; };
-		01D706791BA00F6B0069B124 /* TimeLineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 01D706781BA00F6B0069B124 /* TimeLineView.m */; };
+		01D706791BA00F6B0069B124 /* GraphView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01D706781BA00F6B0069B124 /* GraphView.mm */; };
+		01F2A5621BA3C5EF004D54E7 /* DetailView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01F2A5611BA3C5EF004D54E7 /* DetailView.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,8 +113,10 @@
 		014D1E8D1B99B9AF00193D46 /* DmTraceData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DmTraceData.hpp; path = ../src/Android/DmTraceData.hpp; sourceTree = "<group>"; };
 		0158D3E81B9746A6003ADCFB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
 		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
-		01D706771BA00F6B0069B124 /* TimeLineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TimeLineView.h; sourceTree = "<group>"; };
-		01D706781BA00F6B0069B124 /* TimeLineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TimeLineView.m; sourceTree = "<group>"; };
+		01D706771BA00F6B0069B124 /* GraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
+		01D706781BA00F6B0069B124 /* GraphView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GraphView.mm; sourceTree = "<group>"; };
+		01F2A5601BA3C5EF004D54E7 /* DetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailView.h; sourceTree = "<group>"; };
+		01F2A5611BA3C5EF004D54E7 /* DetailView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailView.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -162,8 +165,10 @@
 				010355431B9DDA4900D2B01D /* Images.xcassets */,
 				010355451B9DDA4900D2B01D /* MainMenu.xib */,
 				010355361B9DDA4900D2B01D /* Supporting Files */,
-				01D706771BA00F6B0069B124 /* TimeLineView.h */,
-				01D706781BA00F6B0069B124 /* TimeLineView.m */,
+				01F2A5601BA3C5EF004D54E7 /* DetailView.h */,
+				01F2A5611BA3C5EF004D54E7 /* DetailView.mm */,
+				01D706771BA00F6B0069B124 /* GraphView.h */,
+				01D706781BA00F6B0069B124 /* GraphView.mm */,
 			);
 			path = DmTraceViewer;
 			sourceTree = "<group>";
@@ -194,7 +199,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		01200C051B9EB7E800166547 /* TraceModel */ = {
+		01200C051B9EB7E800166547 /* AndroidTrace */ = {
 			isa = PBXGroup;
 			children = (
 				0111B98C1B86B3BB0005A657 /* Call.cpp */,
@@ -223,15 +228,15 @@
 				0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */,
 				0111B9A41B86B3BB0005A657 /* TraceUnits.hpp */,
 			);
-			name = TraceModel;
+			name = AndroidTrace;
 			sourceTree = "<group>";
 		};
 		01BA983C1B80C33500BA696A = {
 			isa = PBXGroup;
 			children = (
 				0158D3E81B9746A6003ADCFB /* CoreServices.framework */,
-				01BA98471B80C33500BA696A /* AndroidTrace */,
-				01200C051B9EB7E800166547 /* TraceModel */,
+				01BA98471B80C33500BA696A /* AndroidTraceTest */,
+				01200C051B9EB7E800166547 /* AndroidTrace */,
 				010355351B9DDA4900D2B01D /* DmTraceViewer */,
 				0103554F1B9DDA4900D2B01D /* DmTraceViewerTests */,
 				01BA98461B80C33500BA696A /* Products */,
@@ -249,12 +254,12 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		01BA98471B80C33500BA696A /* AndroidTrace */ = {
+		01BA98471B80C33500BA696A /* AndroidTraceTest */ = {
 			isa = PBXGroup;
 			children = (
 				0111B98A1B86B2EB0005A657 /* main.cpp */,
 			);
-			name = AndroidTrace;
+			name = AndroidTraceTest;
 			path = ../src/Android;
 			sourceTree = SOURCE_ROOT;
 		};
@@ -433,8 +438,9 @@
 			files = (
 				0103553F1B9DDA4900D2B01D /* Document.mm in Sources */,
 				0103553C1B9DDA4900D2B01D /* main.m in Sources */,
+				01F2A5621BA3C5EF004D54E7 /* DetailView.mm in Sources */,
 				0103553A1B9DDA4900D2B01D /* AppDelegate.mm in Sources */,
-				01D706791BA00F6B0069B124 /* TimeLineView.m in Sources */,
+				01D706791BA00F6B0069B124 /* GraphView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -2,12 +2,13 @@
 //  Document.m
 //  DmTraceViewer
 //
-//  Created by 张航 on 15/9/7.
+//  Created by Frank Zhang on 15/9/7.
 //  Copyright (c) 2015年 Frank Zhang. All rights reserved.
 //
 
 #import "Document.h"
 #include <Android/DmTraceData.hpp>
+#include <Android/DmTraceControl.hpp>
 using namespace Android;
 
 @interface Document ()
@@ -15,8 +16,10 @@ using namespace Android;
 @end
 
 @implementation Document
-
-DmTraceData mTraceData;
+{
+    DmTraceData mTraceData;
+    DmTraceControl mTraceCtrl;
+}
 
 - (instancetype)init {
     self = [super init];
@@ -66,4 +69,5 @@ DmTraceData mTraceData;
     }
     return YES;
 }
+
 @end
