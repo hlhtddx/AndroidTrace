@@ -4,13 +4,13 @@
 
 #pragma once
 
-#include "DmTraceData.hpp"
+#include "DmTraceModel.hpp"
 #include "DmTraceControl.hpp"
 using namespace Android;
 
 class CDmTraceViewerDoc
     : public CDocument
-    , public DmTraceData
+    , public DmTraceModel
 {
 protected: // create from serialization only
 	CDmTraceViewerDoc();
@@ -40,6 +40,8 @@ public:
 #endif
 
 protected:
+    DmTraceModel mTraceModel;
+    DmTraceControl mtraceControl;
 
 // Generated message map functions
 protected:

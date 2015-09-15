@@ -24,6 +24,48 @@ namespace Android {
 	typedef uint32_t COLOR;
 	typedef uint32_t id_type;
 
+    class GeneralException
+    {
+    public:
+        GeneralException() {
+        }
+
+        GeneralException(const char* description)
+            : mDescription(description) {
+        }
+
+        virtual const char* getDescription() {
+            return mDescription.c_str();
+        }
+
+    protected:
+        String mDescription;
+    };
+
+    class MemoryException : public GeneralException
+    {
+    public:
+        MemoryException(const char* description)
+            : GeneralException(description) {
+        }
+    };
+
+    class BoundaryException : public GeneralException
+    {
+    public:
+        BoundaryException(const char* description, size_t index, size_t boundary)
+        {
+            mIndex = index;
+            mBoundary = boundary;
+            std::stringstream ss(mDescription);
+            ss << "Out of range: " << description << " -> (" << index << " out of " << boundary << ")";
+        }
+
+    protected:
+        size_t mIndex;
+        size_t mBoundary;
+    };
+
 	template<class _Ty> class List : public std::list<_Ty>
 	{
 	};
@@ -104,48 +146,6 @@ namespace Android {
 			}
 			return ret;
 		}
-	};
-
-	class GeneralException
-	{
-	public:
-		GeneralException() {
-		}
-
-		GeneralException(const char* description)
-			: mDescription(description) {
-		}
-
-		virtual const char* getDescription() {
-			return mDescription.c_str();
-		}
-
-	protected:
-		String mDescription;
-	};
-
-	class MemoryException : public GeneralException
-	{
-	public:
-		MemoryException(const char* description)
-			: GeneralException(description) {
-		}
-	};
-
-	class BoundaryException : public GeneralException
-	{
-	public:
-		BoundaryException(const char* description, size_t index, size_t boundary)
-		{
-			mIndex = index;
-			mBoundary = boundary;
-			std::stringstream ss(mDescription);
-			ss << "Out of range: " << description << " -> (" << index << " out of " << boundary << ")";
-		}
-
-	protected:
-		size_t mIndex;
-		size_t mBoundary;
 	};
 
 	template<class _Ty> class FastArray
@@ -366,4 +366,3 @@ namespace Android {
 		return readToken(str, line, '\n');
 	}
 };
-

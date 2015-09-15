@@ -6,7 +6,7 @@
 #include "Call.hpp"
 #include "MethodData.hpp"
 #include "ThreadData.hpp"
-#include "DmTraceData.hpp"
+#include "DmTraceModel.hpp"
 #include <math.h>
 
 namespace Android {
@@ -71,41 +71,41 @@ namespace Android {
     class TickScaler
     {
     protected:
-        double mMinVal;         // Minimal value (in microsecond, timeline at the most left) of the visible range
-        double mMaxVal;         // Maximal value (in microsecond, timeline at the most right) of the visible range
-        double mRangeVal;       // Visible range (in microsecond), mRangeVal = mMaxVal- mMinVal
-        int mNumPixels;         // The number of pixels horizontal in visible range
-        int mPixelsPerTick;     // The number of pixels within one tick, in px/tick
-        double mPixelsPerRange; // The number of pixels within one microsecond, in px/us, mPixelsPerRange = mNumPixels / mRangeVal
-        double mTickIncrement;  // The scale unit, in us/tick. mTickIncrement = mRangeVal * mPixelsPerTick / mNumPixels
-        double mMinMajorTick;   // mMinMajorTick = mTickIncrement / 5.0
+        uint32_t mMinVal;           // Minimal value (in microsecond, timeline at the most left) of the visible range
+        uint32_t mMaxVal;           // Maximal value (in microsecond, timeline at the most right) of the visible range
+        int64_t mRangeVal;         // Visible range (in microsecond), mRangeVal = mMaxVal- mMinVal
+        int mNumPixels;             // The number of pixels horizontal in visible range
+        int mPixelsPerTick;         // The number of pixels within one tick, in px/tick
+        uint32_t mTickIncrement;    // The scale unit, in us/tick. mTickIncrement = mRangeVal * mPixelsPerTick / mNumPixels
+        uint32_t mMinMajorTick;     // The minimal major Tick which is greater than mMinVal, in microsecond.
 
     public:
 
-        TickScaler(double minVal, double maxVal, int numPixels, int pixelsPerTick)
+        TickScaler(uint32_t minVal, uint32_t maxVal, int numPixels, int pixelsPerTick)
         {
             mMinVal = minVal;
             mMaxVal = maxVal;
+            mRangeVal = mMaxVal - mMinVal;
             mNumPixels = numPixels;
             mPixelsPerTick = pixelsPerTick;
         }
 
-        void setMinVal(double minVal)
+        void setMinVal(uint32_t minVal)
         {
             mMinVal = minVal;
         }
 
-        double getMinVal()
+        uint32_t getMinVal()
         {
             return mMinVal;
         }
 
-        void setMaxVal(double maxVal)
+        void setMaxVal(uint32_t maxVal)
         {
             mMaxVal = maxVal;
         }
 
-        double getMaxVal()
+        uint32_t getMaxVal()
         {
             return mMaxVal;
         }
@@ -131,107 +131,47 @@ namespace Android {
             return mPixelsPerTick;
         }
 
-        void setPixelsPerRange(double pixelsPerRange)
-        {
-            mPixelsPerRange = pixelsPerRange;
-        }
-
-        double getPixelsPerRange()
-        {
-            return mPixelsPerRange;
-        }
-
-        void setTickIncrement(double tickIncrement)
+        void setTickIncrement(uint32_t tickIncrement)
         {
             mTickIncrement = tickIncrement;
         }
 
-        double getTickIncrement()
+        uint32_t getTickIncrement()
         {
             return mTickIncrement;
         }
 
-        void setMinMajorTick(double minMajorTick)
+        void setMinMajorTick(uint32_t minMajorTick)
         {
             mMinMajorTick = minMajorTick;
         }
 
-        double getMinMajorTick()
+        uint32_t getMinMajorTick()
         {
             return mMinMajorTick;
         }
 
-        int valueToPixel(double value)
+        int valueToPixel(uint32_t value)
         {
-            return (int)ceil(mPixelsPerRange * (value - mMinVal) - 0.5);
+            return (int)(((int64_t)value - mMinVal) * mNumPixels / mRangeVal);
         }
 
-        double valueToPixelFraction(double value)
+        uint32_t pixelToValue(int pixel)
         {
-            return mPixelsPerRange * (value - mMinVal);
-        }
-
-        double pixelToValue(int pixel)
-        {
-            return mMinVal + pixel / mPixelsPerRange;
+            return uint32_t(mMinVal + pixel * mRangeVal / mNumPixels);
         }
 
         /* Compute the scale ticks for following parameters:
-             1. mMinVal, mMaxVal ==> The visible range of min/max timeline in us(which is aligned with scaled tick
-                  mRangeVal          = mMaxVal - mMinVal
+             1. mMinVal, mMaxVal ==> The visible range of min/max timeline in us(If useGivenEndPoints is true, they are aligned with mTickIncrement)
+                mRangeVal          = mMaxVal - mMinVal
 
              2. mNumPixels       ==> How many pixels is visible width range
 
-             3. mTickIncrement   ==> Scaling unit (1, 2, 5 * 10^N)
-                  minorTickIncrement = 1/5 of mTickIncrement
+             3. mTickIncrement   ==> Scaling unit (1, 2, 5 * 10^N) in us
 
-             4. mPixelsPerRange  ==> How many pixels within one Tick
+             4. mMinMajorTick    ==> Ceil of mMinVal aligned with mTickIncrement
          */
-        void computeTicks(bool useGivenEndPoints)
-        {
-            int numTicks = mNumPixels / mPixelsPerTick;
-            mRangeVal = (mMaxVal - mMinVal);
-            mTickIncrement = (mRangeVal / numTicks);
-            double dlogTickIncrement = log10(mTickIncrement);
-            double logTickIncrement = floor(dlogTickIncrement);
-            double scale = pow(10.0, logTickIncrement);
-            double scaledTickIncr = mTickIncrement / scale;
-
-            if (scaledTickIncr > 5.0) {
-                scaledTickIncr = 10.0;
-            }
-            else if (scaledTickIncr > 2.0) {
-                scaledTickIncr = 5.0;
-            }
-            else if (scaledTickIncr > 1.0) {
-                scaledTickIncr = 2.0;
-            }
-            else
-                scaledTickIncr = 1.0;
-
-            mTickIncrement = (scaledTickIncr * scale);
-
-            if (!useGivenEndPoints) {
-                double minorTickIncrement = mTickIncrement / 5.0;
-                double dval = mMaxVal / minorTickIncrement;
-                int ival = (int)dval;
-                if (ival != dval) {
-                    mMaxVal = ((ival + 1) * minorTickIncrement);
-                }
-                ival = static_cast<int>((mMinVal / mTickIncrement));
-                mMinVal = (ival * mTickIncrement);
-                mMinMajorTick = mMinVal;
-            }
-            else {
-                int ival = static_cast<int>((mMinVal / mTickIncrement));
-                mMinMajorTick = (ival * mTickIncrement);
-                if (mMinMajorTick < mMinVal) {
-                    mMinMajorTick += mTickIncrement;
-                }
-            }
-            mRangeVal = (mMaxVal - mMinVal);
-            mPixelsPerRange = (mNumPixels / mRangeVal);
-        }
+        void computeTicks(bool useGivenEndPoints);
     };
 
     class Pixel
@@ -320,12 +260,12 @@ namespace Android {
         int mCachedStartRow;
         int mCachedEndRow;
         double mScalePixelsPerRange;
-        double mScaleMinVal;
-        double mScaleMaxVal;
-        double mLimitMinVal;
-        double mLimitMaxVal;
-        double mMinDataVal;
-        double mMaxDataVal;
+        uint32_t mScaleMinVal;
+        uint32_t mScaleMaxVal;
+        uint32_t mLimitMinVal;
+        uint32_t mLimitMaxVal;
+        uint32_t mMinDataVal;
+        uint32_t mMaxDataVal;
         const int ZOOM_TIMER_INTERVAL = 10;
         const int HIGHLIGHT_TIMER_INTERVAL = 50;
         const int ZOOM_STEPS = 8;
@@ -359,8 +299,8 @@ namespace Android {
         void initZoomFractionsWithSinWave();
 
     public:
-        void setRange(double minVal, double maxVal);
-        void setLimitRange(double minVal, double maxVal);
+        void setRange(uint32_t minVal, uint32_t maxVal);
+        void setLimitRange(uint32_t minVal, uint32_t maxVal);
         void resetScale();
         void setScaleFromHorizontalScrollBar(int selection);
 
@@ -448,22 +388,22 @@ namespace Android {
         int mScrollOffsetY;
 
     public:
-        const int PixelsPerTick = 50;
-        const int LeftMargin = 10;
-        const int RightMargin = 60;
-        const int rowHeight = 20;
-        const int rowYMargin = 12;
-        const int rowYMarginHalf = 6;
-        const int rowYSpace = 32;
-        const int majorTickLength = 8;
-        const int minorTickLength = 4;
-        const int timeLineOffsetY = 58;
-        const int tickToFontSpacing = 2;
-        const int topMargin = 90;
+        static const int PixelsPerTick = 50;
+        static const int LeftMargin = 10;
+        static const int RightMargin = 60;
+        static const int rowHeight = 20;
+        static const int rowYMargin = 12;
+        static const int rowYMarginHalf = 6;
+        static const int rowYSpace = 32;
+        static const int majorTickLength = 8;
+        static const int minorTickLength = 4;
+        static const int timeLineOffsetY = 58;
+        static const int tickToFontSpacing = 2;
+        static const int topMargin = 90;
 
-        const int MinInclusiveRange = 3;
+        static const int MinInclusiveRange = 3;
 
-        DmTraceData* mDmTraceData;
+        DmTraceModel* mDmTraceData;
         TickScaler mScaleInfo;
 
         int mMouseRow;
@@ -503,12 +443,11 @@ namespace Android {
         void startHighlighting();
         void createStrip(uint32_t recordStart, uint32_t recordEnd, uint32_t baseline, Call * call, bool isContextSwitch, Pixel & pixel);
         void popFrames(CallStack & stack, CallList * callList, Call * top, uint32_t startTime, Pixel& pixel, FastArray<Strip>* stripList);
-        double computeWeight(double start, double end, bool isContextSwitch, int pixel);
         void dumpStrips();
 
     public:
         DmTraceControl();
-        void setData(DmTraceData* traceData);
+        void setData(DmTraceModel* traceData);
 
         friend class TimeLineView;
         friend class TimeScaleView;

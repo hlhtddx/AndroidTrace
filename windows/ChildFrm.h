@@ -12,6 +12,7 @@ public:
 
 // Attributes
 public:
+    CSplitterWndEx m_wndSplitter;
 
 // Operations
 public:
@@ -30,4 +31,5 @@ public:
 // Generated message map functions
 protected:
 	DECLARE_MESSAGE_MAP()
+    virtual BOOL OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext);
 };

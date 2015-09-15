@@ -138,7 +138,7 @@
     <ClCompile Include="..\..\src\Android\ColorController.cpp" />
     <ClCompile Include="..\..\src\Android\Common.cpp" />
     <ClCompile Include="..\..\src\Android\DmTraceControl.cpp" />
-    <ClCompile Include="..\..\src\Android\DmTraceData.cpp" />
+    <ClCompile Include="..\..\src\Android\DmTraceModel.cpp" />
     <ClCompile Include="..\..\src\Android\MethodData.cpp" />
     <ClCompile Include="..\..\src\Android\ProfileData.cpp" />
     <ClCompile Include="..\..\src\Android\ProfileNode.cpp" />
@@ -152,7 +152,7 @@
     <ClInclude Include="..\..\src\Android\ColorController.hpp" />
     <ClInclude Include="..\..\src\Android\Common.hpp" />
     <ClInclude Include="..\..\src\Android\DmTraceControl.hpp" />
-    <ClInclude Include="..\..\src\Android\DmTraceData.hpp" />
+    <ClInclude Include="..\..\src\Android\DmTraceModel.hpp" />
     <ClInclude Include="..\..\src\Android\MethodData.hpp" />
     <ClInclude Include="..\..\src\Android\ProfileData.hpp" />
     <ClInclude Include="..\..\src\Android\ProfileNode.hpp" />

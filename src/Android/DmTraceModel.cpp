@@ -1,4 +1,4 @@
-#include "DmTraceData.hpp"
+#include "DmTraceModel.hpp"
 #include "ColorController.hpp"
 #include <fstream>
 #include <iostream>
@@ -13,7 +13,7 @@
 
 namespace Android {
 
-	DmTraceData::DmTraceData()
+	DmTraceModel::DmTraceModel()
 	{
 		mRegression = false;
 		mTopLevel = new MethodData(0, "(toplevel)");
@@ -25,7 +25,7 @@ namespace Android {
 		mClockSource = UNKNOWN;
 	}
 
-	DmTraceData::~DmTraceData()
+	DmTraceModel::~DmTraceModel()
 	{
 		if (mSortedThreads != nullptr) {
 			delete mSortedThreads;
@@ -41,14 +41,14 @@ namespace Android {
 		}
 	}
 
-    void DmTraceData::open(const char* traceFileName, bool regression)
+    void DmTraceModel::open(const char* traceFileName, bool regression)
     {
         mRegression = regression;
         mTraceFileName = traceFileName;
         generateTrees();
     }
 
-	void DmTraceData::generateTrees()
+	void DmTraceModel::generateTrees()
 	{
 #ifdef _MSC_VER
         ULONGLONG s1 = GetTickCount64();
@@ -102,7 +102,7 @@ namespace Android {
         std::cerr << "done" << std::endl;
     }
 	//
-	//ProfileProvider* DmTraceData::getProfileProvider()
+	//ProfileProvider* DmTraceModel::getProfileProvider()
 	//{
 	//    if(mProfileProvider == nullptr)
 	//        mProfileProvider = new ProfileProvider(this);
@@ -111,7 +111,7 @@ namespace Android {
 	//}
 	//
 
-	void DmTraceData::readDataFileHeader(ByteBuffer* buffer)
+	void DmTraceModel::readDataFileHeader(ByteBuffer* buffer)
 	{
 		int magic = buffer->getInt();
 		if (magic != TRACE_MAGIC) {
@@ -139,7 +139,7 @@ namespace Android {
 		buffer->skip(offsetToData);
 	}
 
-	ByteBuffer* DmTraceData::mapFile(const char* filename, filepos offset)
+	ByteBuffer* DmTraceModel::mapFile(const char* filename, filepos offset)
 	{
 		char* buffer = nullptr;
 		try {
@@ -163,7 +163,7 @@ namespace Android {
 		}
 	}
 
-	filepos DmTraceData::parseKeys() /* throws(IOException) */
+	filepos DmTraceModel::parseKeys() /* throws(IOException) */
 	{
 		filepos offset = 0;
 		try {
@@ -216,7 +216,7 @@ namespace Android {
 		return offset;
 	}
 
-	void DmTraceData::parseOption(const String &line)
+	void DmTraceModel::parseOption(const String &line)
 	{
 		std::stringstream str(line);
 		String key, value;
@@ -239,7 +239,7 @@ namespace Android {
         }
 	}
 
-	void DmTraceData::parseThread(const String &line)
+	void DmTraceModel::parseThread(const String &line)
 	{
 		std::stringstream str(line);
 		String idStr, name;
@@ -249,7 +249,7 @@ namespace Android {
 		}
 	}
 
-	void DmTraceData::parseMethod(const String &line)
+	void DmTraceModel::parseMethod(const String &line)
 	{
 		std::stringstream str(line);
 
@@ -287,7 +287,7 @@ namespace Android {
 		mMethodMap.add(id, new MethodData(id, className.c_str(), methodName.c_str(), signature.c_str(), pathname.c_str(), lineNumber));
 	}
 
-    void DmTraceData::parseData(filepos offset) /* throws(IOException) */
+    void DmTraceModel::parseData(filepos offset) /* throws(IOException) */
     {
         ByteBuffer* buffer = mapFile(mTraceFileName.c_str(), offset);
         if (buffer == nullptr) {
@@ -550,7 +550,7 @@ namespace Android {
         delete buffer;
     }
 
-	void DmTraceData::constructPathname(String& className, String& pathname)
+	void DmTraceModel::constructPathname(String& className, String& pathname)
 	{
 		size_t index = className.find('/');
 		if ((index != className.npos) && (index < className.size() - 1) && (pathname.compare(className.size() - 6, 5, ".java"))) {
@@ -558,7 +558,7 @@ namespace Android {
 		}
 	}
 
-	void DmTraceData::analyzeData()
+	void DmTraceModel::analyzeData()
 	{
 		TimeBase* timeBase = getPreferredTimeBase();
 
@@ -611,7 +611,7 @@ namespace Android {
 		}
 	}
 	
-	void DmTraceData::dumpSegments()
+	void DmTraceModel::dumpSegments()
 	{
 		//printf("\nSegments\n");
 		//printf("id\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
@@ -627,7 +627,7 @@ namespace Android {
 		//}
 	}
 	
-	void DmTraceData::dumpThreadTimes()
+	void DmTraceModel::dumpThreadTimes()
 	{
 		printf("\nThread Times\n");
 		printf("id\tt-start\tt-end\tg-start\tg-end\tname\n");
@@ -643,7 +643,7 @@ namespace Android {
 		}
 	}
 	
-	void DmTraceData::dumpCallTimes()
+	void DmTraceModel::dumpCallTimes()
 	{
 		printf("\nCall Times\n");
 		printf("   i\t  id\tcaller\tend\tt-start\tt-end\tg-start\tg-end\texcl.\tincl.\tmethod\n");
@@ -671,7 +671,7 @@ namespace Android {
         }
 	}
 	
-	void DmTraceData::dumpMethodStats()
+	void DmTraceModel::dumpMethodStats()
 	{
 		printf("\nMethod Stats\n");
 		printf("Excl Cpu\tIncl Cpu\tExcl Real\tIncl Real\tCalls\tMethod\n");
@@ -688,17 +688,17 @@ namespace Android {
 		}
 	}
 
-	MethodPtrList* DmTraceData::getMethods()
+	MethodPtrList* DmTraceModel::getMethods()
 	{
 		return mSortedMethods;
 	}
 
-	ThreadPtrList* DmTraceData::getThreads()
+	ThreadPtrList* DmTraceModel::getThreads()
 	{
 		return mSortedThreads;
 	}
  
-    ThreadData* DmTraceData::getThreadData(id_type threadId)
+    ThreadData* DmTraceModel::getThreadData(id_type threadId)
     {
         auto i = mThreadMap.find(threadId);
         if (i == mThreadMap.end()) {
@@ -707,7 +707,7 @@ namespace Android {
         return i->second;
     }
 
-    CallList* DmTraceData::getCallList(id_type threadId)
+    CallList* DmTraceModel::getCallList(id_type threadId)
     {
         ThreadData* threadData = getThreadData(threadId);
         if (threadData == nullptr) {
@@ -716,32 +716,32 @@ namespace Android {
         return threadData->getCallList();
     }
 
-	uint32_t DmTraceData::getTotalCpuTime()
+	uint32_t DmTraceModel::getTotalCpuTime()
 	{
 		return mTotalCpuTime;
 	}
 
-	uint32_t DmTraceData::getTotalRealTime()
+	uint32_t DmTraceModel::getTotalRealTime()
 	{
 		return mTotalRealTime;
 	}
 
-	bool DmTraceData::haveCpuTime()
+	bool DmTraceModel::haveCpuTime()
 	{
 		return mClockSource != WALL;
 	}
 
-	bool DmTraceData::haveRealTime()
+	bool DmTraceModel::haveRealTime()
 	{
 		return mClockSource != THREAD_CPU;
 	}
 
-	PropertyMap& DmTraceData::getProperties()
+	PropertyMap& DmTraceModel::getProperties()
 	{
 		return mPropertiesMap;
 	}
 
-	TimeBase* DmTraceData::getPreferredTimeBase()
+	TimeBase* DmTraceModel::getPreferredTimeBase()
 	{
 		if (mClockSource == WALL) {
 			return TimeBase::REAL_TIME;
@@ -749,7 +749,7 @@ namespace Android {
 		return TimeBase::CPU_TIME;
 	}
 
-	const char* DmTraceData::getClockSource()
+	const char* DmTraceModel::getClockSource()
 	{
 		switch (mClockSource) {
 		case THREAD_CPU:

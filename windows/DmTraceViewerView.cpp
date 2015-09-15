@@ -143,7 +143,7 @@ CDmTraceViewerDoc* CDmTraceViewerView::GetDocument() const // non-debug version 
 }
 #endif //_DEBUG
 
-void CDmTraceViewerView::DrawGrid(CDC* pDC, DmTraceData* pReader, DmTraceControl* pTimeLineview)
+void CDmTraceViewerView::DrawGrid(CDC* pDC, DmTraceModel* pReader, DmTraceControl* pTimeLineview)
 {
 }
 

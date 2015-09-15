@@ -7,7 +7,7 @@
 //
 
 #include <iostream>
-#include "DmTraceData.hpp"
+#include "DmTraceModel.hpp"
 #include "DmTraceControl.hpp"
 
 using namespace Android;
@@ -77,7 +77,7 @@ int main(int argc, const char * argv[]) {
 	
 	const char* fileName = argv[1];
     try {
-        DmTraceData reader;
+        DmTraceModel reader;
         reader.open(fileName, regression);
 
         MyTraceControl view;

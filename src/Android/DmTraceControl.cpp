@@ -31,6 +31,55 @@ namespace Android {
         mThread = thread;
     }
 
+    /* Compute the scale ticks for following parameters:
+    1. mMinVal, mMaxVal ==> The visible range of min/max timeline in us(If useGivenEndPoints is true, they are aligned with mTickIncrement)
+    mRangeVal          = mMaxVal - mMinVal
+
+    2. mNumPixels       ==> How many pixels is visible width range
+
+    3. mTickIncrement   ==> Scaling unit (1, 2, 5 * 10^N) in us
+
+    4. mMinMajorTick    ==> Ceil of mMinVal aligned with mTickIncrement
+    */
+    void TickScaler::computeTicks(bool useGivenEndPoints)
+    {
+        int numTicks = mNumPixels / mPixelsPerTick;
+        mRangeVal = (mMaxVal - mMinVal);
+        mTickIncrement = int(mRangeVal / numTicks);
+
+        uint32_t nTickIncr;
+        for (nTickIncr = 100; nTickIncr < mTickIncrement; nTickIncr *= 10) {
+            if (nTickIncr * 2 > mTickIncrement) {
+                nTickIncr = nTickIncr * 2;
+                break;
+            }
+            if (nTickIncr * 5 > mTickIncrement) {
+                nTickIncr = nTickIncr * 5;
+                break;
+            }
+        }
+        mTickIncrement = nTickIncr;
+
+        if (!useGivenEndPoints) {
+            //Align mMinVal and mMaxVal to minor Tick Increment scale
+            uint32_t minorTickIncrement = mTickIncrement / 5;
+            uint32_t imax = mMaxVal / minorTickIncrement * minorTickIncrement;
+            if (imax < mMaxVal) {
+                mMaxVal = imax;
+            }
+            mMinVal = mMinVal / mTickIncrement * mTickIncrement;
+            mMinMajorTick = mMinVal;
+        }
+        else {
+            // Only mMinMajorTick should be aligned
+            mMinMajorTick = mMinVal / mTickIncrement * mTickIncrement;
+            if (mMinMajorTick < mMinVal) {
+                mMinMajorTick += mTickIncrement;
+            }
+        }
+        mRangeVal = (mMaxVal - mMinVal);
+    }
+
     int TimeLineView::highlightHeights[] = { 0, 2, 4, 5, 6, 5, 4, 2, 4, 5, 6 };
 
     TimeLineView::TimeLineView(DmTraceControl *parent)
@@ -68,7 +117,7 @@ namespace Android {
         }
     }
 
-    void TimeLineView::setRange(double minVal, double maxVal)
+    void TimeLineView::setRange(uint32_t minVal, uint32_t maxVal)
     {
         mMinDataVal = minVal;
         mMaxDataVal = maxVal;
@@ -76,7 +125,7 @@ namespace Android {
         mParent->getScaleInfo().setMaxVal(maxVal);
     }
 
-    void TimeLineView::setLimitRange(double minVal, double maxVal)
+    void TimeLineView::setLimitRange(uint32_t minVal, uint32_t maxVal)
     {
         mLimitMinVal = minVal;
         mLimitMaxVal = maxVal;
@@ -90,9 +139,9 @@ namespace Android {
 
     void TimeLineView::setScaleFromHorizontalScrollBar(int selection)
     {
-        double minVal = mParent->getScaleInfo().getMinVal();
-        double maxVal = mParent->getScaleInfo().getMaxVal();
-        double visibleRange = maxVal - minVal;
+        uint32_t minVal = mParent->getScaleInfo().getMinVal();
+        uint32_t maxVal = mParent->getScaleInfo().getMaxVal();
+        uint32_t visibleRange = maxVal - minVal;
         minVal = mLimitMinVal + selection;
         maxVal = minVal + visibleRange;
         if (maxVal > mLimitMaxVal) {
@@ -137,7 +186,7 @@ namespace Android {
                 mParent->getScaleInfo().setMinVal(newMinVal);
             }
             else if (diff < 0.0) {
-                double newMaxVal = mScaleMaxVal - diff / mScalePixelsPerRange;
+                uint32_t newMaxVal = mScaleMaxVal - diff / mScalePixelsPerRange;
                 if (newMaxVal > mLimitMaxVal)
                     newMaxVal = mLimitMaxVal;
 
@@ -182,11 +231,10 @@ namespace Android {
         String blockDetails;
 
         if (mDebug) {
-            double pixelsPerRange = mParent->getScaleInfo().getPixelsPerRange();
-            printf("dim.x %d pixels %d minVal %f, maxVal %f ppr %f rpp %f\n",
+            printf("dim.x %d pixels %d minVal %d, maxVal %d pixels %d tickIncr %d\n",
                 dim.cx, dim.cx - 70,
                 mParent->getScaleInfo().getMinVal(), mParent->getScaleInfo().getMaxVal(),
-                pixelsPerRange, 1.0 / pixelsPerRange);
+                mParent->getScaleInfo().getNumPixels(), mParent->getScaleInfo().getTickIncrement());
         }
         Call* selectBlock = nullptr;
 #if 0
@@ -442,7 +490,7 @@ namespace Android {
         }
         double minVal = mParent->getScaleInfo().getMinVal();
         double maxVal = mParent->getScaleInfo().getMaxVal();
-        double ppr = mParent->getScaleInfo().getPixelsPerRange();
+        double ppr = 1.0;// mParent->getScaleInfo().getPixelsPerRange();
         mZoomMin = (minVal + (mMouseMarkStartX - 10) / ppr);
         mZoomMax = (minVal + (mMouseMarkEndX - 10) / ppr);
         if (mZoomMin < mMinDataVal)
@@ -496,7 +544,7 @@ namespace Android {
             if (x > dim.cx - 60)
                 x = dim.cx - 60;
 
-            double ppr = mParent->getScaleInfo().getPixelsPerRange();
+            double ppr = 1.0;// mParent->getScaleInfo().getPixelsPerRange();
             t = tMin + (x - 10) / ppr;
             tMinNew = std::max(tMinRef, t - (t - tMin) / zoomFactor);
             tMaxNew = std::min(tMaxRef, t + (tMax - t) / zoomFactor);
@@ -533,7 +581,7 @@ namespace Android {
 
         mMouseMarkStartX = x;
         mGraphicsState = Scaling;
-        mScalePixelsPerRange = mParent->getScaleInfo().getPixelsPerRange();
+        mScalePixelsPerRange = 1.0;// mParent->getScaleInfo().getPixelsPerRange();
         mScaleMinVal = mParent->getScaleInfo().getMinVal();
         mScaleMaxVal = mParent->getScaleInfo().getMaxVal();
     }
@@ -628,8 +676,23 @@ namespace Android {
         }
     }
 
+    //const int DmTraceControl::PixelsPerTick = 50;
+    //const int DmTraceControl::LeftMargin = 10;
+    //const int DmTraceControl::RightMargin = 60;
+    //const int DmTraceControl::rowHeight = 20;
+    //const int DmTraceControl::rowYMargin = 12;
+    //const int DmTraceControl::rowYMarginHalf = 6;
+    //const int DmTraceControl::rowYSpace = 32;
+    //const int DmTraceControl::majorTickLength = 8;
+    //const int DmTraceControl::minorTickLength = 4;
+    //const int DmTraceControl::timeLineOffsetY = 58;
+    //const int DmTraceControl::tickToFontSpacing = 2;
+    //const int DmTraceControl::topMargin = 90;
+
+    //const int DmTraceControl::MinInclusiveRange = 3;
+
     DmTraceControl::DmTraceControl()
-        : mScaleInfo(0.0, 0.0, 0, 50)
+        : mScaleInfo(0, 0, 0, 50)
         , mMouseRow(-1)
         , mStartRow(0)
         , mEndRow(0)
@@ -642,10 +705,9 @@ namespace Android {
         mDmTraceData = nullptr;
         mHighlightMethodData = nullptr;
         mHighlightCall = nullptr;
-        //mUnits = reader->getTraceUnits();
     }
 
-    void DmTraceControl::setData(DmTraceData* traceData)
+    void DmTraceControl::setData(DmTraceModel* traceData)
     {
         mDmTraceData = traceData;
         mHighlightMethodData = nullptr;
@@ -657,8 +719,8 @@ namespace Android {
         mNumRows = (int)traceData->getThreads()->size();
 
         if (traceData->isRegression()) {
-            double maxVal = traceData->getMaxTime();
-            double minVal = traceData->getMinTime();
+            uint32_t maxVal = traceData->getMaxTime();
+            uint32_t minVal = traceData->getMinTime();
             mScaleInfo.setMaxVal(maxVal);
             mScaleInfo.setMinVal(minVal);
             mScaleInfo.setNumPixels(1000);
@@ -713,8 +775,8 @@ namespace Android {
 
     void DmTraceControl::computeStrips()
     {
-        double minVal = mScaleInfo.getMinVal();
-        double maxVal = mScaleInfo.getMaxVal();
+        uint32_t minVal = mScaleInfo.getMinVal();
+        uint32_t maxVal = mScaleInfo.getMaxVal();
 
         mHighlightExclusive.clear();
         mHighlightInclusive.clear();
@@ -772,7 +834,7 @@ namespace Android {
             CallList* callList = thread->getCallList();
 
             int y1 = thread->mRank * 32 + 32 - 6;
-            Pixel pix;
+            Pixel pixel;
 
             CallStack stack("computeStrip");
 
@@ -780,10 +842,10 @@ namespace Android {
                 Call* call = callList->get(callIndex);
                 uint32_t blockStartTime = call->getStartTime();
                 uint32_t blockEndTime = call->getEndTime();
-                double mStartFraction = mScaleInfo.pixelToValue(pix.mStart);
+                uint32_t currentStartTime = mScaleInfo.pixelToValue(pixel.mStart);
 
                 //Check if segment is out of visible range
-                if (blockEndTime <= mStartFraction)
+                if (blockEndTime <= currentStartTime)
                 {
                     callIndex = call->getEnd();
                     continue;
@@ -835,7 +897,7 @@ namespace Android {
 
                     if (topStartTime < blockStartTime) {
                         //Next call(child or siblings) belongs to the next pixel
-                        createStrip(topStartTime, recordStart, y1, topCall, isContextSwitch, pix);
+                        createStrip(topStartTime, recordStart, y1, topCall, isContextSwitch, pixel);
                     }
 
                     if (topEndTime == blockStartTime)
@@ -844,7 +906,7 @@ namespace Android {
                     stack.push(call->getIndex());
                 }
                 else {
-                    popFrames(stack, callList, topCall, blockStartTime, pix, &stripList);
+                    popFrames(stack, callList, topCall, blockStartTime, pixel, &stripList);
                     stack.push(call->getIndex());
                 }
 
@@ -856,7 +918,7 @@ namespace Android {
             int top = stack.top();
             if (top != -1)
             {
-                popFrames(stack, callList, callList->get(top), INT_MAX, pix, &stripList);
+                popFrames(stack, callList, callList->get(top), INT_MAX, pixel, &stripList);
             }
         }
 
@@ -942,16 +1004,6 @@ namespace Android {
         if (lastEndTime < startTime) {
             createStrip(lastEndTime, startTime, y1, top, top->isContextSwitch(), pixel);
         }
-    }
-
-    double DmTraceControl::computeWeight(double start, double end, bool isContextSwitch, int pixel)
-    {
-        double pixelStartFraction = mScaleInfo.valueToPixelFraction(start);
-        double pixelEndFraction = mScaleInfo.valueToPixelFraction(end);
-        double leftEndPoint = std::max(pixelStartFraction, pixel - 0.5);
-        double rightEndPoint = std::min(pixelEndFraction, pixel + 0.5);
-        double weight = rightEndPoint - leftEndPoint;
-        return weight;
     }
 
     void DmTraceControl::dumpStrips()

@@ -54,7 +54,7 @@
     <ClCompile Include="..\..\src\Android\DmTraceControl.cpp">
       <Filter>Android</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\Android\DmTraceData.cpp">
+    <ClCompile Include="..\..\src\Android\DmTraceModel.cpp">
       <Filter>Android</Filter>
     </ClCompile>
   </ItemGroup>
@@ -95,7 +95,7 @@
     <ClInclude Include="..\..\src\Android\DmTraceControl.hpp">
       <Filter>Android</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\src\Android\DmTraceData.hpp">
+    <ClInclude Include="..\..\src\Android\DmTraceModel.hpp">
       <Filter>Android</Filter>
     </ClInclude>
   </ItemGroup>

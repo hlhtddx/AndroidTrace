@@ -6,6 +6,8 @@
 #include "DmTraceViewer.h"
 
 #include "ChildFrm.h"
+#include "ThreadLabelView.h"
+#include "DmTraceViewerView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -54,3 +56,19 @@ void CChildFrame::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 // CChildFrame message handlers
+
+
+BOOL CChildFrame::OnCreateClient(LPCREATESTRUCT lpcs, CCreateContext* pContext)
+{
+    // create splitter window
+    if (!m_wndSplitter.CreateStatic(this, 1, 2))
+        return FALSE;
+
+    if (!m_wndSplitter.CreateView(0, 0, RUNTIME_CLASS(CThreadLabelView), CSize(100, 100), pContext) ||
+        !m_wndSplitter.CreateView(0, 1, RUNTIME_CLASS(CDmTraceViewerView), CSize(100, 100), pContext))
+    {
+        m_wndSplitter.DestroyWindow();
+        return FALSE;
+    }
+    return TRUE;
+}
