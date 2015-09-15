@@ -11,10 +11,10 @@
 
 @implementation MyTraceView
 {
-    DmTraceData* mTraceData;
+    DmTraceControl* mTraceCtrl;
 }
-- (void)setDocument:(DmTraceData*)document {
-    mTraceData = document;
+- (void)setDmTraceCtrl:(DmTraceControl*)traceControl {
+    mTraceCtrl = traceControl;
 }
 
 @end

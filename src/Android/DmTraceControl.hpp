@@ -439,7 +439,7 @@ namespace Android {
         friend class DmTraceControl;
     };
 
-    class DmTraceControl : public Canvas
+    class DmTraceControl
     {
     protected:
         TimeScaleView* mTimescale;

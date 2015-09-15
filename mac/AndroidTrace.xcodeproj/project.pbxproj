@@ -19,7 +19,6 @@
 		0103552A1B9DD90100D2B01D /* ThreadData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99C1B86B3BB0005A657 /* ThreadData.cpp */; };
 		0103552B1B9DD90100D2B01D /* TimeBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B99E1B86B3BB0005A657 /* TimeBase.cpp */; };
 		0103552C1B9DD90100D2B01D /* TraceUnits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */; };
-		0103552F1B9DD9F700D2B01D /* libAndroidTraceModel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */; };
 		0103553A1B9DDA4900D2B01D /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 010355391B9DDA4900D2B01D /* AppDelegate.mm */; };
 		0103553C1B9DDA4900D2B01D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0103553B1B9DDA4900D2B01D /* main.m */; };
 		0103553F1B9DDA4900D2B01D /* Document.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0103553E1B9DDA4900D2B01D /* Document.mm */; };
@@ -28,8 +27,10 @@
 		010355471B9DDA4900D2B01D /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 010355451B9DDA4900D2B01D /* MainMenu.xib */; };
 		010355531B9DDA4900D2B01D /* DmTraceViewerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 010355521B9DDA4900D2B01D /* DmTraceViewerTests.m */; };
 		0111B98B1B86B2EB0005A657 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0111B98A1B86B2EB0005A657 /* main.cpp */; };
-		01200C041B9EB68A00166547 /* libAndroidTraceModel.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */; };
 		0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0158D3E81B9746A6003ADCFB /* CoreServices.framework */; };
+		01B6F7AA1BA7F322002B2C2D /* libAndroidDmTrace.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0103551D1B9DD8F000D2B01D /* libAndroidDmTrace.a */; };
+		01B6F7AB1BA7F32C002B2C2D /* libAndroidDmTrace.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0103551D1B9DD8F000D2B01D /* libAndroidDmTrace.a */; };
+		01B6F7AE1BA80155002B2C2D /* DmTraceWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01B6F7AD1BA80155002B2C2D /* DmTraceWrapper.mm */; };
 		01D706791BA00F6B0069B124 /* GraphView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01D706781BA00F6B0069B124 /* GraphView.mm */; };
 		01F2A5621BA3C5EF004D54E7 /* DetailView.mm in Sources */ = {isa = PBXBuildFile; fileRef = 01F2A5611BA3C5EF004D54E7 /* DetailView.mm */; };
 /* End PBXBuildFile section */
@@ -71,7 +72,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAndroidTraceModel.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		0103551D1B9DD8F000D2B01D /* libAndroidDmTrace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libAndroidDmTrace.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		010355341B9DDA4900D2B01D /* DmTraceViewer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DmTraceViewer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		010355371B9DDA4900D2B01D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		010355381B9DDA4900D2B01D /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -112,7 +113,9 @@
 		014D1E8C1B99B9AF00193D46 /* DmTraceData.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = DmTraceData.cpp; path = ../src/Android/DmTraceData.cpp; sourceTree = "<group>"; };
 		014D1E8D1B99B9AF00193D46 /* DmTraceData.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = DmTraceData.hpp; path = ../src/Android/DmTraceData.hpp; sourceTree = "<group>"; };
 		0158D3E81B9746A6003ADCFB /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
-		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AndroidTrace; sourceTree = BUILT_PRODUCTS_DIR; };
+		01B6F7AC1BA80155002B2C2D /* DmTraceWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DmTraceWrapper.h; sourceTree = "<group>"; };
+		01B6F7AD1BA80155002B2C2D /* DmTraceWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DmTraceWrapper.mm; sourceTree = "<group>"; };
+		01BA98451B80C33500BA696A /* AndroidTrace */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = AndroidTrace; path = AndroidTraceTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		01D706771BA00F6B0069B124 /* GraphView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GraphView.h; sourceTree = "<group>"; };
 		01D706781BA00F6B0069B124 /* GraphView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = GraphView.mm; sourceTree = "<group>"; };
 		01F2A5601BA3C5EF004D54E7 /* DetailView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailView.h; sourceTree = "<group>"; };
@@ -131,7 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				01200C041B9EB68A00166547 /* libAndroidTraceModel.a in Frameworks */,
+				01B6F7AB1BA7F32C002B2C2D /* libAndroidDmTrace.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -146,7 +149,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0103552F1B9DD9F700D2B01D /* libAndroidTraceModel.a in Frameworks */,
+				01B6F7AA1BA7F322002B2C2D /* libAndroidDmTrace.a in Frameworks */,
 				0158D3E91B9746A6003ADCFB /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -169,6 +172,8 @@
 				01F2A5611BA3C5EF004D54E7 /* DetailView.mm */,
 				01D706771BA00F6B0069B124 /* GraphView.h */,
 				01D706781BA00F6B0069B124 /* GraphView.mm */,
+				01B6F7AC1BA80155002B2C2D /* DmTraceWrapper.h */,
+				01B6F7AD1BA80155002B2C2D /* DmTraceWrapper.mm */,
 			);
 			path = DmTraceViewer;
 			sourceTree = "<group>";
@@ -199,7 +204,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		01200C051B9EB7E800166547 /* AndroidTrace */ = {
+		01200C051B9EB7E800166547 /* AndroidDmTrace */ = {
 			isa = PBXGroup;
 			children = (
 				0111B98C1B86B3BB0005A657 /* Call.cpp */,
@@ -228,7 +233,7 @@
 				0111B9A31B86B3BB0005A657 /* TraceUnits.cpp */,
 				0111B9A41B86B3BB0005A657 /* TraceUnits.hpp */,
 			);
-			name = AndroidTrace;
+			name = AndroidDmTrace;
 			sourceTree = "<group>";
 		};
 		01BA983C1B80C33500BA696A = {
@@ -236,7 +241,7 @@
 			children = (
 				0158D3E81B9746A6003ADCFB /* CoreServices.framework */,
 				01BA98471B80C33500BA696A /* AndroidTraceTest */,
-				01200C051B9EB7E800166547 /* AndroidTrace */,
+				01200C051B9EB7E800166547 /* AndroidDmTrace */,
 				010355351B9DDA4900D2B01D /* DmTraceViewer */,
 				0103554F1B9DDA4900D2B01D /* DmTraceViewerTests */,
 				01BA98461B80C33500BA696A /* Products */,
@@ -247,7 +252,7 @@
 			isa = PBXGroup;
 			children = (
 				01BA98451B80C33500BA696A /* AndroidTrace */,
-				0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */,
+				0103551D1B9DD8F000D2B01D /* libAndroidDmTrace.a */,
 				010355341B9DDA4900D2B01D /* DmTraceViewer.app */,
 				0103554C1B9DDA4900D2B01D /* DmTraceViewerTests.xctest */,
 			);
@@ -276,9 +281,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		0103551C1B9DD8F000D2B01D /* AndroidTraceModel */ = {
+		0103551C1B9DD8F000D2B01D /* AndroidDmTrace */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0103551E1B9DD8F000D2B01D /* Build configuration list for PBXNativeTarget "AndroidTraceModel" */;
+			buildConfigurationList = 0103551E1B9DD8F000D2B01D /* Build configuration list for PBXNativeTarget "AndroidDmTrace" */;
 			buildPhases = (
 				010355191B9DD8F000D2B01D /* Sources */,
 				0103551A1B9DD8F000D2B01D /* Frameworks */,
@@ -288,9 +293,9 @@
 			);
 			dependencies = (
 			);
-			name = AndroidTraceModel;
-			productName = AndroidTraceModel;
-			productReference = 0103551D1B9DD8F000D2B01D /* libAndroidTraceModel.a */;
+			name = AndroidDmTrace;
+			productName = AndroidDmTrace;
+			productReference = 0103551D1B9DD8F000D2B01D /* libAndroidDmTrace.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		010355331B9DDA4900D2B01D /* DmTraceViewer */ = {
@@ -329,9 +334,9 @@
 			productReference = 0103554C1B9DDA4900D2B01D /* DmTraceViewerTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		01BA98441B80C33500BA696A /* AndroidTrace */ = {
+		01BA98441B80C33500BA696A /* AndroidTraceTest */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 01BA984C1B80C33500BA696A /* Build configuration list for PBXNativeTarget "AndroidTrace" */;
+			buildConfigurationList = 01BA984C1B80C33500BA696A /* Build configuration list for PBXNativeTarget "AndroidTraceTest" */;
 			buildPhases = (
 				01BA98411B80C33500BA696A /* Sources */,
 				01BA98421B80C33500BA696A /* Frameworks */,
@@ -342,8 +347,8 @@
 			dependencies = (
 				0103552E1B9DD9F000D2B01D /* PBXTargetDependency */,
 			);
-			name = AndroidTrace;
-			productName = AndroidTrace;
+			name = AndroidTraceTest;
+			productName = AndroidTraceTest;
 			productReference = 01BA98451B80C33500BA696A /* AndroidTrace */;
 			productType = "com.apple.product-type.tool";
 		};
@@ -384,8 +389,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				01BA98441B80C33500BA696A /* AndroidTrace */,
-				0103551C1B9DD8F000D2B01D /* AndroidTraceModel */,
+				01BA98441B80C33500BA696A /* AndroidTraceTest */,
+				0103551C1B9DD8F000D2B01D /* AndroidDmTrace */,
 				010355331B9DDA4900D2B01D /* DmTraceViewer */,
 				0103554B1B9DDA4900D2B01D /* DmTraceViewerTests */,
 			);
@@ -440,6 +445,7 @@
 				0103553C1B9DDA4900D2B01D /* main.m in Sources */,
 				01F2A5621BA3C5EF004D54E7 /* DetailView.mm in Sources */,
 				0103553A1B9DDA4900D2B01D /* AppDelegate.mm in Sources */,
+				01B6F7AE1BA80155002B2C2D /* DmTraceWrapper.mm in Sources */,
 				01D706791BA00F6B0069B124 /* GraphView.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -465,7 +471,7 @@
 /* Begin PBXTargetDependency section */
 		0103552E1B9DD9F000D2B01D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0103551C1B9DD8F000D2B01D /* AndroidTraceModel */;
+			target = 0103551C1B9DD8F000D2B01D /* AndroidDmTrace */;
 			targetProxy = 0103552D1B9DD9F000D2B01D /* PBXContainerItemProxy */;
 		};
 		0103554E1B9DDA4900D2B01D /* PBXTargetDependency */ = {
@@ -475,7 +481,7 @@
 		};
 		01200C031B9EB68400166547 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 0103551C1B9DD8F000D2B01D /* AndroidTraceModel */;
+			target = 0103551C1B9DD8F000D2B01D /* AndroidDmTrace */;
 			targetProxy = 01200C021B9EB68400166547 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -710,7 +716,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		0103551E1B9DD8F000D2B01D /* Build configuration list for PBXNativeTarget "AndroidTraceModel" */ = {
+		0103551E1B9DD8F000D2B01D /* Build configuration list for PBXNativeTarget "AndroidDmTrace" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0103551F1B9DD8F000D2B01D /* Debug */,
@@ -746,7 +752,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		01BA984C1B80C33500BA696A /* Build configuration list for PBXNativeTarget "AndroidTrace" */ = {
+		01BA984C1B80C33500BA696A /* Build configuration list for PBXNativeTarget "AndroidTraceTest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				01BA984D1B80C33500BA696A /* Debug */,

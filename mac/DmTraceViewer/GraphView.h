@@ -50,7 +50,7 @@ public:
     NSColor *darkColor;
 }
 
-- (void)setDocument:(DmTraceData*)document;
+- (void)setDmTraceCtrl:(DmTraceControl*)traceControl;
 @end
 
 @interface MyTimeLineView : MyTraceView

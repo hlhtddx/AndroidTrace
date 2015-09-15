@@ -11,9 +11,11 @@
 #import "DetailView.h"
 
 @interface Document : NSDocument
-@property (weak) IBOutlet NSScrollView *mScrollView;
-@property (weak) IBOutlet MyTimeLineView *mTimeLineView;
+
 @property (weak) IBOutlet DetailView *mDetailView;
+@property (weak) IBOutlet MyThreadLabelView *mThreadLabelView;
+@property (weak) IBOutlet MyTimeScaleView *mTimeScaleView;
+@property (weak) IBOutlet MyTimeLineView *mTimeLineView;
 
 @end
 

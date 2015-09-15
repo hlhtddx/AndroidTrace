@@ -11,10 +11,6 @@
 #include <Android/DmTraceControl.hpp>
 using namespace Android;
 
-@interface Document ()
-
-@end
-
 @implementation Document
 {
     DmTraceData mTraceData;
@@ -31,7 +27,10 @@ using namespace Android;
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)aController {
     [super windowControllerDidLoadNib:aController];
-    // Add any code here that needs to be executed once the windowController has loaded the document's window.
+    
+    [_mTimeLineView setDmTraceCtrl: &mTraceCtrl];
+    [_mTimeScaleView setDmTraceCtrl: &mTraceCtrl];
+    [_mThreadLabelView setDmTraceCtrl: &mTraceCtrl];
 }
 
 + (BOOL)autosavesInPlace {

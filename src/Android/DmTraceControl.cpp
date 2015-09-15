@@ -974,8 +974,6 @@ namespace Android {
 
     void DmTraceControl::setBoundary(Rectangle* rcBound)
     {
-        Canvas::setBoundary(rcBound);
-
         Rectangle rcThreadLabel;
         Rectangle rcTimescale;
         Rectangle rcTimeLine;
