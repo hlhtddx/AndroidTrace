@@ -177,15 +177,15 @@ namespace Android {
     void TimeLineView::draw(void* context)
     {
         if (mGraphicsState == Scaling) {
-            double diff = mMouse.x - mMouseMarkStartX;
-            if (diff > 0.0) {
-                double newMinVal = mScaleMinVal - diff / mScalePixelsPerRange;
+            int diff = mMouse.x - mMouseMarkStartX;
+            if (diff > 0) {
+                uint32_t newMinVal = mScaleMinVal - diff / mScalePixelsPerRange;
                 if (newMinVal < mLimitMinVal)
                     newMinVal = mLimitMinVal;
 
                 mParent->getScaleInfo().setMinVal(newMinVal);
             }
-            else if (diff < 0.0) {
+            else if (diff < 0) {
                 uint32_t newMaxVal = mScaleMaxVal - diff / mScalePixelsPerRange;
                 if (newMaxVal > mLimitMaxVal)
                     newMaxVal = mLimitMaxVal;
@@ -488,9 +488,9 @@ namespace Android {
             redraw();
             return;
         }
-        double minVal = mParent->getScaleInfo().getMinVal();
-        double maxVal = mParent->getScaleInfo().getMaxVal();
-        double ppr = 1.0;// mParent->getScaleInfo().getPixelsPerRange();
+        uint32_t minVal = mParent->getScaleInfo().getMinVal();
+        uint32_t maxVal = mParent->getScaleInfo().getMaxVal();
+        uint32_t ppr = 1;
         mZoomMin = (minVal + (mMouseMarkStartX - 10) / ppr);
         mZoomMax = (minVal + (mMouseMarkEndX - 10) / ppr);
         if (mZoomMin < mMinDataVal)
@@ -676,21 +676,6 @@ namespace Android {
         }
     }
 
-    //const int DmTraceControl::PixelsPerTick = 50;
-    //const int DmTraceControl::LeftMargin = 10;
-    //const int DmTraceControl::RightMargin = 60;
-    //const int DmTraceControl::rowHeight = 20;
-    //const int DmTraceControl::rowYMargin = 12;
-    //const int DmTraceControl::rowYMarginHalf = 6;
-    //const int DmTraceControl::rowYSpace = 32;
-    //const int DmTraceControl::majorTickLength = 8;
-    //const int DmTraceControl::minorTickLength = 4;
-    //const int DmTraceControl::timeLineOffsetY = 58;
-    //const int DmTraceControl::tickToFontSpacing = 2;
-    //const int DmTraceControl::topMargin = 90;
-
-    //const int DmTraceControl::MinInclusiveRange = 3;
-
     DmTraceControl::DmTraceControl()
         : mScaleInfo(0, 0, 0, 50)
         , mMouseRow(-1)
@@ -718,7 +703,7 @@ namespace Android {
         mHaveRealTime = traceData->haveRealTime();
         mNumRows = (int)traceData->getThreads()->size();
 
-        if (traceData->isRegression()) {
+        if (mDmTraceData->isRegression()) {
             uint32_t maxVal = traceData->getMaxTime();
             uint32_t minVal = traceData->getMinTime();
             mScaleInfo.setMaxVal(maxVal);
@@ -869,8 +854,8 @@ namespace Android {
                 }
 
                 // Clip block to range of minVal~maxVal
-                double recordStart = std::max(static_cast<double>(blockStartTime), minVal);
-                double recordEnd = std::min(static_cast<double>(blockEndTime), maxVal);
+                uint32_t recordStart = std::max(blockStartTime, minVal);
+                uint32_t recordEnd = std::min(blockEndTime, maxVal);
 
                 // if range of the Call is empty, skip to next call
                 if (recordStart == recordEnd) {
@@ -922,7 +907,9 @@ namespace Android {
             }
         }
 
-        dumpStrips();
+        if (mDmTraceData->isRegression()) {
+            dumpStrips();
+        }
     }
 
     void DmTraceControl::createStrip(uint32_t recordStart, uint32_t recordEnd, uint32_t baseline, Call* call, bool isContextSwitch, Pixel& pixel)

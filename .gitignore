@@ -6,3 +6,5 @@ xcuserdata
 data
 Release
 Debug
+windows/DmTraceViewer.VC.db
+*.opendb
